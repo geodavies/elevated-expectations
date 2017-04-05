@@ -1,4 +1,4 @@
-package uk.ac.aston.dc2300.model;
+package uk.ac.aston.dc2300.model.entity;
 
 /**
  * This class represents an entity that moves around within the building such as a person or a maintenance crew.

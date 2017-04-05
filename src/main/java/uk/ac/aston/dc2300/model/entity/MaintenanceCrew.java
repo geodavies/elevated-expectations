@@ -1,4 +1,4 @@
-package uk.ac.aston.dc2300.model;
+package uk.ac.aston.dc2300.model.entity;
 
 /**
  * This class represents a maintenance crew that may come to visit the building. A maintenance crew will take up 4

@@ -1,4 +1,4 @@
-package uk.ac.aston.dc2300.model;
+package uk.ac.aston.dc2300.model.entity;
 
 /**
  * This class represents a client visiting the building
