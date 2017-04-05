@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * <p>
- *     This class represents a building which contains multiple elevators and floors for the elevators to visit. The
- *     building also keeps log of the amount of complaints received by clients regarding elevator waiting times.
- * </p>
+ * This class represents a building which contains multiple elevators and floors for the elevators to visit. The
+ * building also keeps log of the amount of complaints received by clients regarding elevator waiting times.
  *
  * @author George Davies
  * @since 04/04/17

@@ -1,11 +1,9 @@
 package uk.ac.aston.dc2300.model;
 
 /**
- * <p>
- *     This class represents an entity that moves around within the building such as a person or a maintenance crew.
- *     Each entity stores the time they entered the building, the size of the entity (amount of space they take up in
- *     an elevator) and the destination their current destination.
- * </p>
+ * This class represents an entity that moves around within the building such as a person or a maintenance crew.
+ * Each entity stores the time they entered the building, the size of the entity (amount of space they take up in
+ * an elevator) and the destination their current destination.
  *
  * @author George Davies
  * @since 04/04/17
