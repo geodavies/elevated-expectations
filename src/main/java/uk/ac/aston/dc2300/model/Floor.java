@@ -5,7 +5,11 @@ import java.util.LinkedList;
 import java.util.Set;
 
 /**
- * Created by George on 04/04/17.
+ * This class represents a floor inside the building. Each building contains multiple occupants and may have a queue of
+ * them waiting to ride the elevator
+ *
+ * @author George Davies
+ * @since 04/04/17
  */
 public class Floor {
 
@@ -26,10 +30,20 @@ public class Floor {
         return elevatorQueue;
     }
 
+    /**
+     * Adds a BuildingOccupant to the floor
+     *
+     * @param buildingOccupant the BuildingOccupant to be added
+     */
     public void addOccupant(BuildingOccupant buildingOccupant) {
         occupants.add(buildingOccupant);
     }
 
+    /**
+     * Removes a BuildingOccupant from the floor
+     *
+     * @param buildingOccupant the BuildingOccupant to be removed
+     */
     public void removeOccupant(BuildingOccupant buildingOccupant) {
         occupants.remove(buildingOccupant);
     }

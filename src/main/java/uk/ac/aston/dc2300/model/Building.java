@@ -4,7 +4,13 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by George on 04/04/17.
+ * <p>
+ *     This class represents a building which contains multiple elevators and floors for the elevators to visit. The
+ *     building also keeps log of the amount of complaints received by clients regarding elevator waiting times.
+ * </p>
+ *
+ * @author George Davies
+ * @since 04/04/17
  */
 public class Building {
 
@@ -14,6 +20,10 @@ public class Building {
 
     private int numComplaints;
 
+    /**
+     * @param elevators The set of elevators inside the building
+     * @param floors The list of floors contained by the building
+     */
     public Building(Set<Elevator> elevators, List<Floor> floors) {
         this.elevators = elevators;
         this.floors = floors;
@@ -27,6 +37,9 @@ public class Building {
         return floors;
     }
 
+    /**
+     * Increments the number of complaints received by one
+     */
     public void addComplaint() {
         this.numComplaints  = numComplaints + 1;
     }
