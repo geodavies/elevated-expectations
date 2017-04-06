@@ -1,5 +1,7 @@
 package uk.ac.aston.dc2300.component;
 
+import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
+
 /**
  * <p>
  *     Simulation class composes the main component of the application this class is responsible for managing the
@@ -11,7 +13,7 @@ package uk.ac.aston.dc2300.component;
  */
 public class Simulation {
 
-    public Simulation(){
+    public Simulation(SimulationConfiguration simulationConfiguration){
         // TODO: Implement
     }
 

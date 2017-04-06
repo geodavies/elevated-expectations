@@ -20,7 +20,7 @@ public class GuiController implements ApplicationController {
 
     public GuiController() {
         LOGGER.info("Initializing application in 'gui' mode");
-        simulation = new Simulation();
+        simulation = new Simulation(null);
     }
 
     @Override
