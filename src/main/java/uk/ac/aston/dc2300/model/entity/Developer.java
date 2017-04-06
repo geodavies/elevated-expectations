@@ -8,11 +8,8 @@ package uk.ac.aston.dc2300.model.entity;
  */
 public class Developer extends BuildingOccupant {
 
-    /**
-     * @param timeEntered the time in seconds the Developer entered the building following simulation start
-     */
-    public Developer(int timeEntered) {
-        super(1, timeEntered);
+    public Developer() {
+        super(1, 0);
     }
 
     @Override

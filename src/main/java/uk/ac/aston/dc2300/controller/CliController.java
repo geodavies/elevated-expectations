@@ -29,7 +29,7 @@ public class CliController implements ApplicationController {
 
     @Override
     public void start() {
-
+        simulation.start();
     }
 
     /**
@@ -39,7 +39,7 @@ public class CliController implements ApplicationController {
      * @return a SimulationConfiguration from the input of the user
      */
     private SimulationConfiguration getConfigurationInput() {
-        System.out.println("Please select simulation configuration settings");
+        System.out.println("\nPlease select simulation configuration settings");
 
         Scanner scanner = new Scanner(System.in);
 
@@ -58,7 +58,7 @@ public class CliController implements ApplicationController {
             String floorChangeProbabilityInput = scanner.nextLine();
             // If left empty, set to default value
             if (floorChangeProbabilityInput.isEmpty()) {
-                floorChangeProbability = new BigDecimal(0.01);
+                floorChangeProbability = new BigDecimal("0.01");
             } else {
                 try {
                     // Check value is valid decimal
@@ -82,7 +82,7 @@ public class CliController implements ApplicationController {
             String clientArrivalProbablityInput = scanner.nextLine();
             // If left empty, set to default value
             if (clientArrivalProbablityInput.isEmpty()) {
-                clientArrivalProbability = new BigDecimal(0.005);
+                clientArrivalProbability = new BigDecimal("0.005");
             } else {
                 try {
                     // Check value is valid decimal
