@@ -47,6 +47,7 @@ public class CliController implements ApplicationController {
         BigDecimal floorChangeProbability = null;
         BigDecimal clientArrivalProbability = null;
         String seed;
+        // Set these to -1 so application will error later if not set correctly
         int numEmployees = -1;
         int numDevelopers = -1;
 
@@ -98,11 +99,12 @@ public class CliController implements ApplicationController {
             }
         }
 
-
+        // Get randomization seed
         System.out.printf("Randomization seed: ");
         seed = scanner.nextLine();
         if (seed.isEmpty()) seed = "Not so random";
 
+        // Get number of employees
         boolean numEmployeesInitialized = false;
         while (!numEmployeesInitialized) {
             System.out.printf("Number of employees [10]: ");
@@ -129,6 +131,7 @@ public class CliController implements ApplicationController {
             }
         }
 
+        // Get number of developers
         boolean numDevelopersInitialized = false;
         while (!numDevelopersInitialized) {
             System.out.printf("Number of developers [10]: ");
