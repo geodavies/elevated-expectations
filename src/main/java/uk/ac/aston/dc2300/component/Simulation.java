@@ -4,12 +4,10 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 import uk.ac.aston.dc2300.model.entity.*;
+import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Simulation class composes the main component of the application this class is responsible for managing the
@@ -24,9 +22,9 @@ public class Simulation {
 
     private final BigDecimal CLIENT_ARRIVAL_PROBABILITY;
 
-    private final String SEED;
-
     private final Building BUILDING;
+
+    private final RandomUtils RANDOM_UTILS;
 
     private static final Logger LOGGER = LogManager.getLogger(Simulation.class);
 
@@ -64,8 +62,8 @@ public class Simulation {
         // Set client arrival probability
         CLIENT_ARRIVAL_PROBABILITY = simulationConfiguration.getClientArrivalProbability();
 
-        // Set randomization seed
-        SEED = simulationConfiguration.getSeed();
+        // Set random seed
+        RANDOM_UTILS = new RandomUtils(simulationConfiguration.getSeed());
 
         // Create and set Building
         BUILDING = new Building(elevatorSet, floors);
@@ -74,8 +72,61 @@ public class Simulation {
 
     }
 
+    /**
+     * Begins the simulation
+     */
     public void start() {
-        // TODO: Implement
+
+        setInitialDestinations();
+
+    }
+
+    /**
+     * Sets the initial destinations of the building occupants and makes them call the elevator
+     */
+    private void setInitialDestinations() {
+
+        LOGGER.info("Setting initial occupant destinations...");
+
+        // Get all the occupants on the ground floor
+        Floor groundFloor = BUILDING.getFloors().get(0);
+        Set<BuildingOccupant> initialOccupants = groundFloor.getOccupants();
+        for (BuildingOccupant buildingOccupant : initialOccupants) {
+            // Give them new destination floors
+            assignNewDestination(buildingOccupant);
+            buildingOccupant.callElevator(groundFloor);
+        }
+
+        LOGGER.info("Finished setting destinations");
+
+    }
+
+    /**
+     * Assigns a new destination floor for the occupant to go to based on their type
+     *
+     * @param buildingOccupant the occupant to be assigned a new destination
+     */
+    private void assignNewDestination(BuildingOccupant buildingOccupant) {
+        if (buildingOccupant instanceof Employee) {
+            // Assign employees any floor
+            int numFloors = BUILDING.getFloors().size();
+            int randomFloor = RANDOM_UTILS.getIntInRange(0, numFloors - 1);
+            buildingOccupant.setDestination(BUILDING.getFloors().get(randomFloor));
+        } else if (buildingOccupant instanceof Developer) {
+            // Assign developers a floor in the top half
+            List<Floor> topHalfFloors = BUILDING.getTopHalfFloors();
+            int randomFloorIndex = RANDOM_UTILS.getIntInRange(0, topHalfFloors.size() - 1);
+            buildingOccupant.setDestination(topHalfFloors.get(randomFloorIndex));
+        } else if (buildingOccupant instanceof Client) {
+            // Assign clients a floor in the bottom half
+            List<Floor> bottomHalfFoors = BUILDING.getBottomHalfFloors();
+            int randomFloorIndex = RANDOM_UTILS.getIntInRange(0, bottomHalfFoors.size() - 1);
+            buildingOccupant.setDestination(bottomHalfFoors.get(randomFloorIndex));
+        } else if (buildingOccupant instanceof MaintenanceCrew) {
+            // Assign maintenance workers to the top floor
+            List<Floor> floors = BUILDING.getFloors();
+            buildingOccupant.setDestination(floors.get(floors.size() - 1));
+        }
     }
 
 }
