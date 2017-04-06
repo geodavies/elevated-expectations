@@ -4,9 +4,9 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.component.Simulation;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
-import uk.ac.aston.dc2300.utility.UserInputUtils;
 
 import java.math.BigDecimal;
+import java.util.Scanner;
 
 /**
  * An implementation of ApplicationController which allows command line interaction.
@@ -41,6 +41,8 @@ public class CliController implements ApplicationController {
     private SimulationConfiguration getConfigurationInput() {
         System.out.println("Please select simulation configuration settings");
 
+        Scanner scanner = new Scanner(System.in);
+
         // Initialize variables
         BigDecimal floorChangeProbability = null;
         BigDecimal clientArrivalProbability = null;
@@ -52,7 +54,7 @@ public class CliController implements ApplicationController {
         while (floorChangeProbability == null) {
             System.out.printf("Floor change probability (p) [0.01]: ");
             // Take user input
-            String floorChangeProbabilityInput = UserInputUtils.getInput();
+            String floorChangeProbabilityInput = scanner.nextLine();
             // If left empty, set to default value
             if (floorChangeProbabilityInput.isEmpty()) {
                 floorChangeProbability = new BigDecimal(0.01);
@@ -76,7 +78,7 @@ public class CliController implements ApplicationController {
         while (clientArrivalProbability == null) {
             System.out.printf("Client arrival probability (q) [0.005]: ");
             // Get user input
-            String clientArrivalProbablityInput = UserInputUtils.getInput();
+            String clientArrivalProbablityInput = scanner.nextLine();
             // If left empty, set to default value
             if (clientArrivalProbablityInput.isEmpty()) {
                 clientArrivalProbability = new BigDecimal(0.005);
@@ -98,14 +100,14 @@ public class CliController implements ApplicationController {
 
 
         System.out.printf("Randomization seed: ");
-        seed = UserInputUtils.getInput();
+        seed = scanner.nextLine();
         if (seed.isEmpty()) seed = "Not so random";
 
         boolean numEmployeesInitialized = false;
         while (!numEmployeesInitialized) {
             System.out.printf("Number of employees [10]: ");
             // Get user input
-            String numEmployeesInput = UserInputUtils.getInput();
+            String numEmployeesInput = scanner.nextLine();
             // If left empty, set to default value
             if (numEmployeesInput.equals("")) {
                 numEmployees = 10;
@@ -131,7 +133,7 @@ public class CliController implements ApplicationController {
         while (!numDevelopersInitialized) {
             System.out.printf("Number of developers [10]: ");
             // Get user input
-            String numDevelopersInput = UserInputUtils.getInput();
+            String numDevelopersInput = scanner.nextLine();
             // If left empty, set to default value
             if (numDevelopersInput.equals("")) {
                 numDevelopers = 10;
