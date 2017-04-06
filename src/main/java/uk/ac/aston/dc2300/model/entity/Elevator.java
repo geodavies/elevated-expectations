@@ -22,9 +22,12 @@ public class Elevator {
 
     /**
      * @param maxCapacity the maximum amount of spaces available inside the elevator
+     * @param currentFloor the floor at which the elevator is to start
      */
-    public Elevator(int maxCapacity){
+    public Elevator(int maxCapacity, Floor currentFloor){
         this.maxCapacity = maxCapacity;
+        this.currentFloor = currentFloor;
+        this.previousFloor = currentFloor;
         occupants = new HashSet<>();
     }
 
