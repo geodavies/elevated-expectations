@@ -105,26 +105,23 @@ public class CliController implements ApplicationController {
         if (seed.isEmpty()) seed = "Not so random";
 
         // Get number of employees
-        boolean numEmployeesInitialized = false;
-        while (!numEmployeesInitialized) {
+        while (numEmployees == -1) {
             System.out.printf("Number of employees [10]: ");
             // Get user input
             String numEmployeesInput = scanner.nextLine();
             // If left empty, set to default value
             if (numEmployeesInput.equals("")) {
                 numEmployees = 10;
-                numEmployeesInitialized = true;
             } else {
                 try {
                     // Check if valid int
                     int validationInt = Integer.parseInt(numEmployeesInput);
                     // Check greater than 0
                     if(validationInt < 0){
-                        System.out.println("Must be greater than 0");
+                        System.out.println("Must be greater than or equal to 0");
                         continue;
                     }
                     numEmployees = validationInt;
-                    numEmployeesInitialized = true;
                 } catch (NumberFormatException e) {
                     System.out.println("Must be a valid whole number");
                 }
@@ -132,26 +129,23 @@ public class CliController implements ApplicationController {
         }
 
         // Get number of developers
-        boolean numDevelopersInitialized = false;
-        while (!numDevelopersInitialized) {
+        while (numDevelopers == -1) {
             System.out.printf("Number of developers [10]: ");
             // Get user input
             String numDevelopersInput = scanner.nextLine();
             // If left empty, set to default value
             if (numDevelopersInput.equals("")) {
                 numDevelopers = 10;
-                numDevelopersInitialized = true;
             } else {
                 try {
                     // Check if valid int
                     int validationInt = Integer.parseInt(numDevelopersInput);
                     // Check greater than 0
                     if(validationInt < 0){
-                        System.out.println("Must be greater than 0");
+                        System.out.println("Must be greater than or equal to 0");
                         continue;
                     }
                     numDevelopers = validationInt;
-                    numDevelopersInitialized = true;
                 } catch (NumberFormatException e) {
                     System.out.println("Must be a valid whole number");
                 }
