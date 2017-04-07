@@ -79,7 +79,12 @@ public class Simulation {
 
         setInitialDestinations();
 
-        moveElevators();
+        // TODO: Set this to loop while simulation is running
+        for (int i = 0; i < 500; i++) {
+            loadElevators();
+            moveElevators();
+            unloadElevators();
+        }
 
     }
 
@@ -137,6 +142,24 @@ public class Simulation {
     private void moveElevators() {
         for (Elevator elevator : BUILDING.getElevators()) {
             elevator.moveIfRequested(BUILDING.getFloors());
+        }
+    }
+
+    /**
+     * Moves any queuing BuildingOccupants into the elevators
+     */
+    private void loadElevators() {
+        for (Elevator elevator : BUILDING.getElevators()) {
+            elevator.loadPassengers();
+        }
+    }
+
+    /**
+     * Moves any BuildingOccupants at their destination onto the floor
+     */
+    private void unloadElevators() {
+        for (Elevator elevator : BUILDING.getElevators()) {
+            elevator.unloadPassengers();
         }
     }
 

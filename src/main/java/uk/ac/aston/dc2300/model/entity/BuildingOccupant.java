@@ -29,7 +29,7 @@ public abstract class BuildingOccupant {
         return timeEntered;
     }
 
-    public int getOccupantSize() {
+    public int getSize() {
         return occupantSize;
     }
 
@@ -52,8 +52,9 @@ public abstract class BuildingOccupant {
      * Moves the occupant from their current floor into the elevator
      *
      * @param elevator the elevator to move the occupant to
+     * @param floor the floor to move from
      */
-    public abstract void getInElevator(Elevator elevator);
+    public abstract void getInElevator(Elevator elevator, Floor floor);
 
     /**
      * Moves the occupant from the elevator to the current floor the elevator is at
