@@ -35,7 +35,7 @@ public class Simulation {
         // Create floor(s)
         List<Floor> floors = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            Floor floor = new Floor();
+            Floor floor = new Floor(i);
             floors.add(floor);
         }
 
@@ -78,6 +78,8 @@ public class Simulation {
     public void start() {
 
         setInitialDestinations();
+
+        moveElevators();
 
     }
 
@@ -126,6 +128,15 @@ public class Simulation {
             // Assign maintenance workers to the top floor
             List<Floor> floors = BUILDING.getFloors();
             buildingOccupant.setDestination(floors.get(floors.size() - 1));
+        }
+    }
+
+    /**
+     * Moves the elevators to their next positions
+     */
+    private void moveElevators() {
+        for (Elevator elevator : BUILDING.getElevators()) {
+            elevator.moveIfRequested(BUILDING.getFloors());
         }
     }
 

@@ -13,13 +13,20 @@ import java.util.Set;
  */
 public class Floor {
 
+    int floorNumber;
+
     private Set<BuildingOccupant> occupants;
 
     private LinkedList<BuildingOccupant> elevatorQueue;
 
-    public Floor() {
+    public Floor(int floorNumber) {
+        this.floorNumber = floorNumber;
         elevatorQueue = new LinkedList<>();
         occupants = new HashSet<>();
+    }
+
+    public int getFloorNumber() {
+        return floorNumber;
     }
 
     public Set<BuildingOccupant> getOccupants() {
