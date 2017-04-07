@@ -1,10 +1,7 @@
 package uk.ac.aston.dc2300.gui;
 
-import com.oracle.tools.packager.Log;
-import de.craften.ui.swingmaterial.MaterialProgressSpinner;
 import org.apache.log4j.LogManager;
 import uk.ac.aston.dc2300.component.Simulation;
-import uk.ac.aston.dc2300.controller.CliController;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 
 import javax.swing.*;
@@ -13,7 +10,12 @@ import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 
 /**
- * Created by dan on 07/04/2017.
+ * <p>
+ *     A JFrame/Swing UI for configuring the parameters of the simulation.
+ * </p>
+ *
+ * @author Dan Cotton
+ * @since 06/04/17
  */
 public class LandingConfig {
     private static final org.apache.log4j.Logger LOGGER = LogManager.getLogger(LandingConfig.class);
@@ -27,10 +29,6 @@ public class LandingConfig {
     private JTextField numberDevelopersField;
     private JPanel saveButtonContainer;
     private JButton saveButton;
-
-    /*
-        Material UI Components
-     */
 
     /*
         Defining Required Simulation Config Data
@@ -55,27 +53,12 @@ public class LandingConfig {
                     Button Pressed - Populate Values
                  */
                 LOGGER.info("[GUI] Button Pressed - Initiating Simulation");
-                employeeFloorChangeProbability = new BigDecimal(floorChangeProbabilityField.getText());
-                clientArrivalProbability = new BigDecimal(clientArrivalProbabilityField.getText());
-                seed = Long.parseLong(randomSeedField.getText());
-                numEmployees = Integer.parseInt(numberEmployeesField.getText());
-                numDevelopers = Integer.parseInt(numberDevelopersField.getText());
-
-                LOGGER.debug("[GUI] Using following values for simulation");
-                LOGGER.debug("[GUI] EmpChange: " + employeeFloorChangeProbability);
-                LOGGER.debug("[GUI] ClientArrive: " + clientArrivalProbability);
-                LOGGER.debug("[GUI] RandSeed: " + seed);
-                LOGGER.debug("[GUI] NumEmp: " + numEmployees);
-                LOGGER.debug("[GUI] NumDev: " + numDevelopers);
+                collectInputData();
 
                 /*
                     Values Retrieved - Pass to Config Object
                 */
-                SimulationConfiguration configObject = new SimulationConfiguration(employeeFloorChangeProbability,
-                        clientArrivalProbability,
-                        seed,
-                        numEmployees,
-                        numDevelopers);
+                SimulationConfiguration configObject = getSimulationConfiguration();
                 LOGGER.debug("[GUI] Constructed config obj: " + configObject.toString());
 
                 /*
@@ -89,6 +72,54 @@ public class LandingConfig {
         });
     }
 
+    /**
+     * Method returns the current simulation configuration object
+     * - based on the currently 'saved' UI values.
+     *
+     * @return a SimulationConfiguration from the GUI user input
+     * fields
+     */
+    private SimulationConfiguration getSimulationConfiguration(){
+        return new SimulationConfiguration(employeeFloorChangeProbability,
+                clientArrivalProbability,
+                seed,
+                numEmployees,
+                numDevelopers);
+    }
+
+    /**
+     * Method collects values from GUI input fields and stores
+     * the type-parsed results in appropriate class fields.
+     *
+     * @return void
+     */
+    private void collectInputData() {
+        LOGGER.info("[GUI] Collecting Values from Fields");
+        /*
+            Collect and parse values from each field.
+        */
+        employeeFloorChangeProbability = new BigDecimal(floorChangeProbabilityField.getText());
+        clientArrivalProbability = new BigDecimal(clientArrivalProbabilityField.getText());
+        seed = Long.parseLong(randomSeedField.getText());
+        numEmployees = Integer.parseInt(numberEmployeesField.getText());
+        numDevelopers = Integer.parseInt(numberDevelopersField.getText());
+        /*
+            Log collected values.
+        */
+        LOGGER.debug("[GUI] Collected following values from input");
+        LOGGER.debug("[GUI] EmpChange: " + employeeFloorChangeProbability);
+        LOGGER.debug("[GUI] ClientArrive: " + clientArrivalProbability);
+        LOGGER.debug("[GUI] RandSeed: " + seed);
+        LOGGER.debug("[GUI] NumEmp: " + numEmployees);
+        LOGGER.debug("[GUI] NumDev: " + numDevelopers);
+    }
+
+    /**
+     * Method returns current config-panel to allow this UI
+     * to be injected into another JFrame.
+     *
+     * @return JPanel instance of the UI
+     */
     public JPanel getConfigPanel(){
         return landingConfigPanel;
     }
