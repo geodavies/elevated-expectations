@@ -21,13 +21,11 @@ public class LandingConfig {
     private static final org.apache.log4j.Logger LOGGER = LogManager.getLogger(LandingConfig.class);
 
     private JPanel landingConfigPanel;
-    private JPanel landingConfigPanelCopy;
     private JTextField floorChangeProbabilityField;
     private JTextField clientArrivalProbabilityField;
     private JTextField randomSeedField;
     private JTextField numberEmployeesField;
     private JTextField numberDevelopersField;
-    private JPanel saveButtonContainer;
     private JButton saveButton;
 
     /*
