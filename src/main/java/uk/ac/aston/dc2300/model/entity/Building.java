@@ -46,4 +46,45 @@ public class Building {
         return this.numComplaints;
     }
 
+    /**
+     * Gets all of the floors within the top section of the building
+     *
+     * @return the list of floors in the top half of the building
+     */
+    public List<Floor> getTopHalfFloors() {
+        // Get number of floors
+        int numberOfFloors = floors.size();
+        // Get middle floor (safe for odd numbers too)
+        int middleFloorRoundingUp = numberOfFloors/2 + numberOfFloors%2;
+        // Return sublist of floors
+        return floors.subList(middleFloorRoundingUp - 1, numberOfFloors - 1);
+    }
+
+    /**
+     * Gets all of the floors within the bottom section of the building
+     *
+     * @return the list of floors in the bottom half of the building
+     */
+    public List<Floor> getBottomHalfFloors() {
+        // Get number of floors
+        int numberOfFloors = floors.size();
+        // Get middle floor (safe for odd numbers too)
+        int middleFloorRoundingUp = numberOfFloors/2 + numberOfFloors%2;
+        // Return sublist of floors
+        return floors.subList(0, middleFloorRoundingUp - 1);
+    }
+
+    /**
+     * Searches the building for the given occupant and returns the floor which contains them
+     *
+     * @param buildingOccupant the occupant to find
+     * @return the floor containing that occupant
+     */
+    public Floor findFloorContainingOccupant(BuildingOccupant buildingOccupant) {
+        for (Floor floor : floors) {
+            if (floor.getOccupants().contains(buildingOccupant)) return floor;
+        }
+        return null;
+    }
+
 }

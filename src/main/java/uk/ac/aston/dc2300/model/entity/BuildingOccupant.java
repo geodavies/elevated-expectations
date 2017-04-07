@@ -44,17 +44,16 @@ public abstract class BuildingOccupant {
     /**
      * Notifies the building that this occupant is waiting to ride the elevator
      *
-     * @param building the building containing the occupant
-     * @param floor the floor the occupant want to go to
+     * @param currentFloor the floor the occupant is calling from
      */
-    abstract void callElevator(Building building, Floor floor);
+    public abstract void callElevator(Floor currentFloor);
 
     /**
      * Moves the occupant from their current floor into the elevator
      *
      * @param elevator the elevator to move the occupant to
      */
-    abstract void getInElevator(Elevator elevator);
+    public abstract void getInElevator(Elevator elevator);
 
     /**
      * Moves the occupant from the elevator to the current floor the elevator is at

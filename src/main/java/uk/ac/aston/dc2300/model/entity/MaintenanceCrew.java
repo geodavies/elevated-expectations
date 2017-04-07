@@ -17,12 +17,12 @@ public class MaintenanceCrew extends BuildingOccupant {
     }
 
     @Override
-    void callElevator(Building building, Floor floor) {
-        // TODO: Implement
+    public void callElevator(Floor currentFloor) {
+        currentFloor.getElevatorQueue().addLast(this);
     }
 
     @Override
-    void getInElevator(Elevator elevator) {
+    public void getInElevator(Elevator elevator) {
         // TODO: Implement
     }
 

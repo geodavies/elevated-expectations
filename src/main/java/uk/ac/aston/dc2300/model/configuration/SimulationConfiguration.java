@@ -15,7 +15,7 @@ public class SimulationConfiguration {
 
     private final BigDecimal clientArrivalProbability;
 
-    private final String seed;
+    private final long seed;
 
     private final int numEmployees;
 
@@ -30,7 +30,7 @@ public class SimulationConfiguration {
      * @param numDevelopers number of developers to begin the simulation with
      */
     public SimulationConfiguration(BigDecimal employeeFloorChangeProbability, BigDecimal clientArrivalProbability,
-                                   String seed, int numEmployees, int numDevelopers) {
+                                   long seed, int numEmployees, int numDevelopers) {
         this.employeeFloorChangeProbability = employeeFloorChangeProbability;
         this.clientArrivalProbability = clientArrivalProbability;
         this.seed = seed;
@@ -46,7 +46,7 @@ public class SimulationConfiguration {
         return clientArrivalProbability;
     }
 
-    public String getSeed() {
+    public long getSeed() {
         return seed;
     }
 
