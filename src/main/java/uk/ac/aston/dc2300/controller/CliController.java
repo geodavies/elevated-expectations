@@ -46,8 +46,8 @@ public class CliController implements ApplicationController {
         // Initialize variables
         BigDecimal floorChangeProbability = null;
         BigDecimal clientArrivalProbability = null;
-        String seed;
         // Set these to -1 so application will error later if not set correctly
+        long seed = -1;
         int numEmployees = -1;
         int numDevelopers = -1;
 
@@ -100,9 +100,23 @@ public class CliController implements ApplicationController {
         }
 
         // Get randomization seed
-        System.out.printf("Randomization seed: ");
-        seed = scanner.nextLine();
-        if (seed.isEmpty()) seed = "Not so random";
+        while (seed == -1) {
+            System.out.printf("Randomization seed [420]: ");
+            // Get user input
+            String seedInput = scanner.nextLine();
+            // If left empty, set to default value
+            if (seedInput.equals("")) {
+                seed = 420;
+            } else {
+                try {
+                    // Check if valid long
+                    long validationLong = Long.parseLong(seedInput);
+                    seed = validationLong;
+                } catch (NumberFormatException e) {
+                    System.out.println("Must be a valid whole number");
+                }
+            }
+        }
 
         // Get number of employees
         while (numEmployees == -1) {
@@ -151,6 +165,9 @@ public class CliController implements ApplicationController {
                 }
             }
         }
+
+        // Create some space to improve legibility
+        System.out.print("\n");
 
         return new SimulationConfiguration(floorChangeProbability, clientArrivalProbability, seed, numEmployees, numDevelopers);
     }

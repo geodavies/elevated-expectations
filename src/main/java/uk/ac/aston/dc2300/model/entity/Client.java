@@ -16,12 +16,12 @@ public class Client extends BuildingOccupant {
     }
 
     @Override
-    void callElevator(Building building, Floor floor) {
-        // TODO: Implement
+    public void callElevator(Floor currentFloor) {
+        currentFloor.getElevatorQueue().addFirst(this);
     }
 
     @Override
-    void getInElevator(Elevator elevator) {
+    public void getInElevator(Elevator elevator) {
         // TODO: Implement
     }
 
