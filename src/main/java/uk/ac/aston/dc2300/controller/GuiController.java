@@ -2,30 +2,39 @@ package uk.ac.aston.dc2300.controller;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import uk.ac.aston.dc2300.component.Simulation;
+import uk.ac.aston.dc2300.gui.LandingConfig;
+
+import javax.swing.*;
 
 /**
  * <p>
  *     An implementation of ApplicationController which displays a graphical user interface.
  * </p>
  *
- * @author George Davies
- * @since 05/04/17
+ * @author Dan Cotton
+ * @since 06/04/17
  */
 public class GuiController implements ApplicationController {
 
     private static final Logger LOGGER = LogManager.getLogger(GuiController.class);
 
-    private Simulation simulation;
-
     public GuiController() {
-        LOGGER.info("Initializing application in 'gui' mode");
-        simulation = new Simulation(null);
+        LOGGER.info("Initializing application in 'GUI' mode");
+    }
+
+    private void startConfigUI() {
+        JFrame configFrame = new JFrame("Elevator Simulation");
+        configFrame.setContentPane(new LandingConfig().getConfigPanel());
+        configFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        configFrame.setResizable(false);
+        configFrame.pack();
+        configFrame.setVisible(true);
     }
 
     @Override
     public void start() {
-        // TODO: Implement
+        LOGGER.info("Starting GUI from controller to allow configuration.");
+        startConfigUI();
     }
 
 }
