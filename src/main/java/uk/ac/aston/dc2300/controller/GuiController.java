@@ -3,12 +3,9 @@ package uk.ac.aston.dc2300.controller;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.component.Simulation;
-import uk.ac.aston.dc2300.gui.ConfigFrame;
 import uk.ac.aston.dc2300.gui.LandingConfig;
-import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 
 import javax.swing.*;
-import java.math.BigDecimal;
 
 /**
  * <p>
