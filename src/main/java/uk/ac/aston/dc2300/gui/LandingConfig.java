@@ -44,29 +44,26 @@ public class LandingConfig {
 
     public LandingConfig(){
         super();
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                /*
-                    Button Pressed - Populate Values
-                 */
-                LOGGER.info("[GUI] Button Pressed - Initiating Simulation");
-                collectInputData();
+        saveButton.addActionListener(e -> {
+            /*
+                Button Pressed - Populate Values
+             */
+            LOGGER.info("[GUI] Button Pressed - Initiating Simulation");
+            collectInputData();
 
-                /*
-                    Values Retrieved - Pass to Config Object
-                */
-                SimulationConfiguration configObject = getSimulationConfiguration();
-                LOGGER.debug("[GUI] Constructed config obj: " + configObject.toString());
+            /*
+                Values Retrieved - Pass to Config Object
+            */
+            SimulationConfiguration configObject = getSimulationConfiguration();
+            LOGGER.debug("[GUI] Constructed config obj: " + configObject.toString());
 
-                /*
-                    SimulationConfiguration Object Instantiated.
-                    Instantiate Simulation and run it.
-                */
-                simulation = new Simulation(configObject);
-                simulation.start();
+            /*
+                SimulationConfiguration Object Instantiated.
+                Instantiate Simulation and run it.
+            */
+            simulation = new Simulation(configObject);
+            simulation.start();
 
-            }
         });
     }
 
