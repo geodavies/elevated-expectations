@@ -43,7 +43,6 @@ public class LandingConfig {
     private Simulation simulation;
 
     public LandingConfig(){
-        super();
         saveButton.addActionListener(e -> {
             /*
                 Button Pressed - Populate Values
