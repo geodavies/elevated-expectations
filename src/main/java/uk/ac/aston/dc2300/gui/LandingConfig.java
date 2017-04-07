@@ -5,8 +5,6 @@ import uk.ac.aston.dc2300.component.Simulation;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 
 /**
