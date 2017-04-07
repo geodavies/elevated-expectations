@@ -85,8 +85,6 @@ public class LandingConfig {
     /**
      * Method collects values from GUI input fields and stores
      * the type-parsed results in appropriate class fields.
-     *
-     * @return void
      */
     private void collectInputData() {
         LOGGER.info("[GUI] Collecting Values from Fields");
