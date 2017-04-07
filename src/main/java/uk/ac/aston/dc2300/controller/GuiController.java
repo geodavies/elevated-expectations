@@ -23,11 +23,12 @@ public class GuiController implements ApplicationController {
     }
 
     private void startConfigUI() {
-        JFrame frame = new JFrame("LandingConfig");
-        frame.setContentPane(new LandingConfig().getConfigPanel());
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+        JFrame configFrame = new JFrame("Elevator Simulation");
+        configFrame.setContentPane(new LandingConfig().getConfigPanel());
+        configFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        configFrame.setResizable(false);
+        configFrame.pack();
+        configFrame.setVisible(true);
     }
 
     @Override
