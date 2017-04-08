@@ -21,6 +21,10 @@ public class SimulationConfiguration {
 
     private final int numDevelopers;
 
+    private final int numFloors;
+
+    private final int elevatorCapacity;
+
     /**
      * @param employeeFloorChangeProbability the probability each tick that an employee or developer will change their
      *                                       current
@@ -28,14 +32,18 @@ public class SimulationConfiguration {
      * @param seed the seed used to generate the randomness
      * @param numEmployees number of employees to begin simulation with
      * @param numDevelopers number of developers to begin the simulation with
+     * @param numFloors number of floors within the building that will be simulated
+     * @param elevatorCapacity capacity of each elevator in the building
      */
     public SimulationConfiguration(BigDecimal employeeFloorChangeProbability, BigDecimal clientArrivalProbability,
-                                   long seed, int numEmployees, int numDevelopers) {
+                                   long seed, int numEmployees, int numDevelopers, int numFloors, int elevatorCapacity) {
         this.employeeFloorChangeProbability = employeeFloorChangeProbability;
         this.clientArrivalProbability = clientArrivalProbability;
         this.seed = seed;
         this.numEmployees = numEmployees;
         this.numDevelopers = numDevelopers;
+        this.numFloors = numFloors;
+        this.elevatorCapacity = elevatorCapacity;
     }
 
     public BigDecimal getEmployeeFloorChangeProbability() {
@@ -56,6 +64,14 @@ public class SimulationConfiguration {
 
     public int getNumDevelopers() {
         return numDevelopers;
+    }
+
+    public int getNumFloors() {
+        return numFloors;
+    }
+
+    public int getElevatorCapacity() {
+        return elevatorCapacity;
     }
 
 }
