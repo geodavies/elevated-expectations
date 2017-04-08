@@ -25,6 +25,8 @@ public class LandingConfig {
     private JTextField numberEmployeesField;
     private JTextField numberDevelopersField;
     private JButton saveButton;
+    private JTextField numberFloorsField;
+    private JTextField elevatorCapacityField;
 
     /*
         Defining Required Simulation Config Data
@@ -34,6 +36,8 @@ public class LandingConfig {
     private long seed;
     private int numEmployees;
     private int numDevelopers;
+    private int numFloors;
+    private int elevatorCapacity;
 
     /*
         Defining Required Simulation Config Data
@@ -76,7 +80,7 @@ public class LandingConfig {
                 clientArrivalProbability,
                 seed,
                 numEmployees,
-                numDevelopers, 1, 1);
+                numDevelopers, numFloors, elevatorCapacity);
     }
 
     /**
@@ -93,6 +97,8 @@ public class LandingConfig {
         seed = Long.parseLong(randomSeedField.getText());
         numEmployees = Integer.parseInt(numberEmployeesField.getText());
         numDevelopers = Integer.parseInt(numberDevelopersField.getText());
+        numFloors = Integer.parseInt(numberFloorsField.getText());
+        elevatorCapacity = Integer.parseInt(elevatorCapacityField.getText());
         /*
             Log collected values.
         */
@@ -102,6 +108,8 @@ public class LandingConfig {
         LOGGER.debug("[GUI] RandSeed: " + seed);
         LOGGER.debug("[GUI] NumEmp: " + numEmployees);
         LOGGER.debug("[GUI] NumDev: " + numDevelopers);
+        LOGGER.debug("[GUI] NumFloors: " + numFloors);
+        LOGGER.debug("[GUI] ElevatorCapacity: " + elevatorCapacity);
     }
 
     /**
