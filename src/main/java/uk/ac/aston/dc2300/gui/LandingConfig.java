@@ -76,7 +76,7 @@ public class LandingConfig {
                 clientArrivalProbability,
                 seed,
                 numEmployees,
-                numDevelopers);
+                numDevelopers, 1, 1);
     }
 
     /**

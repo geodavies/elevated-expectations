@@ -168,10 +168,58 @@ public class CliController implements ApplicationController {
             }
         }
 
+        // Get number of floors
+        while (numFloors == -1) {
+            System.out.printf("Number of floors in building [6]: ");
+            // Get user input
+            String numFloorsInput = scanner.nextLine();
+            // If left empty, set to default value
+            if (numFloorsInput.equals("")) {
+                numFloors = 6;
+            } else {
+                try {
+                    // Check if valid int
+                    int validationInt = Integer.parseInt(numFloorsInput);
+                    // Check greater than 0
+                    if(validationInt < 0){
+                        System.out.println("Must be greater than or equal to 0");
+                        continue;
+                    }
+                    numFloors = validationInt;
+                } catch (NumberFormatException e) {
+                    System.out.println("Must be a valid whole number");
+                }
+            }
+        }
+
+        // Get elevator capacities
+        while (elevatorCapacity == -1) {
+            System.out.printf("Max Capacity of elevators in building [4]: ");
+            // Get user input
+            String elevatorCapacityInput = scanner.nextLine();
+            // If left empty, set to default value
+            if (elevatorCapacityInput.equals("")) {
+                elevatorCapacity = 4;
+            } else {
+                try {
+                    // Check if valid int
+                    int validationInt = Integer.parseInt(elevatorCapacityInput);
+                    // Check greater than 0
+                    if(validationInt < 0){
+                        System.out.println("Must be greater than or equal to 0");
+                        continue;
+                    }
+                    elevatorCapacity = validationInt;
+                } catch (NumberFormatException e) {
+                    System.out.println("Must be a valid whole number");
+                }
+            }
+        }
+
         // Create some space to improve legibility
         System.out.print("\n");
 
-        return new SimulationConfiguration(floorChangeProbability, clientArrivalProbability, seed, numEmployees, numDevelopers);
+        return new SimulationConfiguration(floorChangeProbability, clientArrivalProbability, seed, numEmployees, numDevelopers, numFloors, elevatorCapacity);
     }
 
 }
