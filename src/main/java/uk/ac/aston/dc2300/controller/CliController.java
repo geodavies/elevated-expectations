@@ -50,6 +50,8 @@ public class CliController implements ApplicationController {
         long seed = -1;
         int numEmployees = -1;
         int numDevelopers = -1;
+        int numFloors = -1;
+        int elevatorCapacity = -1;
 
         // Get floor change probability
         while (floorChangeProbability == null) {
