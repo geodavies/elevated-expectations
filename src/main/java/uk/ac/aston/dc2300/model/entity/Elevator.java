@@ -10,7 +10,7 @@ import java.util.Set;
 
 /**
  * This class represents an elevator from inside the building. Each elevator stores its current floor, the floor it was
- * previously at, the OCCUPANTS contained and the maximum capacity (maximum number of OCCUPANTS allowed in at one time).
+ * previously at, the occupants contained and the maximum capacity (maximum number of occupants allowed in at one time).
  *
  * @author George Davies
  * @since 04/04/17
@@ -72,35 +72,30 @@ public class Elevator {
      */
     public void moveIfRequested(List<Floor> floors) {
 
-        if (currentFloor.getFloorNumber() != 0 && !anyoneWaiting(floors)) { // There's nobody waiting return to ground floor
+        if (currentFloor.getFloorNumber() != 0 && !anyoneWaitingOnFloors(floors)) { // There's nobody waiting return to ground floor
             moveDown(floors);
         } else if (currentFloor.getFloorNumber() == 0) { // The elevator is currently on the ground floor
             // If there's anyone waiting above current floor move up
-            if (anyoneWaiting(getFloorsAbove(floors))) {
+            if (anyoneWaitingOnFloors(getFloorsAbove(floors))) {
                 moveUp(floors);
-            }
-        } else if (currentFloor.getFloorNumber() == floors.size() - 1) { // The elevator is currently on the top floor
-            // If there's anyone waiting below current floor move down
-            if (anyoneWaiting(getFloorsBelow(floors))) {
-                moveDown(floors);
             }
         } else if(currentFloor.getFloorNumber() > previousFloor.getFloorNumber()){ // If the elevator last moved up
             // If there's anyone waiting above then continue moving up
-            if (anyoneWaiting(getFloorsAbove(floors))) {
+            if (anyoneWaitingOnFloors(getFloorsAbove(floors))) {
                 moveUp(floors);
             } else {
                 // Otherwise move down if there's people below
-                if (anyoneWaiting(getFloorsBelow(floors))) {
+                if (anyoneWaitingOnFloors(getFloorsBelow(floors))) {
                     moveDown(floors);
                 }
             }
         } else if (currentFloor.getFloorNumber() < previousFloor.getFloorNumber()) { // If the elevator last moved down
             // If there's anyone waiting below then continue moving down
-            if (anyoneWaiting(getFloorsBelow(floors))) {
+            if (anyoneWaitingOnFloors(getFloorsBelow(floors))) {
                 moveDown(floors);
             } else {
                 // Otherwise move up if there's people above
-                if (anyoneWaiting(getFloorsAbove(floors))) {
+                if (anyoneWaitingOnFloors(getFloorsAbove(floors))) {
                     moveUp(floors);
                 }
             }
@@ -138,10 +133,8 @@ public class Elevator {
         Set<BuildingOccupant> elevatorOccupants = new HashSet<>(OCCUPANTS);
         for (BuildingOccupant buildingOccupant : elevatorOccupants) {
             if (buildingOccupant.getDestination().equals(currentFloor)) {
-                // Get out of the elevator
-                removeOccupant(buildingOccupant);
-                // Get onto the floor
-                currentFloor.addOccupant(buildingOccupant);
+                // Command the passenger to get out the elevator
+                buildingOccupant.getOutElevator(this, currentFloor);
                 LOGGER.info(String.format("Let out passenger on floor %s", currentFloor.getFloorNumber()));
             }
         }
@@ -173,16 +166,16 @@ public class Elevator {
      * @param floors the floors to check
      * @return boolean status true=passengersWaiting, false=noneWaiting
      */
-    private boolean anyoneWaiting(List<Floor> floors) {
+    private boolean anyoneWaitingOnFloors(List<Floor> floors) {
         boolean waiting = false;
         for (Floor floor : floors) {
             // If there's someone queuing on that floor
-            if (!floor.getElevatorQueue().isEmpty()) {
+            if (floor.isAnyoneWaiting()) {
                 waiting = true;
                 break;
             }
             for (BuildingOccupant buildingOccupant : OCCUPANTS) {
-                // If someone currently in the lift wants to go to that floor
+                // If someone currently in the elevator wants to go to that floor
                 if (buildingOccupant.getDestination().equals(floor)) {
                     waiting = true;
                     break;

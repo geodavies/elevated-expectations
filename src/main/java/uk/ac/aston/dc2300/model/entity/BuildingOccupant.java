@@ -60,9 +60,13 @@ public abstract class BuildingOccupant {
      * Moves the occupant from the elevator to the current floor the elevator is at
      *
      * @param elevator the elevator to move the occupant from
+     * @param floor the floor to move the occupant to
      */
-    public void getOutElevator(Elevator elevator) {
-        // TODO: Implement
+    public void getOutElevator(Elevator elevator, Floor floor) {
+        // Remove from elevator
+        elevator.removeOccupant(this);
+        // Add to floor
+        floor.addOccupant(this);
     }
 
 }

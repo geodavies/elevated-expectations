@@ -17,15 +17,15 @@ public class Client extends BuildingOccupant {
 
     @Override
     public void callElevator(Floor currentFloor) {
-        currentFloor.getElevatorQueue().addFirst(this);
+        currentFloor.addToFrontOfQueue(this);
     }
 
     @Override
     public void getInElevator(Elevator elevator, Floor floor) {
         // Leave the queue
-        floor.getElevatorQueue().remove(this);
+        floor.removeFromQueue(this);
         // Leave the floor
-        floor.getOccupants().remove(this);
+        floor.removeOccupant(this);
         // Get in the elevator
         elevator.addOccupant(this);
     }
