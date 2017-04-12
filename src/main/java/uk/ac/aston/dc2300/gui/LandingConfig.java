@@ -2,6 +2,9 @@ package uk.ac.aston.dc2300.gui;
 
 import org.apache.log4j.LogManager;
 import uk.ac.aston.dc2300.component.Simulation;
+import uk.ac.aston.dc2300.gui.util.BigDecimalVerifier;
+import uk.ac.aston.dc2300.gui.util.IntegerVerifier;
+import uk.ac.aston.dc2300.gui.util.LongVerifier;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 
 import javax.swing.*;
@@ -45,6 +48,18 @@ public class LandingConfig {
     private Simulation simulation;
 
     public LandingConfig(){
+        // Setup input verifiers
+        floorChangeProbabilityField.setInputVerifier(new BigDecimalVerifier());
+        clientArrivalProbabilityField.setInputVerifier(new BigDecimalVerifier());
+
+        randomSeedField.setInputVerifier(new LongVerifier());
+
+        numberEmployeesField.setInputVerifier(new IntegerVerifier());
+        numberDevelopersField.setInputVerifier(new IntegerVerifier());
+        numberFloorsField.setInputVerifier(new IntegerVerifier());
+        elevatorCapacityField.setInputVerifier(new IntegerVerifier());
+
+        // Setup save button listener
         saveButton.addActionListener(e -> {
             /*
                 Button Pressed - Populate Values
