@@ -11,7 +11,7 @@ import java.util.Scanner;
  */
 public class CliUtils {
 
-    private Scanner cliScanner;
+    private final Scanner cliScanner;
 
     public CliUtils () {
         cliScanner = new Scanner(System.in);
