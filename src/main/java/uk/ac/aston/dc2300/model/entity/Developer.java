@@ -14,12 +14,17 @@ public class Developer extends BuildingOccupant {
 
     @Override
     public void callElevator(Floor currentFloor) {
-        currentFloor.getElevatorQueue().addLast(this);
+        currentFloor.addToBackOfQueue(this);
     }
 
     @Override
-    public void getInElevator(Elevator elevator) {
-        // TODO: Implement
+    public void getInElevator(Elevator elevator, Floor floor) {
+        // Leave the queue
+        floor.removeFromQueue(this);
+        // Leave the floor
+        floor.removeOccupant(this);
+        // Get in the elevator
+        elevator.addOccupant(this);
     }
 
 }

@@ -13,13 +13,20 @@ import java.util.Set;
  */
 public class Floor {
 
+    int floorNumber;
+
     private Set<BuildingOccupant> occupants;
 
     private LinkedList<BuildingOccupant> elevatorQueue;
 
-    public Floor() {
+    public Floor(int floorNumber) {
+        this.floorNumber = floorNumber;
         elevatorQueue = new LinkedList<>();
         occupants = new HashSet<>();
+    }
+
+    public int getFloorNumber() {
+        return floorNumber;
     }
 
     public Set<BuildingOccupant> getOccupants() {
@@ -46,6 +53,42 @@ public class Floor {
      */
     public void removeOccupant(BuildingOccupant buildingOccupant) {
         occupants.remove(buildingOccupant);
+    }
+
+    /**
+     * Adds a BuildingOccupant to the front of the elevator queue
+     *
+     * @param buildingOccupant BuildingOccupant to be added
+     */
+    public void addToFrontOfQueue(BuildingOccupant buildingOccupant) {
+        elevatorQueue.addFirst(buildingOccupant);
+    }
+
+    /**
+     * Adds a BuildingOccupant to the back of the elevator queue
+     *
+     * @param buildingOccupant BuildingOccupant to be added
+     */
+    public void addToBackOfQueue(BuildingOccupant buildingOccupant) {
+        elevatorQueue.addLast(buildingOccupant);
+    }
+
+    /**
+     * Removes a BuildingOccupant from the elevator queue
+     *
+     * @param buildingOccupant BuildingOccupant to be removed
+     */
+    public void removeFromQueue(BuildingOccupant buildingOccupant) {
+        elevatorQueue.remove(buildingOccupant);
+    }
+
+    /**
+     * Checks if anyone is waiting to to be collected from here
+     *
+     * @return boolean true=someone waiting, false=nobody waiting
+     */
+    public boolean isAnyoneWaiting() {
+        return !elevatorQueue.isEmpty();
     }
 
 }

@@ -1,5 +1,8 @@
 package uk.ac.aston.dc2300.model.entity;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 /**
  * This class represents an entity that moves around within the building such as a person or a maintenance crew.
  * Each entity stores the time they entered the building, the size of the entity (amount of space they take up in
@@ -16,11 +19,13 @@ public abstract class BuildingOccupant {
 
     private Floor destination;
 
+    private static final Logger LOGGER = LogManager.getLogger(BuildingOccupant.class);
+
     /**
      * @param occupantSize the number of spaces the occupant takes in the elevator
      * @param timeEntered the time in seconds the occupant entered the building following simulation start
      */
-    public BuildingOccupant(int occupantSize, int timeEntered){
+    public BuildingOccupant(int occupantSize, int timeEntered) {
         this.occupantSize = occupantSize;
         this.timeEntered = timeEntered;
     }
@@ -29,7 +34,7 @@ public abstract class BuildingOccupant {
         return timeEntered;
     }
 
-    public int getOccupantSize() {
+    public int getSize() {
         return occupantSize;
     }
 
@@ -52,16 +57,34 @@ public abstract class BuildingOccupant {
      * Moves the occupant from their current floor into the elevator
      *
      * @param elevator the elevator to move the occupant to
+     * @param floor the floor to move from
      */
-    public abstract void getInElevator(Elevator elevator);
+    public abstract void getInElevator(Elevator elevator, Floor floor);
 
     /**
-     * Moves the occupant from the elevator to the current floor the elevator is at
+     * Moves the occupant from the elevator to the given floor
      *
      * @param elevator the elevator to move the occupant from
+     * @param floor the floor to move the occupant to
      */
-    public void getOutElevator(Elevator elevator) {
-        // TODO: Implement
+    private void getOutElevator(Elevator elevator, Floor floor) {
+        // Remove from elevator
+        elevator.removeOccupant(this);
+        // Add to floor
+        floor.addOccupant(this);
+        LOGGER.info(String.format("Passenger got out of elevator at floor %s", floor.getFloorNumber()));
+    }
+
+    /**
+     * Checks if the the given floor is the destination of the occupant and will move them to that floor if it is
+     *
+     * @param elevator the elevator to move the occupant from
+     * @param floor the floor to move the occupant to
+     */
+    public void getOutElevatorIfAtDestination(Elevator elevator, Floor floor) {
+        if (floor.equals(destination)) {
+            getOutElevator(elevator, floor);
+        }
     }
 
 }
