@@ -34,13 +34,13 @@ public class Simulation {
 
         // Create floor(s)
         List<Floor> floors = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < simulationConfiguration.getNumFloors(); i++) {
             Floor floor = new Floor(i);
             floors.add(floor);
         }
 
         // Create elevator(s) and put in ground floor
-        Elevator elevator = new Elevator(4, floors.get(0));
+        Elevator elevator = new Elevator(simulationConfiguration.getElevatorCapacity(), floors.get(0));
         Set<Elevator> elevatorSet = new HashSet<>();
         elevatorSet.add(elevator);
 

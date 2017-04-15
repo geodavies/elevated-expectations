@@ -4,6 +4,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.component.Simulation;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
+import uk.ac.aston.dc2300.utility.CliUtils;
 
 import java.math.BigDecimal;
 import java.util.Scanner;
@@ -41,134 +42,46 @@ public class CliController implements ApplicationController {
     private SimulationConfiguration getConfigurationInput() {
         System.out.println("\nPlease select simulation configuration settings");
 
-        Scanner scanner = new Scanner(System.in);
+        CliUtils cliMediator = new CliUtils();
 
         // Initialize variables
-        BigDecimal floorChangeProbability = null;
-        BigDecimal clientArrivalProbability = null;
-        // Set these to -1 so application will error later if not set correctly
-        long seed = -1;
-        int numEmployees = -1;
-        int numDevelopers = -1;
-
         // Get floor change probability
-        while (floorChangeProbability == null) {
-            System.out.printf("Floor change probability (p) [0.01]: ");
-            // Take user input
-            String floorChangeProbabilityInput = scanner.nextLine();
-            // If left empty, set to default value
-            if (floorChangeProbabilityInput.isEmpty()) {
-                floorChangeProbability = new BigDecimal("0.01");
-            } else {
-                try {
-                    // Check value is valid decimal
-                    BigDecimal validationDecimal = new BigDecimal(floorChangeProbabilityInput);
-                    // Check value is between 0 and 1
-                    if (validationDecimal.compareTo(BigDecimal.ZERO) < 0 || validationDecimal.compareTo(BigDecimal.ONE) > 0) {
-                        System.out.println("Probability must be a decimal between 0 and 1");
-                        continue;
-                    }
-                    floorChangeProbability = validationDecimal;
-                } catch (NumberFormatException e) {
-                    System.out.println("Probability must be a decimal between 0 and 1");
-                }
-            }
-        }
+        BigDecimal floorChangeProbability = cliMediator.readBigDecimalViaCli("Floor Change probability (p)", new BigDecimal("0.01"));
 
         // Get client arrival probability
-        while (clientArrivalProbability == null) {
-            System.out.printf("Client arrival probability (q) [0.005]: ");
-            // Get user input
-            String clientArrivalProbablityInput = scanner.nextLine();
-            // If left empty, set to default value
-            if (clientArrivalProbablityInput.isEmpty()) {
-                clientArrivalProbability = new BigDecimal("0.005");
-            } else {
-                try {
-                    // Check value is valid decimal
-                    BigDecimal validationDecimal = new BigDecimal(clientArrivalProbablityInput);
-                    // Check value is between 0 and 1
-                    if (validationDecimal.compareTo(BigDecimal.ZERO) < 0 || validationDecimal.compareTo(BigDecimal.ONE) > 0) {
-                        System.out.println("Probability must be a decimal between 0 and 1");
-                        continue;
-                    }
-                    clientArrivalProbability = validationDecimal;
-                } catch (NumberFormatException e) {
-                    System.out.println("Probability must be a decimal between 0 and 1");
-                }
-            }
-        }
+        BigDecimal clientArrivalProbability = cliMediator.readBigDecimalViaCli("Client arrival probability (q) ",  new BigDecimal("0.005"));
 
         // Get randomization seed
-        while (seed == -1) {
-            System.out.printf("Randomization seed [420]: ");
-            // Get user input
-            String seedInput = scanner.nextLine();
-            // If left empty, set to default value
-            if (seedInput.equals("")) {
-                seed = 420;
-            } else {
-                try {
-                    // Check if valid long
-                    seed = Long.parseLong(seedInput);
-                } catch (NumberFormatException e) {
-                    System.out.println("Must be a valid whole number");
-                }
-            }
-        }
+        long seed = cliMediator.readLongViaCli("Randomization seed", 420);
 
         // Get number of employees
-        while (numEmployees == -1) {
-            System.out.printf("Number of employees [10]: ");
-            // Get user input
-            String numEmployeesInput = scanner.nextLine();
-            // If left empty, set to default value
-            if (numEmployeesInput.equals("")) {
-                numEmployees = 10;
-            } else {
-                try {
-                    // Check if valid int
-                    int validationInt = Integer.parseInt(numEmployeesInput);
-                    // Check greater than 0
-                    if(validationInt < 0){
-                        System.out.println("Must be greater than or equal to 0");
-                        continue;
-                    }
-                    numEmployees = validationInt;
-                } catch (NumberFormatException e) {
-                    System.out.println("Must be a valid whole number");
-                }
-            }
-        }
+        int numEmployees = cliMediator.readIntegerViaCli("Number of employees in building", 10);
 
         // Get number of developers
-        while (numDevelopers == -1) {
-            System.out.printf("Number of developers [10]: ");
-            // Get user input
-            String numDevelopersInput = scanner.nextLine();
-            // If left empty, set to default value
-            if (numDevelopersInput.equals("")) {
-                numDevelopers = 10;
-            } else {
-                try {
-                    // Check if valid int
-                    int validationInt = Integer.parseInt(numDevelopersInput);
-                    // Check greater than 0
-                    if(validationInt < 0){
-                        System.out.println("Must be greater than or equal to 0");
-                        continue;
-                    }
-                    numDevelopers = validationInt;
-                } catch (NumberFormatException e) {
-                    System.out.println("Must be a valid whole number");
-                }
-            }
-        }
+        int numDevelopers = cliMediator.readIntegerViaCli("Number of developers in building", 10);
+
+        // Get number of floors
+        int numFloors = cliMediator.readIntegerViaCli("Number of floors in building", 6);
+
+        // Get elevator capacities
+        int elevatorCapacity = cliMediator.readIntegerViaCli("Max Capacity of Elevators", 4);
+
+        /*
+            Log collected values.
+        */
+        LOGGER.debug("[CLI] Collected following values from input");
+        LOGGER.debug("[CLI] EmpChange: " + floorChangeProbability);
+        LOGGER.debug("[CLI] ClientArrive: " + clientArrivalProbability);
+        LOGGER.debug("[CLI] RandSeed: " + seed);
+        LOGGER.debug("[CLI] NumEmp: " + numEmployees);
+        LOGGER.debug("[CLI] NumDev: " + numDevelopers);
+        LOGGER.debug("[CLI] NumFloors: " + numFloors);
+        LOGGER.debug("[CLI] ElevatorCapacity: " + elevatorCapacity);
 
         // Create some space to improve legibility
         System.out.print("\n");
 
-        return new SimulationConfiguration(floorChangeProbability, clientArrivalProbability, seed, numEmployees, numDevelopers);
+        return new SimulationConfiguration(floorChangeProbability, clientArrivalProbability, seed, numEmployees, numDevelopers, numFloors, elevatorCapacity);
     }
 
 }
