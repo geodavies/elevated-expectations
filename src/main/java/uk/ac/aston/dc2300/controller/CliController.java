@@ -110,8 +110,7 @@ public class CliController implements ApplicationController {
             } else {
                 try {
                     // Check if valid long
-                    long validationLong = Long.parseLong(seedInput);
-                    seed = validationLong;
+                    seed = Long.parseLong(seedInput);
                 } catch (NumberFormatException e) {
                     System.out.println("Must be a valid whole number");
                 }

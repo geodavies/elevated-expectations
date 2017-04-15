@@ -108,7 +108,7 @@ public class Elevator {
      * met
      */
     public void loadPassengers() {
-        // Create a copy of elevator queue so it can be modified in the loop
+        // Create a copy of the occupants to allow for concurrent modification
         LinkedList<BuildingOccupant> elevatorQueue = new LinkedList<>(currentFloor.getElevatorQueue());
         for (BuildingOccupant buildingOccupant : elevatorQueue) {
             // If the elevator is full then stop loading
@@ -129,14 +129,10 @@ public class Elevator {
      * that floor.
      */
     public void unloadPassengers() {
-        // Create a copy of the occupants set so it can be modified in the loop
+        // Create a copy of the occupants to allow for concurrent modification
         Set<BuildingOccupant> elevatorOccupants = new HashSet<>(OCCUPANTS);
         for (BuildingOccupant buildingOccupant : elevatorOccupants) {
-            if (buildingOccupant.getDestination().equals(currentFloor)) {
-                // Command the passenger to get out the elevator
-                buildingOccupant.getOutElevator(this, currentFloor);
-                LOGGER.info(String.format("Let out passenger on floor %s", currentFloor.getFloorNumber()));
-            }
+            buildingOccupant.getOutElevatorIfAtDestination(this, currentFloor);
         }
     }
 
