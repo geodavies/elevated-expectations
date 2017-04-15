@@ -26,6 +26,10 @@ public class Simulation {
 
     private final RandomUtils RANDOM_UTILS;
 
+    private final int SIMULATION_RUN_TIME;
+
+    private int currentTime = 0;
+
     private static final Logger LOGGER = LogManager.getLogger(Simulation.class);
 
     public Simulation(SimulationConfiguration simulationConfiguration){
@@ -68,6 +72,9 @@ public class Simulation {
         // Create and set Building
         BUILDING = new Building(elevatorSet, floors);
 
+        // Set time to run simulation for
+        SIMULATION_RUN_TIME = 28800; // 8 hours in seconds
+
         LOGGER.info("Finished creating simulation");
 
     }
@@ -79,11 +86,14 @@ public class Simulation {
 
         setInitialDestinations();
 
-        // TODO: Set this to loop while simulation is running
-        for (int i = 0; i < 500; i++) {
+        while (currentTime < SIMULATION_RUN_TIME) {
+            LOGGER.debug(String.format("Simulation time: %s", currentTime));
+
             loadElevators();
             moveElevators();
             unloadElevators();
+
+            currentTime += 10;
         }
 
     }
