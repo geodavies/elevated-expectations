@@ -66,6 +66,9 @@ public class CliController implements ApplicationController {
         // Get elevator capacities
         int elevatorCapacity = cliMediator.readIntegerViaCli("Max Capacity of Elevators", 4);
 
+        // Get simulation time
+        int simulationTime = cliMediator.readIntegerViaCli("Time to run simulation (s)", 28800);
+
         /*
             Log collected values.
         */
@@ -77,11 +80,13 @@ public class CliController implements ApplicationController {
         LOGGER.debug("[CLI] NumDev: " + numDevelopers);
         LOGGER.debug("[CLI] NumFloors: " + numFloors);
         LOGGER.debug("[CLI] ElevatorCapacity: " + elevatorCapacity);
+        LOGGER.debug("[CLI] SimulationTime: " + simulationTime);
 
         // Create some space to improve legibility
         System.out.print("\n");
 
-        return new SimulationConfiguration(floorChangeProbability, clientArrivalProbability, seed, numEmployees, numDevelopers, numFloors, elevatorCapacity);
+        return new SimulationConfiguration(floorChangeProbability, clientArrivalProbability, seed, numEmployees,
+                numDevelopers, numFloors, elevatorCapacity, simulationTime);
     }
 
 }

@@ -31,18 +31,20 @@ public class LandingConfig {
     private JButton saveButton;
     private JTextField numberFloorsField;
     private JTextField elevatorCapacityField;
+    private JTextField simulationTimeField;
 
     /*
         Define array of input fields
     */
-
     private final JTextField[] inputFields = {floorChangeProbabilityField,
             clientArrivalProbabilityField,
             randomSeedField,
             numberEmployeesField,
             numberDevelopersField,
             numberFloorsField,
-            elevatorCapacityField};
+            elevatorCapacityField,
+            simulationTimeField};
+
     /*
         Defining Required Simulation Config Data
     */
@@ -53,6 +55,7 @@ public class LandingConfig {
     private int numDevelopers;
     private int numFloors;
     private int elevatorCapacity;
+    private int simulationTime;
 
     /*
         Defining Required Simulation Config Data
@@ -70,6 +73,7 @@ public class LandingConfig {
         numberDevelopersField.setInputVerifier(new IntegerVerifier());
         numberFloorsField.setInputVerifier(new IntegerVerifier());
         elevatorCapacityField.setInputVerifier(new IntegerVerifier());
+        simulationTimeField.setInputVerifier(new IntegerVerifier());
 
         // Setup save button listener
         saveButton.addActionListener(e -> {
@@ -135,11 +139,8 @@ public class LandingConfig {
      * fields
      */
     private SimulationConfiguration getSimulationConfiguration(){
-        return new SimulationConfiguration(employeeFloorChangeProbability,
-                clientArrivalProbability,
-                seed,
-                numEmployees,
-                numDevelopers, numFloors, elevatorCapacity);
+        return new SimulationConfiguration(employeeFloorChangeProbability, clientArrivalProbability, seed, numEmployees,
+                numDevelopers, numFloors, elevatorCapacity, simulationTime);
     }
 
     /**
@@ -158,6 +159,8 @@ public class LandingConfig {
         numDevelopers = Integer.parseInt(numberDevelopersField.getText());
         numFloors = Integer.parseInt(numberFloorsField.getText());
         elevatorCapacity = Integer.parseInt(elevatorCapacityField.getText());
+        simulationTime = Integer.parseInt(simulationTimeField.getText());
+
         /*
             Log collected values.
         */
@@ -169,6 +172,7 @@ public class LandingConfig {
         LOGGER.debug("[GUI] NumDev: " + numDevelopers);
         LOGGER.debug("[GUI] NumFloors: " + numFloors);
         LOGGER.debug("[GUI] ElevatorCapacity: " + elevatorCapacity);
+        LOGGER.debug("[GUI] SimulationTime: " + simulationTime);
     }
 
     /**
