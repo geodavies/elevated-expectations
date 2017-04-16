@@ -64,7 +64,7 @@ public class Simulation {
         }
 
         // Set floor change probability
-        FLOOR_CHANGE_PROBABILITY = simulationConfiguration.getFloorChangeProbability();
+        FLOOR_CHANGE_PROBABILITY = simulationConfiguration.getEmpFloorChangeProbability();
 
         // Set client arrival probability
         CLIENT_ARRIVAL_PROBABILITY = simulationConfiguration.getClientArrivalProbability();

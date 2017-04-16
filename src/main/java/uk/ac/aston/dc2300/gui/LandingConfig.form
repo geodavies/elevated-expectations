@@ -137,7 +137,7 @@
               <text value="10"/>
             </properties>
           </component>
-          <component id="1187d" class="javax.swing.JTextField" binding="floorChangeProbabilityField">
+          <component id="1187d" class="javax.swing.JTextField" binding="empFloorChangeProbabilityField">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="100" height="-1"/>

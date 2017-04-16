@@ -23,7 +23,7 @@ public class LandingConfig {
     private static final org.apache.log4j.Logger LOGGER = LogManager.getLogger(LandingConfig.class);
 
     private JPanel landingConfigPanel;
-    private JTextField floorChangeProbabilityField;
+    private JTextField empFloorChangeProbabilityField;
     private JTextField clientArrivalProbabilityField;
     private JTextField randomSeedField;
     private JTextField numberEmployeesField;
@@ -36,7 +36,7 @@ public class LandingConfig {
     /*
         Define array of input fields
     */
-    private final JTextField[] inputFields = {floorChangeProbabilityField,
+    private final JTextField[] inputFields = {empFloorChangeProbabilityField,
             clientArrivalProbabilityField,
             randomSeedField,
             numberEmployeesField,
@@ -48,7 +48,7 @@ public class LandingConfig {
     /*
         Defining Required Simulation Config Data
     */
-    private BigDecimal employeeFloorChangeProbability;
+    private BigDecimal empFloorChangeProbability;
     private BigDecimal clientArrivalProbability;
     private long seed;
     private int numEmployees;
@@ -64,7 +64,7 @@ public class LandingConfig {
 
     public LandingConfig(){
         // Setup input verifiers
-        floorChangeProbabilityField.setInputVerifier(new BigDecimalVerifier());
+        empFloorChangeProbabilityField.setInputVerifier(new BigDecimalVerifier());
         clientArrivalProbabilityField.setInputVerifier(new BigDecimalVerifier());
 
         randomSeedField.setInputVerifier(new LongVerifier());
@@ -139,7 +139,7 @@ public class LandingConfig {
      * fields
      */
     private SimulationConfiguration getSimulationConfiguration(){
-        return new SimulationConfiguration(employeeFloorChangeProbability, clientArrivalProbability, seed, numEmployees,
+        return new SimulationConfiguration(empFloorChangeProbability, clientArrivalProbability, seed, numEmployees,
                 numDevelopers, numFloors, elevatorCapacity, simulationTime);
     }
 
@@ -152,7 +152,7 @@ public class LandingConfig {
         /*
             Collect and parse values from each field.
         */
-        employeeFloorChangeProbability = new BigDecimal(floorChangeProbabilityField.getText());
+        empFloorChangeProbability = new BigDecimal(empFloorChangeProbabilityField.getText());
         clientArrivalProbability = new BigDecimal(clientArrivalProbabilityField.getText());
         seed = Long.parseLong(randomSeedField.getText());
         numEmployees = Integer.parseInt(numberEmployeesField.getText());
@@ -165,7 +165,7 @@ public class LandingConfig {
             Log collected values.
         */
         LOGGER.debug("[GUI] Collected following values from input");
-        LOGGER.debug("[GUI] EmpChange: " + employeeFloorChangeProbability);
+        LOGGER.debug("[GUI] EmpChange: " + empFloorChangeProbability);
         LOGGER.debug("[GUI] ClientArrive: " + clientArrivalProbability);
         LOGGER.debug("[GUI] RandSeed: " + seed);
         LOGGER.debug("[GUI] NumEmp: " + numEmployees);
