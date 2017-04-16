@@ -41,7 +41,7 @@ public class Simulation {
 
         // Create floor(s)
         List<Floor> floors = new ArrayList<>();
-        for (int i = 0; i < simulationConfiguration.getnumFloors(); i++) {
+        for (int i = 0; i < simulationConfiguration.getNumFloors(); i++) {
             Floor floor = new Floor(i);
             floors.add(floor);
         }
@@ -58,7 +58,7 @@ public class Simulation {
         }
 
         // Create developer(s) and put in ground floor
-        for (int i = 0; i < simulationConfiguration.getnumDevelopers(); i++) {
+        for (int i = 0; i < simulationConfiguration.getNumDevelopers(); i++) {
             Developer developer = new Developer();
             floors.get(0).addOccupant(developer);
         }
@@ -67,7 +67,7 @@ public class Simulation {
         FLOOR_CHANGE_PROBABILITY = simulationConfiguration.getFloorChangeProbability();
 
         // Set client arrival probability
-        CLIENT_ARRIVAL_PROBABILITY = simulationConfiguration.getclientArrivalProbability();
+        CLIENT_ARRIVAL_PROBABILITY = simulationConfiguration.getClientArrivalProbability();
 
         // Set random seed
         RANDOM_UTILS = new RandomUtils(simulationConfiguration.getSeed());
@@ -76,7 +76,7 @@ public class Simulation {
         BUILDING = new Building(elevatorSet, floors);
 
         // Set time to run simulation for
-        SIMULATION_RUN_TIME = simulationConfiguration.getsimulationTime();
+        SIMULATION_RUN_TIME = simulationConfiguration.getSimulationTime();
 
         LOGGER.info("Finished creating simulation");
 

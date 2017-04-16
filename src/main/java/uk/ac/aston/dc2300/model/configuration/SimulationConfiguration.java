@@ -54,7 +54,7 @@ public class SimulationConfiguration {
         return FLOOR_CHANGE_PROBABILITY;
     }
 
-    public BigDecimal getclientArrivalProbability() {
+    public BigDecimal getClientArrivalProbability() {
         return CLIENT_ARRIVAL_PROBABILITY;
     }
 
@@ -66,11 +66,11 @@ public class SimulationConfiguration {
         return NUM_EMPLOYEES;
     }
 
-    public int getnumDevelopers() {
+    public int getNumDevelopers() {
         return NUM_DEVELOPERS;
     }
 
-    public int getnumFloors() {
+    public int getNumFloors() {
         return NUM_FLOORS;
     }
 
@@ -78,7 +78,7 @@ public class SimulationConfiguration {
         return ELEVATOR_CAPACITY;
     }
 
-    public int getsimulationTime() {
+    public int getSimulationTime() {
         return SIMULATION_TIME;
     }
 }
