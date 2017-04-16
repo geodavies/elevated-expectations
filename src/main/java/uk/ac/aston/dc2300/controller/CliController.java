@@ -46,7 +46,7 @@ public class CliController implements ApplicationController {
 
         // Initialize variables
         // Get floor change probability
-        BigDecimal floorChangeProbability = cliMediator.readBigDecimalViaCli("Floor Change probability (p)", new BigDecimal("0.01"));
+        BigDecimal empFloorChangeProbability = cliMediator.readBigDecimalViaCli("Floor Change probability (p)", new BigDecimal("0.01"));
 
         // Get client arrival probability
         BigDecimal clientArrivalProbability = cliMediator.readBigDecimalViaCli("Client arrival probability (q) ",  new BigDecimal("0.005"));
@@ -66,22 +66,27 @@ public class CliController implements ApplicationController {
         // Get elevator capacities
         int elevatorCapacity = cliMediator.readIntegerViaCli("Max Capacity of Elevators", 4);
 
+        // Get simulation time
+        int simulationTime = cliMediator.readIntegerViaCli("Time to run simulation (s)", 28800);
+
         /*
             Log collected values.
         */
         LOGGER.debug("[CLI] Collected following values from input");
-        LOGGER.debug("[CLI] EmpChange: " + floorChangeProbability);
+        LOGGER.debug("[CLI] EmpChange: " + empFloorChangeProbability);
         LOGGER.debug("[CLI] ClientArrive: " + clientArrivalProbability);
         LOGGER.debug("[CLI] RandSeed: " + seed);
         LOGGER.debug("[CLI] NumEmp: " + numEmployees);
         LOGGER.debug("[CLI] NumDev: " + numDevelopers);
         LOGGER.debug("[CLI] NumFloors: " + numFloors);
         LOGGER.debug("[CLI] ElevatorCapacity: " + elevatorCapacity);
+        LOGGER.debug("[CLI] SimulationTime: " + simulationTime);
 
         // Create some space to improve legibility
         System.out.print("\n");
 
-        return new SimulationConfiguration(floorChangeProbability, clientArrivalProbability, seed, numEmployees, numDevelopers, numFloors, elevatorCapacity);
+        return new SimulationConfiguration(empFloorChangeProbability, clientArrivalProbability, seed, numEmployees,
+                numDevelopers, numFloors, elevatorCapacity, simulationTime);
     }
 
 }

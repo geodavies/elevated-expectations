@@ -11,22 +11,24 @@ import java.math.BigDecimal;
  */
 public class SimulationConfiguration {
 
-    private final BigDecimal employeeFloorChangeProbability;
+    private final BigDecimal EMP_FLOOR_CHANGE_PROBABILITY;
 
-    private final BigDecimal clientArrivalProbability;
+    private final BigDecimal CLIENT_ARRIVAL_PROBABILITY;
 
-    private final long seed;
+    private final long SEED;
 
-    private final int numEmployees;
+    private final int NUM_EMPLOYEES;
 
-    private final int numDevelopers;
+    private final int NUM_DEVELOPERS;
 
-    private final int numFloors;
+    private final int NUM_FLOORS;
 
-    private final int elevatorCapacity;
+    private final int ELEVATOR_CAPACITY;
+
+    private final int SIMULATION_TIME;
 
     /**
-     * @param employeeFloorChangeProbability the probability each tick that an employee or developer will change their
+     * @param empFloorChangeProbability the probability each tick that an employee or developer will change their
      *                                       current
      * @param clientArrivalProbability the probability each tick that a client will arrive at the building
      * @param seed the seed used to generate the randomness
@@ -34,44 +36,50 @@ public class SimulationConfiguration {
      * @param numDevelopers number of developers to begin the simulation with
      * @param numFloors number of floors within the building that will be simulated
      * @param elevatorCapacity capacity of each elevator in the building
+     * @param simulationTime the amount of time the simulation will run for in seconds
      */
-    public SimulationConfiguration(BigDecimal employeeFloorChangeProbability, BigDecimal clientArrivalProbability,
-                                   long seed, int numEmployees, int numDevelopers, int numFloors, int elevatorCapacity) {
-        this.employeeFloorChangeProbability = employeeFloorChangeProbability;
-        this.clientArrivalProbability = clientArrivalProbability;
-        this.seed = seed;
-        this.numEmployees = numEmployees;
-        this.numDevelopers = numDevelopers;
-        this.numFloors = numFloors;
-        this.elevatorCapacity = elevatorCapacity;
+    public SimulationConfiguration(BigDecimal empFloorChangeProbability, BigDecimal clientArrivalProbability,
+                                   long seed, int numEmployees, int numDevelopers, int numFloors, int elevatorCapacity,
+                                   int simulationTime) {
+        EMP_FLOOR_CHANGE_PROBABILITY = empFloorChangeProbability;
+        CLIENT_ARRIVAL_PROBABILITY = clientArrivalProbability;
+        SEED = seed;
+        NUM_EMPLOYEES = numEmployees;
+        NUM_DEVELOPERS = numDevelopers;
+        NUM_FLOORS = numFloors;
+        ELEVATOR_CAPACITY = elevatorCapacity;
+        SIMULATION_TIME = simulationTime;
     }
 
-    public BigDecimal getEmployeeFloorChangeProbability() {
-        return employeeFloorChangeProbability;
+    public BigDecimal getEmpFloorChangeProbability() {
+        return EMP_FLOOR_CHANGE_PROBABILITY;
     }
 
     public BigDecimal getClientArrivalProbability() {
-        return clientArrivalProbability;
+        return CLIENT_ARRIVAL_PROBABILITY;
     }
 
     public long getSeed() {
-        return seed;
+        return SEED;
     }
 
     public int getNumEmployees() {
-        return numEmployees;
+        return NUM_EMPLOYEES;
     }
 
     public int getNumDevelopers() {
-        return numDevelopers;
+        return NUM_DEVELOPERS;
     }
 
     public int getNumFloors() {
-        return numFloors;
+        return NUM_FLOORS;
     }
 
     public int getElevatorCapacity() {
-        return elevatorCapacity;
+        return ELEVATOR_CAPACITY;
     }
 
+    public int getSimulationTime() {
+        return SIMULATION_TIME;
+    }
 }
