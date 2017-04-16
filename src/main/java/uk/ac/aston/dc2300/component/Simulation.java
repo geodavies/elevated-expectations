@@ -7,7 +7,10 @@ import uk.ac.aston.dc2300.model.entity.*;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Simulation class composes the main component of the application this class is responsible for managing the
@@ -87,11 +90,12 @@ public class Simulation {
         setInitialDestinations();
 
         while (currentTime < SIMULATION_RUN_TIME) {
-            LOGGER.debug(String.format("Simulation time: %s", currentTime));
+            LOGGER.debug(String.format("Time: %s", currentTime));
 
+            updateElevatorStatuses();
+            unloadElevators();
             loadElevators();
             moveElevators();
-            unloadElevators();
 
             currentTime += 10;
         }
@@ -110,7 +114,7 @@ public class Simulation {
         Set<BuildingOccupant> initialOccupants = groundFloor.getOccupants();
         for (BuildingOccupant buildingOccupant : initialOccupants) {
             // Give them new destination floors
-            assignNewDestination(buildingOccupant);
+            assignNewDestination(buildingOccupant, BUILDING.getFloorContainingOccupant(buildingOccupant));
             buildingOccupant.callElevator(groundFloor);
         }
 
@@ -123,21 +127,34 @@ public class Simulation {
      *
      * @param buildingOccupant the occupant to be assigned a new destination
      */
-    private void assignNewDestination(BuildingOccupant buildingOccupant) {
+    private void assignNewDestination(BuildingOccupant buildingOccupant, Floor currentFloor) {
+        int currentFloorNumber = currentFloor.getFloorNumber();
         if (buildingOccupant instanceof Employee) {
             // Assign employees any floor
             int numFloors = BUILDING.getFloors().size();
-            int randomFloor = RANDOM_UTILS.getIntInRange(0, numFloors - 1);
-            buildingOccupant.setDestination(BUILDING.getFloors().get(randomFloor));
+            int randomFloorIndex = RANDOM_UTILS.getIntInRange(0, numFloors - 1);
+            while (randomFloorIndex == currentFloorNumber) {
+                // If random floor is current floor try again
+                randomFloorIndex = RANDOM_UTILS.getIntInRange(0, numFloors - 1);
+            }
+            buildingOccupant.setDestination(BUILDING.getFloors().get(randomFloorIndex));
         } else if (buildingOccupant instanceof Developer) {
             // Assign developers a floor in the top half
             List<Floor> topHalfFloors = BUILDING.getTopHalfFloors();
             int randomFloorIndex = RANDOM_UTILS.getIntInRange(0, topHalfFloors.size() - 1);
+            while (randomFloorIndex == currentFloorNumber) {
+                // If random floor is current floor try again
+                randomFloorIndex = RANDOM_UTILS.getIntInRange(0, topHalfFloors.size() - 1);
+            }
             buildingOccupant.setDestination(topHalfFloors.get(randomFloorIndex));
         } else if (buildingOccupant instanceof Client) {
             // Assign clients a floor in the bottom half
             List<Floor> bottomHalfFoors = BUILDING.getBottomHalfFloors();
             int randomFloorIndex = RANDOM_UTILS.getIntInRange(0, bottomHalfFoors.size() - 1);
+            while (randomFloorIndex == currentFloorNumber) {
+                // If random floor is current floor try again
+                randomFloorIndex = RANDOM_UTILS.getIntInRange(0, bottomHalfFoors.size() - 1);
+            }
             buildingOccupant.setDestination(bottomHalfFoors.get(randomFloorIndex));
         } else if (buildingOccupant instanceof MaintenanceCrew) {
             // Assign maintenance workers to the top floor
@@ -147,11 +164,21 @@ public class Simulation {
     }
 
     /**
-     * Moves the elevators to their next positions
+     * This commands each elevator to look at their current occupants and those waiting outside and will open/close the
+     * doors where needed.
      */
-    private void moveElevators() {
+    private void updateElevatorStatuses() {
         for (Elevator elevator : BUILDING.getElevators()) {
-            elevator.moveIfRequested(BUILDING.getFloors());
+            elevator.updateElevatorStatus();
+        }
+    }
+
+    /**
+     * Moves any BuildingOccupants at their destination onto the floor
+     */
+    private void unloadElevators() {
+        for (Elevator elevator : BUILDING.getElevators()) {
+            elevator.unloadPassengers();
         }
     }
 
@@ -165,11 +192,11 @@ public class Simulation {
     }
 
     /**
-     * Moves any BuildingOccupants at their destination onto the floor
+     * Moves the elevators to their next positions
      */
-    private void unloadElevators() {
+    private void moveElevators() {
         for (Elevator elevator : BUILDING.getElevators()) {
-            elevator.unloadPassengers();
+            elevator.moveIfRequested(BUILDING.getFloors());
         }
     }
 

@@ -80,8 +80,10 @@ public class Building {
      * @param buildingOccupant the occupant to find
      * @return the floor containing that occupant
      */
-    public Floor findFloorContainingOccupant(BuildingOccupant buildingOccupant) {
+    public Floor getFloorContainingOccupant(BuildingOccupant buildingOccupant) {
+        // Loop through all the floors in the building
         for (Floor floor : floors) {
+            // If the floor contains the occupant then return that floor
             if (floor.getOccupants().contains(buildingOccupant)) return floor;
         }
         return null;
