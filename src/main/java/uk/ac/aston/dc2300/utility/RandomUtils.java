@@ -1,5 +1,6 @@
 package uk.ac.aston.dc2300.utility;
 
+import java.math.BigDecimal;
 import java.util.Random;
 
 /**
@@ -30,4 +31,21 @@ public class RandomUtils {
         return RANDOM.nextInt((max - min) + 1) + min;
     }
 
+    /**
+     * Gets a random double using the seed provided in config.
+     *
+     * @return the random double
+     */
+    public double getDouble() {
+        return RANDOM.nextDouble();
+    }
+
+    /**
+     * Gets a random BigDecimal using the seed provided in config.
+     *
+     * @return the random BigDecimal
+     */
+    public BigDecimal getBigDecimal() {
+        return BigDecimal.valueOf(getDouble());
+    }
 }

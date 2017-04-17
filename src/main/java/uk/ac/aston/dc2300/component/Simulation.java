@@ -21,6 +21,8 @@ import java.util.Set;
  */
 public class Simulation {
 
+    private final BigDecimal MAINTENANCE_CREW_ARRIVAL_PROBABILITY = BigDecimal.valueOf(0.005);
+
     private final BigDecimal FLOOR_CHANGE_PROBABILITY;
 
     private final BigDecimal CLIENT_ARRIVAL_PROBABILITY;
@@ -92,6 +94,8 @@ public class Simulation {
         while (currentTime <= SIMULATION_RUN_TIME) {
             LOGGER.debug(String.format("Time: %s", currentTime));
 
+            checkForArrivingClients(currentTime);
+            checkForArrivingMaintenanceCrew(currentTime);
             updateElevatorStatuses();
             unloadElevators();
             loadElevators();
@@ -100,6 +104,44 @@ public class Simulation {
             currentTime += 10;
         }
 
+    }
+
+    /**
+     * Randomly (against given probability) creates a client, sets their destination, adds them
+     * to a floor and makes them call the elevator for the floor they're on.
+     */
+    private void checkForArrivingClients(int time) {
+        // #34 Randomly spawn clients
+        if (RANDOM_UTILS.getBigDecimal().compareTo(CLIENT_ARRIVAL_PROBABILITY) <= 0){
+            Client arrivingClient = new Client(time);
+            Floor groundFloor = BUILDING.getFloors().get(0);
+
+            assignNewDestination(arrivingClient, groundFloor);
+            groundFloor.addOccupant(arrivingClient);
+
+            arrivingClient.callElevator(groundFloor);
+
+            LOGGER.info("Client Arriving on Floor 0 with destination: " + BUILDING.getFloors().indexOf(arrivingClient.getDestination()));
+        }
+    }
+
+    /**
+     * Randomly (against given probability) creates a Maintenance Crew, sets their destination, adds them
+     * to a floor and makes them call the elevator for the floor they're on.
+     */
+    private void checkForArrivingMaintenanceCrew(int time) {
+        // #34 Randomly spawn clients
+        if (RANDOM_UTILS.getBigDecimal().compareTo(MAINTENANCE_CREW_ARRIVAL_PROBABILITY) <= 0){
+            MaintenanceCrew arrivingMaintenanceCrew = new MaintenanceCrew(time);
+            Floor groundFloor = BUILDING.getFloors().get(0);
+
+            assignNewDestination(arrivingMaintenanceCrew, groundFloor);
+            groundFloor.addOccupant(arrivingMaintenanceCrew);
+
+            arrivingMaintenanceCrew.callElevator(groundFloor);
+
+            LOGGER.info("Maintenance Crew Arriving on Floor 0 with destination: " + BUILDING.getFloors().indexOf(arrivingMaintenanceCrew.getDestination()));
+        }
     }
 
     /**
