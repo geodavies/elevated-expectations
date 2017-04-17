@@ -121,7 +121,7 @@ public class Simulation {
 
             arrivingClient.callElevator(groundFloor);
 
-            LOGGER.debug("Client Arriving on Floor 0 with destination: " + BUILDING.getFloors().indexOf(arrivingClient.getDestination()));
+            LOGGER.info("Client Arriving on Floor 0 with destination: " + BUILDING.getFloors().indexOf(arrivingClient.getDestination()));
         }
     }
 
@@ -140,7 +140,7 @@ public class Simulation {
 
             arrivingMaintenanceCrew.callElevator(groundFloor);
 
-            LOGGER.debug("Maintenance Crew Arriving on Floor 0 with destination: " + BUILDING.getFloors().indexOf(arrivingMaintenanceCrew.getDestination()));
+            LOGGER.info("Maintenance Crew Arriving on Floor 0 with destination: " + BUILDING.getFloors().indexOf(arrivingMaintenanceCrew.getDestination()));
         }
     }
 
