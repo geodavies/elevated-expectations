@@ -106,6 +106,10 @@ public class Simulation {
 
     }
 
+    /**
+     * Randomly (against given probability) creates a client, sets their destination, adds them
+     * to a floor and makes them call the elevator for the floor they're on.
+     */
     private void checkForArrivingClients(int time) {
         // #34 Randomly spawn clients
         if (RANDOM_UTILS.getBigDecimal().compareTo(CLIENT_ARRIVAL_PROBABILITY) <= 0){
@@ -121,6 +125,10 @@ public class Simulation {
         }
     }
 
+    /**
+     * Randomly (against given probability) creates a Maintenance Crew, sets their destination, adds them
+     * to a floor and makes them call the elevator for the floor they're on.
+     */
     private void checkForArrivingMaintenanceCrew(int time) {
         // #34 Randomly spawn clients
         if (RANDOM_UTILS.getBigDecimal().compareTo(MAINTENANCE_CREW_ARRIVAL_PROBABILITY) <= 0){
@@ -135,6 +143,7 @@ public class Simulation {
             LOGGER.debug("Maintenance Crew Arriving on Floor 0 with destination: " + BUILDING.getFloors().indexOf(arrivingMaintenanceCrew.getDestination()));
         }
     }
+
     /**
      * Sets the initial destinations of the building occupants and makes them call the elevator
      */
