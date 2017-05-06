@@ -37,7 +37,7 @@ public class Developer extends BuildingOccupant {
     }
 
     @Override
-    public void setNewDestination(Building building, RandomUtils randomUtils, BigDecimal probability) {
+    public void setNewDestination(Building building, RandomUtils randomUtils, BigDecimal probability, int currentTime) {
         if (randomUtils.getBigDecimal().compareTo(probability) <= 0) {
             Floor currentFloor = building.getFloorContainingOccupant(this);
             // Assign developers a floor in the top half

@@ -16,11 +16,13 @@ import java.math.BigDecimal;
  */
 public abstract class BuildingOccupant {
 
-    private final int timeEntered;
+    protected final int timeEntered;
 
     private final int occupantSize;
 
-    private Floor destination;
+    protected Floor destination;
+
+    protected int destinationArrivalTime;
 
     private static final Logger LOGGER = LogManager.getLogger(BuildingOccupant.class);
 
@@ -31,10 +33,6 @@ public abstract class BuildingOccupant {
     public BuildingOccupant(int occupantSize, int timeEntered) {
         this.occupantSize = occupantSize;
         this.timeEntered = timeEntered;
-    }
-
-    public int getTimeEntered() {
-        return timeEntered;
     }
 
     public int getSize() {
@@ -64,7 +62,7 @@ public abstract class BuildingOccupant {
      */
     public abstract void getInElevator(Elevator elevator, Floor floor);
 
-    public abstract void setNewDestination(Building building, RandomUtils randomUtils, BigDecimal probability);
+    public abstract void setNewDestination(Building building, RandomUtils randomUtils, BigDecimal probability, int currentTime);
 
     /**
      * Moves the occupant from the elevator to the given floor
@@ -72,25 +70,29 @@ public abstract class BuildingOccupant {
      * @param elevator the elevator to move the occupant from
      * @param floor the floor to move the occupant to
      */
-    private void getOutElevator(Elevator elevator, Floor floor) {
+    private void getOutElevator(Elevator elevator, Floor floor, int currentTime) {
         // Remove from elevator
         elevator.removeOccupant(this);
         // Add to floor
         floor.addOccupant(this);
+        // Update destination arrival time to now
+        destinationArrivalTime = currentTime;
         LOGGER.info(String.format("Passenger got out of elevator at floor %s", floor.getFloorNumber()));
     }
 
-
     /**
      * Checks if the the given floor is the destination of the occupant and will move them to that floor if it is
-     *
-     * @param elevator the elevator to move the occupant from
+     *  @param elevator the elevator to move the occupant from
      * @param floor the floor to move the occupant to
+     * @param currentTime
      */
-    public void getOutElevatorIfAtDestination(Elevator elevator, Floor floor) {
+    public void getOutElevatorIfAtDestination(Elevator elevator, Floor floor, int currentTime) {
         if (floor.equals(destination)) {
-            getOutElevator(elevator, floor);
+            getOutElevator(elevator, floor, currentTime);
         }
     }
 
+    protected void leaveBuilding(Floor currentFloor) {
+        currentFloor.removeOccupant(this);
+    }
 }

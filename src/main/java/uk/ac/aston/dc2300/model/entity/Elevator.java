@@ -51,14 +51,6 @@ public class Elevator {
         movementStatus = STATIONARY;
     }
 
-    public Set<BuildingOccupant> getOccupants() {
-        return currentOccupants;
-    }
-
-    public int getMaxCapacity() {
-        return MAX_CAPACITY;
-    }
-
     /**
      * Adds a BuildingOccupant to the elevator
      *
@@ -146,13 +138,14 @@ public class Elevator {
     /**
      * Gets any passengers currently in the elevator that have a destination of the current floor and moves them onto
      * that floor.
+     * @param currentTime
      */
-    public void unloadPassengers() {
+    public void unloadPassengers(int currentTime) {
         if (doorStatus.equals(OPEN)) {
             // Create a copy of the occupants to allow for concurrent modification
             Set<BuildingOccupant> elevatorOccupants = new HashSet<>(currentOccupants);
             for (BuildingOccupant buildingOccupant : elevatorOccupants) {
-                buildingOccupant.getOutElevatorIfAtDestination(this, currentFloor);
+                buildingOccupant.getOutElevatorIfAtDestination(this, currentFloor, currentTime);
             }
         }
     }

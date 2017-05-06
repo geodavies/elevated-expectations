@@ -88,12 +88,9 @@ public class Simulation {
      * Begins the simulation
      */
     public void start() {
-
         setInitialDestinations();
-
         while (currentTime <= SIMULATION_RUN_TIME) {
             LOGGER.debug(String.format("Time: %s", currentTime));
-
             randomlyReassignDestinations();
             checkForArrivingClients(currentTime);
             checkForArrivingMaintenanceCrew(currentTime);
@@ -104,23 +101,21 @@ public class Simulation {
 
             currentTime += 10;
         }
-
     }
 
     /**
      * Randomly (against given probability) creates a client, sets their destination, adds them
      * to a floor and makes them call the elevator for the floor they're on.
      */
-    private void checkForArrivingClients(int time) {
+    private void checkForArrivingClients(int currentTime) {
         // #34 Randomly spawn clients
         if (RANDOM_UTILS.getBigDecimal().compareTo(CLIENT_ARRIVAL_PROBABILITY) <= 0){
-            Client arrivingClient = new Client(time);
+            int leaveAfterArrivalTime = RANDOM_UTILS.getIntInRange(10, 30) * 60;
+            Client arrivingClient = new Client(currentTime, leaveAfterArrivalTime);
             Floor groundFloor = BUILDING.getFloors().get(0);
 
             groundFloor.addOccupant(arrivingClient);
-            arrivingClient.setNewDestination(BUILDING, RANDOM_UTILS, null);
-
-            LOGGER.info("Client Arriving on Floor 0 with destination: " + BUILDING.getFloors().indexOf(arrivingClient.getDestination()));
+            arrivingClient.setNewDestination(BUILDING, RANDOM_UTILS, null, currentTime);
         }
     }
 
@@ -128,16 +123,15 @@ public class Simulation {
      * Randomly (against given probability) creates a Maintenance Crew, sets their destination, adds them
      * to a floor and makes them call the elevator for the floor they're on.
      */
-    private void checkForArrivingMaintenanceCrew(int time) {
+    private void checkForArrivingMaintenanceCrew(int currentTime) {
         // #34 Randomly spawn clients
         if (RANDOM_UTILS.getBigDecimal().compareTo(MAINTENANCE_CREW_ARRIVAL_PROBABILITY) <= 0){
-            MaintenanceCrew arrivingMaintenanceCrew = new MaintenanceCrew(time);
+            int leaveAfterArrivalTime = RANDOM_UTILS.getIntInRange(20, 40) * 60;
+            MaintenanceCrew arrivingMaintenanceCrew = new MaintenanceCrew(currentTime, leaveAfterArrivalTime);
             Floor groundFloor = BUILDING.getFloors().get(0);
 
             groundFloor.addOccupant(arrivingMaintenanceCrew);
-            arrivingMaintenanceCrew.setNewDestination(BUILDING, RANDOM_UTILS, null);
-
-            LOGGER.info("Maintenance Crew Arriving on Floor 0 with destination: " + BUILDING.getFloors().indexOf(arrivingMaintenanceCrew.getDestination()));
+            arrivingMaintenanceCrew.setNewDestination(BUILDING, RANDOM_UTILS, null, currentTime);
         }
     }
 
@@ -153,7 +147,7 @@ public class Simulation {
         Set<BuildingOccupant> initialOccupants = groundFloor.getOccupants();
         for (BuildingOccupant buildingOccupant : initialOccupants) {
             // Give them new destination floors
-            buildingOccupant.setNewDestination(BUILDING, RANDOM_UTILS, BigDecimal.ONE);
+            buildingOccupant.setNewDestination(BUILDING, RANDOM_UTILS, BigDecimal.ONE, currentTime);
         }
 
         LOGGER.info("Finished setting destinations");
@@ -165,7 +159,7 @@ public class Simulation {
         for (BuildingOccupant occupant : buildingOccupants) {
             Floor currentFloor = BUILDING.getFloorContainingOccupant(occupant);
             if (currentFloor.equals(occupant.getDestination())) {
-                occupant.setNewDestination(BUILDING, RANDOM_UTILS, FLOOR_CHANGE_PROBABILITY);
+                occupant.setNewDestination(BUILDING, RANDOM_UTILS, FLOOR_CHANGE_PROBABILITY, currentTime);
             }
         }
     }
@@ -185,7 +179,7 @@ public class Simulation {
      */
     private void unloadElevators() {
         for (Elevator elevator : BUILDING.getElevators()) {
-            elevator.unloadPassengers();
+            elevator.unloadPassengers(currentTime);
         }
     }
 
