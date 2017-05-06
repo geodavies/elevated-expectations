@@ -49,6 +49,8 @@ public class Building {
     /**
      * Gets all of the floors within the top section of the building
      *
+     * If number of floors is odd, the middle floor will be prioritised to bottom half
+     *
      * @return the list of floors in the top half of the building
      */
     public List<Floor> getTopHalfFloors() {
@@ -57,7 +59,7 @@ public class Building {
         // Get middle floor (safe for odd numbers too)
         int middleFloorRoundingUp = numberOfFloors/2 + numberOfFloors%2;
         // Return sublist of floors
-        return floors.subList(middleFloorRoundingUp - 1, numberOfFloors - 1);
+        return floors.subList(middleFloorRoundingUp, numberOfFloors);
     }
 
     /**
@@ -71,7 +73,7 @@ public class Building {
         // Get middle floor (safe for odd numbers too)
         int middleFloorRoundingUp = numberOfFloors/2 + numberOfFloors%2;
         // Return sublist of floors
-        return floors.subList(0, middleFloorRoundingUp - 1);
+        return floors.subList(0, middleFloorRoundingUp);
     }
 
     /**
