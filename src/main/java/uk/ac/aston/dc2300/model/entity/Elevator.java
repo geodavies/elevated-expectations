@@ -24,7 +24,6 @@ import static uk.ac.aston.dc2300.model.status.ElevatorMovementStatus.STATIONARY;
 public class Elevator {
 
     private Floor previousFloor;
-
     private Floor currentFloor;
 
     private Set<BuildingOccupant> currentOccupants;
@@ -38,13 +37,13 @@ public class Elevator {
     private static final Logger LOGGER = LogManager.getLogger(Elevator.class);
 
     /**
-     * @param MAX_CAPACITY the maximum amount of spaces available inside the elevator
+     * @param maxCapacity the maximum amount of spaces available inside the elevator
      * @param currentFloor the floor at which the elevator is to start
      */
-    public Elevator(int MAX_CAPACITY, Floor currentFloor){
-        this.MAX_CAPACITY = MAX_CAPACITY;
+    public Elevator(int maxCapacity, Floor currentFloor){
+        MAX_CAPACITY = maxCapacity;
         this.currentFloor = currentFloor;
-        this.previousFloor = currentFloor;
+        previousFloor = currentFloor;
         currentOccupants = new HashSet<>();
         occupantsLastTick = new HashSet<>();
         doorStatus = CLOSED;
@@ -52,7 +51,7 @@ public class Elevator {
     }
 
     /**
-     * Adds a BuildingOccupant to the elevator
+     * Adds a BuildingOccupant to the elevator.
      *
      * @param buildingOccupant the BuildingOccupant to be added
      */
@@ -61,7 +60,7 @@ public class Elevator {
     }
 
     /**
-     * Removes a BuildingOccupant from the elevator
+     * Removes a BuildingOccupant from the elevator.
      *
      * @param buildingOccupant the BuildingOccupant to be removed
      */
@@ -76,7 +75,6 @@ public class Elevator {
      * @param floors list of floors in the building
      */
     public void moveIfRequested(List<Floor> floors) {
-
         if (movementStatus.equals(MOVING)) {
             movementStatus = STATIONARY;
         } else {
@@ -109,13 +107,11 @@ public class Elevator {
                 }
             }
         }
-
-
     }
 
     /**
      * Gets any passengers from the current floor and puts them into the elevator if there's enough space and rules are
-     * met
+     * met.
      */
     public void loadPassengers() {
         if (doorStatus.equals(OPEN)) {
@@ -138,7 +134,8 @@ public class Elevator {
     /**
      * Gets any passengers currently in the elevator that have a destination of the current floor and moves them onto
      * that floor.
-     * @param currentTime
+     *
+     * @param currentTime The current time of the simulation
      */
     public void unloadPassengers(int currentTime) {
         if (doorStatus.equals(OPEN)) {
@@ -152,7 +149,7 @@ public class Elevator {
 
     /**
      * This method looks at destinations of passengers and queue on current floor and determine whether the doors need
-     * to be opened or closed
+     * to be opened or closed.
      */
     public void updateElevatorStatus() {
         switch (doorStatus) {

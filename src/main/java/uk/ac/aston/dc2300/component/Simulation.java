@@ -14,7 +14,7 @@ import java.util.Set;
 
 /**
  * Simulation class composes the main component of the application this class is responsible for managing the
- * application state and performing fundamental processes such as randomization and timekeeping.
+ * application state and controlling fundamental processes such as randomization and timekeeping.
  *
  * @author George Davies
  * @since 05/04/17
@@ -37,7 +37,12 @@ public class Simulation {
 
     private static final Logger LOGGER = LogManager.getLogger(Simulation.class);
 
-    public Simulation(SimulationConfiguration simulationConfiguration){
+    /**
+     * Constructor for Simulation. Requires a populated configuration object.
+     *
+     * @param simulationConfiguration configuration for simulation to run from
+     */
+    public Simulation(SimulationConfiguration simulationConfiguration) {
 
         LOGGER.info("Creating simulation...");
 
@@ -55,13 +60,13 @@ public class Simulation {
 
         // Create employee(s) and put in ground floor
         for (int i = 0; i < simulationConfiguration.getNumEmployees(); i++) {
-            Employee employee = new Employee();
+            Employee employee = new Employee(currentTime);
             floors.get(0).addOccupant(employee);
         }
 
         // Create developer(s) and put in ground floor
         for (int i = 0; i < simulationConfiguration.getNumDevelopers(); i++) {
-            Developer developer = new Developer();
+            Developer developer = new Developer(currentTime);
             floors.get(0).addOccupant(developer);
         }
 
@@ -108,13 +113,15 @@ public class Simulation {
      * to a floor and makes them call the elevator for the floor they're on.
      */
     private void checkForArrivingClients(int currentTime) {
-        // #34 Randomly spawn clients
-        if (RANDOM_UTILS.getBigDecimal().compareTo(CLIENT_ARRIVAL_PROBABILITY) <= 0){
+        // Only execute following code if random is in range of probability
+        if (RANDOM_UTILS.getBigDecimal().compareTo(CLIENT_ARRIVAL_PROBABILITY) <= 0) {
+            // Generate random leaving time between 10 and 30 minutes, change to seconds.
             int leaveAfterArrivalTime = RANDOM_UTILS.getIntInRange(10, 30) * 60;
             Client arrivingClient = new Client(currentTime, leaveAfterArrivalTime);
             Floor groundFloor = BUILDING.getFloors().get(0);
-
+            // Put client into building (ground floor)
             groundFloor.addOccupant(arrivingClient);
+            // Assign initial destination floor
             arrivingClient.setNewDestination(BUILDING, RANDOM_UTILS, null, currentTime);
         }
     }
@@ -124,13 +131,15 @@ public class Simulation {
      * to a floor and makes them call the elevator for the floor they're on.
      */
     private void checkForArrivingMaintenanceCrew(int currentTime) {
-        // #34 Randomly spawn clients
-        if (RANDOM_UTILS.getBigDecimal().compareTo(MAINTENANCE_CREW_ARRIVAL_PROBABILITY) <= 0){
+        // Only execute following code if random is in range of probability
+        if (RANDOM_UTILS.getBigDecimal().compareTo(MAINTENANCE_CREW_ARRIVAL_PROBABILITY) <= 0) {
+            // Generate random leaving time between 20 and 40 minutes, change to seconds.
             int leaveAfterArrivalTime = RANDOM_UTILS.getIntInRange(20, 40) * 60;
             MaintenanceCrew arrivingMaintenanceCrew = new MaintenanceCrew(currentTime, leaveAfterArrivalTime);
             Floor groundFloor = BUILDING.getFloors().get(0);
-
+            // Put crew into building (ground floor)
             groundFloor.addOccupant(arrivingMaintenanceCrew);
+            // Assign initial destination floor
             arrivingMaintenanceCrew.setNewDestination(BUILDING, RANDOM_UTILS, null, currentTime);
         }
     }
@@ -139,9 +148,7 @@ public class Simulation {
      * Sets the initial destinations of the building occupants and makes them call the elevator
      */
     private void setInitialDestinations() {
-
         LOGGER.info("Setting initial occupant destinations...");
-
         // Get all the occupants on the ground floor
         Floor groundFloor = BUILDING.getFloors().get(0);
         Set<BuildingOccupant> initialOccupants = groundFloor.getOccupants();
@@ -149,15 +156,18 @@ public class Simulation {
             // Give them new destination floors
             buildingOccupant.setNewDestination(BUILDING, RANDOM_UTILS, BigDecimal.ONE, currentTime);
         }
-
         LOGGER.info("Finished setting destinations");
-
     }
 
+    /**
+     * Will call all occupants that are on their destination floors to set new destinations providing each of their
+     * individual setNewDestination method implementation requirements are met.
+     */
     private void randomlyReassignDestinations() {
         Set<BuildingOccupant> buildingOccupants = BUILDING.getAllOccupants();
         for (BuildingOccupant occupant : buildingOccupants) {
             Floor currentFloor = BUILDING.getFloorContainingOccupant(occupant);
+            // If occupant current floor is also their destination
             if (currentFloor.equals(occupant.getDestination())) {
                 occupant.setNewDestination(BUILDING, RANDOM_UTILS, FLOOR_CHANGE_PROBABILITY, currentTime);
             }

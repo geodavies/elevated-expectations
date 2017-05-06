@@ -16,8 +16,11 @@ public class Employee extends BuildingOccupant {
 
     private static final Logger LOGGER = LogManager.getLogger(Employee.class);
 
-    public Employee() {
-        super(1, 0);
+    /**
+     * @param timeEntered The time the Employee entered the building
+     */
+    public Employee(int timeEntered) {
+        super(1, timeEntered);
     }
 
     @Override

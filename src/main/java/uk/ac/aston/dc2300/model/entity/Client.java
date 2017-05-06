@@ -21,6 +21,7 @@ public class Client extends BuildingOccupant {
 
     /**
      * @param timeEntered the time in seconds the Client entered the building following simulation start
+     * @param leaveAfterArrivalTime the time in seconds the Client will stay at their destination floor before leaving
      */
     public Client(int timeEntered, int leaveAfterArrivalTime) {
         super(1, timeEntered);

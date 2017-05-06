@@ -33,9 +33,7 @@ public class LandingConfig {
     private JTextField elevatorCapacityField;
     private JTextField simulationTimeField;
 
-    /*
-        Define array of input fields
-    */
+    // Define array of input fields
     private final JTextField[] inputFields = {empFloorChangeProbabilityField,
             clientArrivalProbabilityField,
             randomSeedField,
@@ -45,9 +43,7 @@ public class LandingConfig {
             elevatorCapacityField,
             simulationTimeField};
 
-    /*
-        Defining Required Simulation Config Data
-    */
+    // Defining Required Simulation Config Data
     private BigDecimal empFloorChangeProbability;
     private BigDecimal clientArrivalProbability;
     private long seed;
@@ -57,18 +53,14 @@ public class LandingConfig {
     private int elevatorCapacity;
     private int simulationTime;
 
-    /*
-        Defining Required Simulation Config Data
-    */
+    // Defining Required Simulation Config Data
     private Simulation simulation;
 
     public LandingConfig(){
         // Setup input verifiers
         empFloorChangeProbabilityField.setInputVerifier(new BigDecimalVerifier());
         clientArrivalProbabilityField.setInputVerifier(new BigDecimalVerifier());
-
         randomSeedField.setInputVerifier(new LongVerifier());
-
         numberEmployeesField.setInputVerifier(new IntegerVerifier());
         numberDevelopersField.setInputVerifier(new IntegerVerifier());
         numberFloorsField.setInputVerifier(new IntegerVerifier());
@@ -111,7 +103,7 @@ public class LandingConfig {
     }
 
     /**
-     * Method validates all inputfields against their respective input
+     * Method validates all input fields against their respective input
      * verifiers.
      *
      * @throws InvalidInputException if any input field doesn't validate
@@ -149,9 +141,8 @@ public class LandingConfig {
      */
     private void collectInputData() {
         LOGGER.info("[GUI] Collecting Values from Fields");
-        /*
-            Collect and parse values from each field.
-        */
+
+        // Collect and parse values from each field.
         empFloorChangeProbability = new BigDecimal(empFloorChangeProbabilityField.getText());
         clientArrivalProbability = new BigDecimal(clientArrivalProbabilityField.getText());
         seed = Long.parseLong(randomSeedField.getText());
@@ -161,9 +152,7 @@ public class LandingConfig {
         elevatorCapacity = Integer.parseInt(elevatorCapacityField.getText());
         simulationTime = Integer.parseInt(simulationTimeField.getText());
 
-        /*
-            Log collected values.
-        */
+        // Log collected values.
         LOGGER.debug("[GUI] Collected following values from input");
         LOGGER.debug("[GUI] EmpChange: " + empFloorChangeProbability);
         LOGGER.debug("[GUI] ClientArrive: " + clientArrivalProbability);
@@ -185,7 +174,4 @@ public class LandingConfig {
         return landingConfigPanel;
     }
 
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
-    }
 }

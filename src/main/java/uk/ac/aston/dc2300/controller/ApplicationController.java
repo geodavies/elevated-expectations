@@ -1,9 +1,7 @@
 package uk.ac.aston.dc2300.controller;
 
 /**
- * <p>
- *     ApplicationController is an interface to guide how controllers are created and used by other classes.
- * </p>
+ * ApplicationController is an interface to guide how controllers are created and used by other classes.
  *
  * @author George Davies
  * @since 05/04/17

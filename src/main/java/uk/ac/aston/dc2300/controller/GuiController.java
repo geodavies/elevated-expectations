@@ -8,9 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * <p>
- *     An implementation of ApplicationController which displays a graphical user interface.
- * </p>
+ * An implementation of ApplicationController which displays a graphical user interface.
  *
  * @author Dan Cotton
  * @since 06/04/17
@@ -32,9 +30,7 @@ public class GuiController implements ApplicationController {
         configFrame.pack();
         configFrame.setVisible(true);
 
-        /*
-            Calc and set location
-         */
+        // Calc and set location
         final Dimension screenDimensions = Toolkit.getDefaultToolkit().getScreenSize();
         final Dimension frameDimensions = configFrame.getSize();
 

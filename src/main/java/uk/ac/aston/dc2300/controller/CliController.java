@@ -7,7 +7,6 @@ import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 import uk.ac.aston.dc2300.utility.CliUtils;
 
 import java.math.BigDecimal;
-import java.util.Scanner;
 
 /**
  * An implementation of ApplicationController which allows command line interaction.
@@ -17,10 +16,9 @@ import java.util.Scanner;
  */
 public class CliController implements ApplicationController {
 
-    private static final Logger LOGGER = LogManager.getLogger(CliController.class);
-
     private final Simulation simulation;
 
+    private static final Logger LOGGER = LogManager.getLogger(CliController.class);
 
     public CliController() {
         LOGGER.info("Initializing application in 'cli' mode");

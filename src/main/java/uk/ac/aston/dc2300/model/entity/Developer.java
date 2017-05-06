@@ -17,8 +17,11 @@ public class Developer extends BuildingOccupant {
 
     private static final Logger LOGGER = LogManager.getLogger(Developer.class);
 
-    public Developer() {
-        super(1, 0);
+    /**
+     * @param timeEntered the time in seconds the Developer entered the building following simulation start
+     */
+    public Developer(int timeEntered) {
+        super(1, timeEntered);
     }
 
     @Override

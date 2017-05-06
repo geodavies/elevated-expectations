@@ -14,10 +14,7 @@ import java.util.Set;
 public class Building {
 
     private final Set<Elevator> elevators;
-
     private final List<Floor> floors;
-
-    private int numComplaints;
 
     /**
      * @param elevators The set of elevators inside the building
@@ -34,17 +31,6 @@ public class Building {
 
     public List<Floor> getFloors() {
         return floors;
-    }
-
-    /**
-     * Increments the number of complaints received by one
-     */
-    public void addComplaint() {
-        this.numComplaints  = numComplaints + 1;
-    }
-
-    public int getNumComplaints() {
-        return this.numComplaints;
     }
 
     /**
@@ -90,6 +76,11 @@ public class Building {
         return null;
     }
 
+    /**
+     * Collects all of the occupants from each of the floors and returns them
+     *
+     * @return occupants from all floors
+     */
     public Set<BuildingOccupant> getAllOccupants() {
         Set<BuildingOccupant> occupants = new HashSet<>();
         for (Floor floor : floors) {

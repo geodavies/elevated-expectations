@@ -21,7 +21,8 @@ public class MaintenanceCrew extends BuildingOccupant {
     private static final Logger LOGGER = LogManager.getLogger(MaintenanceCrew.class);
 
     /**
-     * the time in seconds the MaintenanceCrew entered the building following simulation start
+     * @param timeEntered the time in seconds the MaintenanceCrew entered the building following simulation start
+     * @param leaveAfterArrivalTime the time in seconds the MaintenanceCrew will stay at their destination floor before leaving
      */
     public MaintenanceCrew(int timeEntered, int leaveAfterArrivalTime) {
         super(4, timeEntered);

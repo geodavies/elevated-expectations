@@ -16,12 +16,11 @@ import java.math.BigDecimal;
  */
 public abstract class BuildingOccupant {
 
-    protected final int timeEntered;
-
     private final int occupantSize;
 
-    protected Floor destination;
+    protected final int timeEntered;
 
+    protected Floor destination;
     protected int destinationArrivalTime;
 
     private static final Logger LOGGER = LogManager.getLogger(BuildingOccupant.class);
@@ -62,6 +61,16 @@ public abstract class BuildingOccupant {
      */
     public abstract void getInElevator(Elevator elevator, Floor floor);
 
+    /**
+     * Sets a new destination for the occupant providing all of the conditions to change floor are met first, this could
+     * include random probability of floor change or whether they've been at the destination for the required amount of
+     * time.
+     *
+     * @param building The building that contains the occupant
+     * @param randomUtils Random utility class to generate numbers from
+     * @param probability The probability that the occupant will change floor
+     * @param currentTime The current time in seconds
+     */
     public abstract void setNewDestination(Building building, RandomUtils randomUtils, BigDecimal probability, int currentTime);
 
     /**
