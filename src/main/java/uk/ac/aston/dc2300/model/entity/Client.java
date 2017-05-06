@@ -4,6 +4,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -39,7 +40,7 @@ public class Client extends BuildingOccupant {
     }
 
     @Override
-    public void setNewDestination(Building building, RandomUtils randomUtils) {
+    public void setNewDestination(Building building, RandomUtils randomUtils, BigDecimal probability) {
         Floor currentFloor = building.getFloorContainingOccupant(this);
         // Assign clients a floor in the bottom half
         List<Floor> bottomHalfFloors = building.getBottomHalfFloors();
@@ -52,5 +53,4 @@ public class Client extends BuildingOccupant {
         setDestination(destination);
         LOGGER.debug(String.format("Client on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
     }
-
 }

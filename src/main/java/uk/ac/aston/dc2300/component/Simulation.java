@@ -118,9 +118,7 @@ public class Simulation {
             Floor groundFloor = BUILDING.getFloors().get(0);
 
             groundFloor.addOccupant(arrivingClient);
-            arrivingClient.setNewDestination(BUILDING, RANDOM_UTILS);
-
-            arrivingClient.callElevator(groundFloor);
+            arrivingClient.setNewDestination(BUILDING, RANDOM_UTILS, null);
 
             LOGGER.info("Client Arriving on Floor 0 with destination: " + BUILDING.getFloors().indexOf(arrivingClient.getDestination()));
         }
@@ -137,9 +135,7 @@ public class Simulation {
             Floor groundFloor = BUILDING.getFloors().get(0);
 
             groundFloor.addOccupant(arrivingMaintenanceCrew);
-            arrivingMaintenanceCrew.setNewDestination(BUILDING, RANDOM_UTILS);
-
-            arrivingMaintenanceCrew.callElevator(groundFloor);
+            arrivingMaintenanceCrew.setNewDestination(BUILDING, RANDOM_UTILS, null);
 
             LOGGER.info("Maintenance Crew Arriving on Floor 0 with destination: " + BUILDING.getFloors().indexOf(arrivingMaintenanceCrew.getDestination()));
         }
@@ -157,8 +153,7 @@ public class Simulation {
         Set<BuildingOccupant> initialOccupants = groundFloor.getOccupants();
         for (BuildingOccupant buildingOccupant : initialOccupants) {
             // Give them new destination floors
-            buildingOccupant.setNewDestination(BUILDING, RANDOM_UTILS);
-            buildingOccupant.callElevator(groundFloor);
+            buildingOccupant.setNewDestination(BUILDING, RANDOM_UTILS, BigDecimal.ONE);
         }
 
         LOGGER.info("Finished setting destinations");
@@ -170,8 +165,7 @@ public class Simulation {
         for (BuildingOccupant occupant : buildingOccupants) {
             Floor currentFloor = BUILDING.getFloorContainingOccupant(occupant);
             if (currentFloor.equals(occupant.getDestination())) {
-                occupant.setNewDestination(BUILDING, RANDOM_UTILS);
-                occupant.callElevator(currentFloor);
+                occupant.setNewDestination(BUILDING, RANDOM_UTILS, FLOOR_CHANGE_PROBABILITY);
             }
         }
     }

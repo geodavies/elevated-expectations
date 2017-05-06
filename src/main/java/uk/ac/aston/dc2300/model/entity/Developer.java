@@ -4,6 +4,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -36,18 +37,21 @@ public class Developer extends BuildingOccupant {
     }
 
     @Override
-    public void setNewDestination(Building building, RandomUtils randomUtils) {
-        Floor currentFloor = building.getFloorContainingOccupant(this);
-        // Assign developers a floor in the top half
-        List<Floor> topHalfFloors = building.getTopHalfFloors();
-        int randomFloorIndex = randomUtils.getIntInRange(0, topHalfFloors.size() - 1);
-        while (randomFloorIndex == currentFloor.getFloorNumber()) {
-            // If random floor is current floor try again
-            randomFloorIndex = randomUtils.getIntInRange(0, topHalfFloors.size() - 1);
+    public void setNewDestination(Building building, RandomUtils randomUtils, BigDecimal probability) {
+        if (randomUtils.getBigDecimal().compareTo(probability) <= 0) {
+            Floor currentFloor = building.getFloorContainingOccupant(this);
+            // Assign developers a floor in the top half
+            List<Floor> topHalfFloors = building.getTopHalfFloors();
+            int randomFloorIndex = randomUtils.getIntInRange(0, topHalfFloors.size() - 1);
+            while (randomFloorIndex == currentFloor.getFloorNumber()) {
+                // If random floor is current floor try again
+                randomFloorIndex = randomUtils.getIntInRange(0, topHalfFloors.size() - 1);
+            }
+            Floor destination = topHalfFloors.get(randomFloorIndex);
+            setDestination(destination);
+            LOGGER.debug(String.format("Developer on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
+            callElevator(currentFloor);
         }
-        Floor destination = topHalfFloors.get(randomFloorIndex);
-        setDestination(destination);
-        LOGGER.debug(String.format("Developer on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
     }
 
 }

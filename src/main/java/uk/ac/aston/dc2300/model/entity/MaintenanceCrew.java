@@ -4,6 +4,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -40,7 +41,7 @@ public class MaintenanceCrew extends BuildingOccupant {
     }
 
     @Override
-    public void setNewDestination(Building building, RandomUtils randomUtils) {
+    public void setNewDestination(Building building, RandomUtils randomUtils, BigDecimal probability) {
         Floor currentFloor = building.getFloorContainingOccupant(this);
         // Assign maintenance workers to the top floor
         List<Floor> floors = building.getFloors();
