@@ -2,6 +2,7 @@ package uk.ac.aston.dc2300.model.entity;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import uk.ac.aston.dc2300.utility.RandomUtils;
 
 /**
  * This class represents an entity that moves around within the building such as a person or a maintenance crew.
@@ -61,7 +62,7 @@ public abstract class BuildingOccupant {
      */
     public abstract void getInElevator(Elevator elevator, Floor floor);
 
-    public abstract void reassignDestination();
+    public abstract void setNewDestination(Building building, RandomUtils randomUtils);
 
     /**
      * Moves the occupant from the elevator to the given floor

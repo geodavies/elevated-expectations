@@ -117,8 +117,8 @@ public class Simulation {
             Client arrivingClient = new Client(time);
             Floor groundFloor = BUILDING.getFloors().get(0);
 
-            assignNewDestination(arrivingClient, groundFloor);
             groundFloor.addOccupant(arrivingClient);
+            arrivingClient.setNewDestination(BUILDING, RANDOM_UTILS);
 
             arrivingClient.callElevator(groundFloor);
 
@@ -136,8 +136,8 @@ public class Simulation {
             MaintenanceCrew arrivingMaintenanceCrew = new MaintenanceCrew(time);
             Floor groundFloor = BUILDING.getFloors().get(0);
 
-            assignNewDestination(arrivingMaintenanceCrew, groundFloor);
             groundFloor.addOccupant(arrivingMaintenanceCrew);
+            arrivingMaintenanceCrew.setNewDestination(BUILDING, RANDOM_UTILS);
 
             arrivingMaintenanceCrew.callElevator(groundFloor);
 
@@ -157,7 +157,7 @@ public class Simulation {
         Set<BuildingOccupant> initialOccupants = groundFloor.getOccupants();
         for (BuildingOccupant buildingOccupant : initialOccupants) {
             // Give them new destination floors
-            assignNewDestination(buildingOccupant, BUILDING.getFloorContainingOccupant(buildingOccupant));
+            buildingOccupant.setNewDestination(BUILDING, RANDOM_UTILS);
             buildingOccupant.callElevator(groundFloor);
         }
 
@@ -165,53 +165,13 @@ public class Simulation {
 
     }
 
-    /**
-     * Assigns a new destination floor for the occupant to go to based on their type
-     *
-     * @param buildingOccupant the occupant to be assigned a new destination
-     */
-    private void assignNewDestination(BuildingOccupant buildingOccupant, Floor currentFloor) {
-        int currentFloorNumber = currentFloor.getFloorNumber();
-        if (buildingOccupant instanceof Employee) {
-            // Assign employees any floor
-            int numFloors = BUILDING.getFloors().size();
-            int randomFloorIndex = RANDOM_UTILS.getIntInRange(0, numFloors - 1);
-            while (randomFloorIndex == currentFloorNumber) {
-                // If random floor is current floor try again
-                randomFloorIndex = RANDOM_UTILS.getIntInRange(0, numFloors - 1);
-            }
-            buildingOccupant.setDestination(BUILDING.getFloors().get(randomFloorIndex));
-        } else if (buildingOccupant instanceof Developer) {
-            // Assign developers a floor in the top half
-            List<Floor> topHalfFloors = BUILDING.getTopHalfFloors();
-            int randomFloorIndex = RANDOM_UTILS.getIntInRange(0, topHalfFloors.size() - 1);
-            while (randomFloorIndex == currentFloorNumber) {
-                // If random floor is current floor try again
-                randomFloorIndex = RANDOM_UTILS.getIntInRange(0, topHalfFloors.size() - 1);
-            }
-            buildingOccupant.setDestination(topHalfFloors.get(randomFloorIndex));
-        } else if (buildingOccupant instanceof Client) {
-            // Assign clients a floor in the bottom half
-            List<Floor> bottomHalfFoors = BUILDING.getBottomHalfFloors();
-            int randomFloorIndex = RANDOM_UTILS.getIntInRange(0, bottomHalfFoors.size() - 1);
-            while (randomFloorIndex == currentFloorNumber) {
-                // If random floor is current floor try again
-                randomFloorIndex = RANDOM_UTILS.getIntInRange(0, bottomHalfFoors.size() - 1);
-            }
-            buildingOccupant.setDestination(bottomHalfFoors.get(randomFloorIndex));
-        } else if (buildingOccupant instanceof MaintenanceCrew) {
-            // Assign maintenance workers to the top floor
-            List<Floor> floors = BUILDING.getFloors();
-            buildingOccupant.setDestination(floors.get(floors.size() - 1));
-        }
-    }
-
     private void randomlyReassignDestinations() {
         Set<BuildingOccupant> buildingOccupants = BUILDING.getAllOccupants();
         for (BuildingOccupant occupant : buildingOccupants) {
             Floor currentFloor = BUILDING.getFloorContainingOccupant(occupant);
             if (currentFloor.equals(occupant.getDestination())) {
-                occupant.reassignDestination();
+                occupant.setNewDestination(BUILDING, RANDOM_UTILS);
+                occupant.callElevator(currentFloor);
             }
         }
     }

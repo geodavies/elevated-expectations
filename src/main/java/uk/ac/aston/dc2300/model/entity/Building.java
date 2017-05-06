@@ -58,7 +58,7 @@ public class Building {
         // Get middle floor (safe for odd numbers too)
         int middleFloorRoundingUp = numberOfFloors/2 + numberOfFloors%2;
         // Return sublist of floors
-        return floors.subList(middleFloorRoundingUp - 1, numberOfFloors - 1);
+        return floors.subList(middleFloorRoundingUp, numberOfFloors);
     }
 
     /**
@@ -72,7 +72,7 @@ public class Building {
         // Get middle floor (safe for odd numbers too)
         int middleFloorRoundingUp = numberOfFloors/2 + numberOfFloors%2;
         // Return sublist of floors
-        return floors.subList(0, middleFloorRoundingUp - 1);
+        return floors.subList(0, middleFloorRoundingUp);
     }
 
     /**

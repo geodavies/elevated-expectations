@@ -1,5 +1,11 @@
 package uk.ac.aston.dc2300.model.entity;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import uk.ac.aston.dc2300.utility.RandomUtils;
+
+import java.util.List;
+
 /**
  * This class represents a developer that works in the building
  *
@@ -7,6 +13,8 @@ package uk.ac.aston.dc2300.model.entity;
  * @since 04/04/17
  */
 public class Developer extends BuildingOccupant {
+
+    private static final Logger LOGGER = LogManager.getLogger(Developer.class);
 
     public Developer() {
         super(1, 0);
@@ -28,8 +36,18 @@ public class Developer extends BuildingOccupant {
     }
 
     @Override
-    public void reassignDestination() {
-        // TODO: Implement
+    public void setNewDestination(Building building, RandomUtils randomUtils) {
+        Floor currentFloor = building.getFloorContainingOccupant(this);
+        // Assign developers a floor in the top half
+        List<Floor> topHalfFloors = building.getTopHalfFloors();
+        int randomFloorIndex = randomUtils.getIntInRange(0, topHalfFloors.size() - 1);
+        while (randomFloorIndex == currentFloor.getFloorNumber()) {
+            // If random floor is current floor try again
+            randomFloorIndex = randomUtils.getIntInRange(0, topHalfFloors.size() - 1);
+        }
+        Floor destination = topHalfFloors.get(randomFloorIndex);
+        setDestination(destination);
+        LOGGER.debug(String.format("Developer on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
     }
 
 }
