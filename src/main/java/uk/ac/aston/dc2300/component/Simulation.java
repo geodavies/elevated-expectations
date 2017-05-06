@@ -94,6 +94,7 @@ public class Simulation {
         while (currentTime <= SIMULATION_RUN_TIME) {
             LOGGER.debug(String.format("Time: %s", currentTime));
 
+            randomlyReassignDestinations();
             checkForArrivingClients(currentTime);
             checkForArrivingMaintenanceCrew(currentTime);
             updateElevatorStatuses();
@@ -202,6 +203,16 @@ public class Simulation {
             // Assign maintenance workers to the top floor
             List<Floor> floors = BUILDING.getFloors();
             buildingOccupant.setDestination(floors.get(floors.size() - 1));
+        }
+    }
+
+    private void randomlyReassignDestinations() {
+        Set<BuildingOccupant> buildingOccupants = BUILDING.getAllOccupants();
+        for (BuildingOccupant occupant : buildingOccupants) {
+            Floor currentFloor = BUILDING.getFloorContainingOccupant(occupant);
+            if (currentFloor.equals(occupant.getDestination())) {
+                occupant.reassignDestination();
+            }
         }
     }
 

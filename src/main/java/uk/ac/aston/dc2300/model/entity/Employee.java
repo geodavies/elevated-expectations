@@ -27,4 +27,9 @@ public class Employee extends BuildingOccupant {
         elevator.addOccupant(this);
     }
 
+    @Override
+    public void reassignDestination() {
+        // TODO: Implement
+    }
+
 }

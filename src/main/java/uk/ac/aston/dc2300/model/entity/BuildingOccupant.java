@@ -61,6 +61,8 @@ public abstract class BuildingOccupant {
      */
     public abstract void getInElevator(Elevator elevator, Floor floor);
 
+    public abstract void reassignDestination();
+
     /**
      * Moves the occupant from the elevator to the given floor
      *
@@ -74,6 +76,7 @@ public abstract class BuildingOccupant {
         floor.addOccupant(this);
         LOGGER.info(String.format("Passenger got out of elevator at floor %s", floor.getFloorNumber()));
     }
+
 
     /**
      * Checks if the the given floor is the destination of the occupant and will move them to that floor if it is

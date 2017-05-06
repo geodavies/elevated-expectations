@@ -1,5 +1,6 @@
 package uk.ac.aston.dc2300.model.entity;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -87,6 +88,14 @@ public class Building {
             if (floor.getOccupants().contains(buildingOccupant)) return floor;
         }
         return null;
+    }
+
+    public Set<BuildingOccupant> getAllOccupants() {
+        Set<BuildingOccupant> occupants = new HashSet<>();
+        for (Floor floor : floors) {
+            occupants.addAll(floor.getOccupants());
+        }
+        return occupants;
     }
 
 }
