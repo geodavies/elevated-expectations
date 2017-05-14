@@ -25,7 +25,7 @@ public class ElevatorTest {
 
 
     /*
-    Setup before each test ran for a basic elevator scenario
+        Setup before each test run for a basic elevator scenario
      */
     @Before
     public void setUp() throws Exception {
@@ -33,19 +33,89 @@ public class ElevatorTest {
         for (int i = 0; i < 6; i++) {
             floorList.add(new Floor(i));
         }
+        // Setup sample employee with destination floor 2
         employee = new Employee();
         employee.setDestination(floorList.get(2));
-        floorList.get(1).addToFrontOfQueue(employee);
+        // Setup sample developer with destination floor 5
         developer = new Developer();
         developer.setDestination(floorList.get(5));
-        floorList.get(4).addToFrontOfQueue(developer);
         elevator = new Elevator(4, floorList.get(0));
 
         currentFloor = 0;
     }
 
+    @Test
+    public void moveIfRequestedDoesntMoveIfZeroAndNoRequests() throws Exception {
+        assertEquals(elevator.getCurrentFloor(), floorList.get(0));
+        elevator.moveIfRequested(floorList);
+        assertEquals(elevator.getCurrentFloor(), floorList.get(0));
+    }
+
+    @Test
+    public void elevatorAcceptsEmployee() throws Exception {
+        // Elevator should be on ground floor
+        assertEquals(floorList.get(0), elevator.getCurrentFloor());
+        // add occupant to floor 0
+        floorList.get(0).addOccupant(employee);
+        // add to back of queue on floor 0
+        floorList.get(0).addToBackOfQueue(employee);
+        // Elevator should be empty
+        assertEquals(0, elevator.getOccupants().size());
+        // Queue should have one person in
+        assertEquals(1, floorList.get(0).getElevatorQueue().size());
+        // Elevator should start to open doors
+        elevator.updateElevatorStatus();
+        // Elevator should finish opening doors
+        elevator.updateElevatorStatus();
+        // Elevator should load the employee
+        elevator.loadPassengers();
+        // Elevator should have one person in
+        assertEquals(1, elevator.getOccupants().size());
+        // Person should be instance of Employee
+        assertEquals(true, elevator.getOccupants().toArray()[0] instanceof Employee);
+        // Queue should be empty
+        assertEquals(0, floorList.get(0).getElevatorQueue().size());
+    }
+
+    @Test
+    public void elevatorDoesntAllowExceedCapacity() throws Exception {
+        // Elevator should be on ground floor
+        assertEquals(floorList.get(0), elevator.getCurrentFloor());
+
+        // Loop from zero -> elevator capacity
+        // Add in a new employee into the queue each time
+        // (giving ELEVATOR_CAPACITY + 1 total employees in the queue)
+        for (int i = 0; i <= elevator.getMaxCapacity(); i++) {
+            Employee employee = new Employee();
+            // set destination to floor 1 - but should be irrelevant
+            employee.setDestination(floorList.get(1));
+            // add occupant to floor 0
+            floorList.get(0).addOccupant(employee);
+            // add to back of queue on floor 0
+            floorList.get(0).addToBackOfQueue(employee);
+        }
+        // Elevator should be empty
+        assertEquals(0, elevator.getOccupants().size());
+        // Queue should have capacity + 1 people in
+        assertEquals(elevator.getMaxCapacity() + 1, floorList.get(0).getElevatorQueue().size());
+        // Elevator should start to open doors
+        elevator.updateElevatorStatus();
+        // Elevator should finish opening doors
+        elevator.updateElevatorStatus();
+        // Elevator should load the employee
+        elevator.loadPassengers();
+        // Elevator should have max number of people in people in
+        assertEquals(elevator.getMaxCapacity(), elevator.getOccupants().size());
+        // Each Person should be instance of Employee
+        for (int i = 0; i < elevator.getMaxCapacity(); i++) {
+            assertEquals(true, elevator.getOccupants().toArray()[i] instanceof Employee);
+        }
+        // Queue should have one remaining person in as the queue exceeded capacity
+        assertEquals(1, floorList.get(0).getElevatorQueue().size());
+    }
+
     /*
-    This test checks that the elevator can move in an upwards direction whilst picking up and dropping passengers off.
+        This test checks that the elevator can move in an upwards direction whilst picking up and dropping passengers off.
      */
     @Test
     public void moveIfRequested() throws Exception {
