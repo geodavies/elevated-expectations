@@ -28,13 +28,13 @@ public class Elevator {
     private Floor currentFloor;
 
     private Set<BuildingOccupant> currentOccupants;
-    private Set<BuildingOccupant> occupantsLastTick;
 
+    private Set<BuildingOccupant> occupantsLastTick;
     private final int MAX_CAPACITY;
 
     private ElevatorDoorStatus doorStatus;
-    private ElevatorMovementStatus movementStatus;
 
+    private ElevatorMovementStatus movementStatus;
     private static final Logger LOGGER = LogManager.getLogger(Elevator.class);
 
     /**
@@ -49,6 +49,10 @@ public class Elevator {
         occupantsLastTick = new HashSet<>();
         doorStatus = CLOSED;
         movementStatus = STATIONARY;
+    }
+
+    public Floor getCurrentFloor() {
+        return currentFloor;
     }
 
     public Set<BuildingOccupant> getOccupants() {
