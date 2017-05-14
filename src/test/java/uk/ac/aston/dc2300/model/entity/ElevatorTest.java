@@ -144,6 +144,9 @@ public class ElevatorTest {
         assertEquals(floorList.get(currentFloor).getElevatorQueue().size(),0);
     }
 
+    /*
+   This test checks that the elevator pickup multiple passengers.
+    */
     @Test
     public void pickUpMultiplePassengers() {
         Employee employee2 = new Employee();
@@ -171,6 +174,9 @@ public class ElevatorTest {
         assertEquals(floorList.get(currentFloor).getElevatorQueue().size(),0);
     }
 
+    /*
+   This test checks that the elevator unload multiple passengers.
+    */
     @Test
     public void unloadMultiplePassengers() {
         floorList.get(1).removeFromQueue(employee);
@@ -205,6 +211,9 @@ public class ElevatorTest {
         assertEquals(floorList.get(currentFloor).getElevatorQueue().size(), 0);
     }
 
+    /*
+   This test checks that the elevator carries on in the current direction until no more passengers are needed picking up or dropping off in the original direction.
+    */
     @Test
     public void elevatorGoesInDirectionOfFirstPassenger(){
         floorList.get(1).getElevatorQueue().clear();
@@ -314,6 +323,9 @@ public class ElevatorTest {
         assertEquals(floorList.get(currentFloor).getElevatorQueue().size(),0);
     }
 
+    /*
+   This test checks that the elevator is full and can#t pick up more passengers.
+    */
     @Test
     public void elevatorFull(){
         Employee employee1 = new Employee();
@@ -361,6 +373,39 @@ public class ElevatorTest {
         assertEquals(floorList.get(1).getElevatorQueue().size(),1);
     }
 
+    /*
+   This test checks that the client has priority over all other passenger types
+    */
+    @Test
+    public void clientHasPriority() {
+        MaintenanceCrew maintenanceCrew = new MaintenanceCrew(10);
+        maintenanceCrew.setDestination(floorList.get(1));
+        maintenanceCrew.callElevator(floorList.get(0));
+        Client client = new Client(15);
+        client.setDestination(floorList.get(3));
+        client.callElevator(floorList.get(0));
+
+        assertEquals(elevator.getOccupants().size(), 0);
+        //Tick 1 - elevator doors opening
+        currentFloor = 0;
+        elevator.updateElevatorStatus();
+        //Tick 2 = elevator doors open and add person to elevator
+        elevator.updateElevatorStatus();
+        assertEquals(elevator.getCurrentFloor().getFloorNumber(), currentFloor);
+        assertEquals(floorList.get(currentFloor).getOccupants().size(), 0);
+        assertEquals(floorList.get(currentFloor).getElevatorQueue().size(),2);
+        elevator.loadPassengers();
+        assertEquals(elevator.getOccupants().size(), 1);
+        assertEquals(floorList.get(currentFloor).getOccupants().size(), 0);
+        assertEquals(floorList.get(currentFloor).getElevatorQueue().size(),1);
+        //Check client was given priority and moved to the front of the elevator queue and was the first to enter elevator
+        assertTrue(elevator.getOccupants().contains(client));
+        assertTrue(floorList.get(currentFloor).getOccupants().contains(maintenanceCrew));
+    }
+
+    /*
+   This test checks that the elevator can handle all types of building occupants.
+    */
     @Test
     public void allBuildingOccupantTypes() {
         MaintenanceCrew maintenanceCrew = new MaintenanceCrew(10);
