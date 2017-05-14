@@ -51,6 +51,10 @@ public class Elevator {
         movementStatus = STATIONARY;
     }
 
+    public ElevatorMovementStatus getMovementStatus() { return movementStatus; }
+
+    public ElevatorDoorStatus getDoorStatus() { return doorStatus; }
+
     public Floor getCurrentFloor() {
         return currentFloor;
     }

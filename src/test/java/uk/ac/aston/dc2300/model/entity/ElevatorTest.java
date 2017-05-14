@@ -2,6 +2,8 @@ package uk.ac.aston.dc2300.model.entity;
 
 import org.junit.Before;
 import org.junit.Test;
+import uk.ac.aston.dc2300.model.status.ElevatorDoorStatus;
+import uk.ac.aston.dc2300.model.status.ElevatorMovementStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,40 @@ public class ElevatorTest {
         elevator = new Elevator(4, floorList.get(0));
 
         currentFloor = 0;
+    }
+
+    @Test
+    public void updateElevatorDoorStatusTriggersOpening() throws Exception {
+        // Initial door status should be CLOSED
+        assertEquals(ElevatorDoorStatus.CLOSED, elevator.getDoorStatus());
+        // add occupant to floor 0
+        floorList.get(0).addOccupant(employee);
+        // add to back of queue on floor 0
+        floorList.get(0).addToBackOfQueue(employee);
+        // Update elevator status (should start opening to allow employee in)
+        elevator.updateElevatorStatus();
+        // Door status should be opening
+        assertEquals(ElevatorDoorStatus.OPENING, elevator.getDoorStatus());
+        // Update elevator status (should be open to allow employee in)
+        elevator.updateElevatorStatus();
+        // Door status should be opening
+        assertEquals(ElevatorDoorStatus.OPEN, elevator.getDoorStatus());
+    }
+
+    @Test
+    public void updateElevatorDoorStatusTriggersClosing() throws Exception {
+        // Trigger above test to setup to 'OPEN' state
+        updateElevatorDoorStatusTriggersOpening();
+        // Initial door status should be OPEN
+        assertEquals(ElevatorDoorStatus.OPEN, elevator.getDoorStatus());
+        // Update elevator status (should start closing)
+        elevator.updateElevatorStatus();
+        // Door status should be CLOSING
+        assertEquals(ElevatorDoorStatus.CLOSING, elevator.getDoorStatus());
+        // Update elevator status (should finish closing)
+        elevator.updateElevatorStatus();
+        // Door status should be CLOSED
+        assertEquals(ElevatorDoorStatus.CLOSED, elevator.getDoorStatus());
     }
 
     @Test
