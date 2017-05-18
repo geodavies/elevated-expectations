@@ -19,6 +19,9 @@ public class Floor {
 
     private LinkedList<BuildingOccupant> elevatorQueue;
 
+    /**
+     * @param floorNumber the number of the floor
+     */
     public Floor(int floorNumber) {
         this.floorNumber = floorNumber;
         elevatorQueue = new LinkedList<>();

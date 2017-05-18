@@ -1,5 +1,6 @@
 package uk.ac.aston.dc2300.model.entity;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,10 +14,7 @@ import java.util.Set;
 public class Building {
 
     private final Set<Elevator> elevators;
-
     private final List<Floor> floors;
-
-    private int numComplaints;
 
     /**
      * @param elevators The set of elevators inside the building
@@ -36,17 +34,6 @@ public class Building {
     }
 
     /**
-     * Increments the number of complaints received by one
-     */
-    public void addComplaint() {
-        this.numComplaints  = numComplaints + 1;
-    }
-
-    public int getNumComplaints() {
-        return this.numComplaints;
-    }
-
-    /**
      * Gets all of the floors within the top section of the building
      *
      * @return the list of floors in the top half of the building
@@ -57,7 +44,7 @@ public class Building {
         // Get middle floor (safe for odd numbers too)
         int middleFloorRoundingUp = numberOfFloors/2 + numberOfFloors%2;
         // Return sublist of floors
-        return floors.subList(middleFloorRoundingUp - 1, numberOfFloors - 1);
+        return floors.subList(middleFloorRoundingUp, numberOfFloors);
     }
 
     /**
@@ -71,7 +58,7 @@ public class Building {
         // Get middle floor (safe for odd numbers too)
         int middleFloorRoundingUp = numberOfFloors/2 + numberOfFloors%2;
         // Return sublist of floors
-        return floors.subList(0, middleFloorRoundingUp - 1);
+        return floors.subList(0, middleFloorRoundingUp);
     }
 
     /**
@@ -87,6 +74,19 @@ public class Building {
             if (floor.getOccupants().contains(buildingOccupant)) return floor;
         }
         return null;
+    }
+
+    /**
+     * Collects all of the occupants from each of the floors and returns them
+     *
+     * @return occupants from all floors
+     */
+    public Set<BuildingOccupant> getAllOccupants() {
+        Set<BuildingOccupant> occupants = new HashSet<>();
+        for (Floor floor : floors) {
+            occupants.addAll(floor.getOccupants());
+        }
+        return occupants;
     }
 
 }

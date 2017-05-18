@@ -14,7 +14,7 @@ import java.util.Set;
 
 /**
  * Simulation class composes the main component of the application this class is responsible for managing the
- * application state and performing fundamental processes such as randomization and timekeeping.
+ * application state and controlling fundamental processes such as randomization and timekeeping.
  *
  * @author George Davies
  * @since 05/04/17
@@ -37,7 +37,12 @@ public class Simulation {
 
     private static final Logger LOGGER = LogManager.getLogger(Simulation.class);
 
-    public Simulation(SimulationConfiguration simulationConfiguration){
+    /**
+     * Constructor for Simulation. Requires a populated configuration object.
+     *
+     * @param simulationConfiguration configuration for simulation to run from
+     */
+    public Simulation(SimulationConfiguration simulationConfiguration) {
 
         LOGGER.info("Creating simulation...");
 
@@ -55,13 +60,13 @@ public class Simulation {
 
         // Create employee(s) and put in ground floor
         for (int i = 0; i < simulationConfiguration.getNumEmployees(); i++) {
-            Employee employee = new Employee();
+            Employee employee = new Employee(currentTime);
             floors.get(0).addOccupant(employee);
         }
 
         // Create developer(s) and put in ground floor
         for (int i = 0; i < simulationConfiguration.getNumDevelopers(); i++) {
-            Developer developer = new Developer();
+            Developer developer = new Developer(currentTime);
             floors.get(0).addOccupant(developer);
         }
 
@@ -88,12 +93,10 @@ public class Simulation {
      * Begins the simulation
      */
     public void start() {
-
         setInitialDestinations();
-
         while (currentTime <= SIMULATION_RUN_TIME) {
             LOGGER.debug(String.format("Time: %s", currentTime));
-
+            randomlyReassignDestinations();
             checkForArrivingClients(currentTime);
             checkForArrivingMaintenanceCrew(currentTime);
             updateElevatorStatuses();
@@ -103,25 +106,23 @@ public class Simulation {
 
             currentTime += 10;
         }
-
     }
 
     /**
      * Randomly (against given probability) creates a client, sets their destination, adds them
      * to a floor and makes them call the elevator for the floor they're on.
      */
-    private void checkForArrivingClients(int time) {
-        // #34 Randomly spawn clients
-        if (RANDOM_UTILS.getBigDecimal().compareTo(CLIENT_ARRIVAL_PROBABILITY) <= 0){
-            Client arrivingClient = new Client(time);
+    private void checkForArrivingClients(int currentTime) {
+        // Only execute following code if random is in range of probability
+        if (RANDOM_UTILS.getBigDecimal().compareTo(CLIENT_ARRIVAL_PROBABILITY) <= 0) {
+            // Generate random leaving time between 10 and 30 minutes, change to seconds.
+            int leaveAfterArrivalTime = RANDOM_UTILS.getIntInRange(10, 30) * 60;
+            Client arrivingClient = new Client(currentTime, leaveAfterArrivalTime);
             Floor groundFloor = BUILDING.getFloors().get(0);
-
-            assignNewDestination(arrivingClient, groundFloor);
+            // Put client into building (ground floor)
             groundFloor.addOccupant(arrivingClient);
-
-            arrivingClient.callElevator(groundFloor);
-
-            LOGGER.info("Client Arriving on Floor 0 with destination: " + BUILDING.getFloors().indexOf(arrivingClient.getDestination()));
+            // Assign initial destination floor
+            arrivingClient.setNewDestination(BUILDING, RANDOM_UTILS, null, currentTime);
         }
     }
 
@@ -129,18 +130,17 @@ public class Simulation {
      * Randomly (against given probability) creates a Maintenance Crew, sets their destination, adds them
      * to a floor and makes them call the elevator for the floor they're on.
      */
-    private void checkForArrivingMaintenanceCrew(int time) {
-        // #34 Randomly spawn clients
-        if (RANDOM_UTILS.getBigDecimal().compareTo(MAINTENANCE_CREW_ARRIVAL_PROBABILITY) <= 0){
-            MaintenanceCrew arrivingMaintenanceCrew = new MaintenanceCrew(time);
+    private void checkForArrivingMaintenanceCrew(int currentTime) {
+        // Only execute following code if random is in range of probability
+        if (RANDOM_UTILS.getBigDecimal().compareTo(MAINTENANCE_CREW_ARRIVAL_PROBABILITY) <= 0) {
+            // Generate random leaving time between 20 and 40 minutes, change to seconds.
+            int leaveAfterArrivalTime = RANDOM_UTILS.getIntInRange(20, 40) * 60;
+            MaintenanceCrew arrivingMaintenanceCrew = new MaintenanceCrew(currentTime, leaveAfterArrivalTime);
             Floor groundFloor = BUILDING.getFloors().get(0);
-
-            assignNewDestination(arrivingMaintenanceCrew, groundFloor);
+            // Put crew into building (ground floor)
             groundFloor.addOccupant(arrivingMaintenanceCrew);
-
-            arrivingMaintenanceCrew.callElevator(groundFloor);
-
-            LOGGER.info("Maintenance Crew Arriving on Floor 0 with destination: " + BUILDING.getFloors().indexOf(arrivingMaintenanceCrew.getDestination()));
+            // Assign initial destination floor
+            arrivingMaintenanceCrew.setNewDestination(BUILDING, RANDOM_UTILS, null, currentTime);
         }
     }
 
@@ -148,60 +148,29 @@ public class Simulation {
      * Sets the initial destinations of the building occupants and makes them call the elevator
      */
     private void setInitialDestinations() {
-
         LOGGER.info("Setting initial occupant destinations...");
-
         // Get all the occupants on the ground floor
         Floor groundFloor = BUILDING.getFloors().get(0);
         Set<BuildingOccupant> initialOccupants = groundFloor.getOccupants();
         for (BuildingOccupant buildingOccupant : initialOccupants) {
             // Give them new destination floors
-            assignNewDestination(buildingOccupant, BUILDING.getFloorContainingOccupant(buildingOccupant));
-            buildingOccupant.callElevator(groundFloor);
+            buildingOccupant.setNewDestination(BUILDING, RANDOM_UTILS, BigDecimal.ONE, currentTime);
         }
-
         LOGGER.info("Finished setting destinations");
-
     }
 
     /**
-     * Assigns a new destination floor for the occupant to go to based on their type
-     *
-     * @param buildingOccupant the occupant to be assigned a new destination
+     * Will call all occupants that are on their destination floors to set new destinations providing each of their
+     * individual setNewDestination method implementation requirements are met.
      */
-    private void assignNewDestination(BuildingOccupant buildingOccupant, Floor currentFloor) {
-        int currentFloorNumber = currentFloor.getFloorNumber();
-        if (buildingOccupant instanceof Employee) {
-            // Assign employees any floor
-            int numFloors = BUILDING.getFloors().size();
-            int randomFloorIndex = RANDOM_UTILS.getIntInRange(0, numFloors - 1);
-            while (randomFloorIndex == currentFloorNumber) {
-                // If random floor is current floor try again
-                randomFloorIndex = RANDOM_UTILS.getIntInRange(0, numFloors - 1);
+    private void randomlyReassignDestinations() {
+        Set<BuildingOccupant> buildingOccupants = BUILDING.getAllOccupants();
+        for (BuildingOccupant occupant : buildingOccupants) {
+            Floor currentFloor = BUILDING.getFloorContainingOccupant(occupant);
+            // If occupant current floor is also their destination
+            if (currentFloor.equals(occupant.getDestination())) {
+                occupant.setNewDestination(BUILDING, RANDOM_UTILS, FLOOR_CHANGE_PROBABILITY, currentTime);
             }
-            buildingOccupant.setDestination(BUILDING.getFloors().get(randomFloorIndex));
-        } else if (buildingOccupant instanceof Developer) {
-            // Assign developers a floor in the top half
-            List<Floor> topHalfFloors = BUILDING.getTopHalfFloors();
-            int randomFloorIndex = RANDOM_UTILS.getIntInRange(0, topHalfFloors.size() - 1);
-            while (randomFloorIndex == currentFloorNumber) {
-                // If random floor is current floor try again
-                randomFloorIndex = RANDOM_UTILS.getIntInRange(0, topHalfFloors.size() - 1);
-            }
-            buildingOccupant.setDestination(topHalfFloors.get(randomFloorIndex));
-        } else if (buildingOccupant instanceof Client) {
-            // Assign clients a floor in the bottom half
-            List<Floor> bottomHalfFoors = BUILDING.getBottomHalfFloors();
-            int randomFloorIndex = RANDOM_UTILS.getIntInRange(0, bottomHalfFoors.size() - 1);
-            while (randomFloorIndex == currentFloorNumber) {
-                // If random floor is current floor try again
-                randomFloorIndex = RANDOM_UTILS.getIntInRange(0, bottomHalfFoors.size() - 1);
-            }
-            buildingOccupant.setDestination(bottomHalfFoors.get(randomFloorIndex));
-        } else if (buildingOccupant instanceof MaintenanceCrew) {
-            // Assign maintenance workers to the top floor
-            List<Floor> floors = BUILDING.getFloors();
-            buildingOccupant.setDestination(floors.get(floors.size() - 1));
         }
     }
 
@@ -220,7 +189,7 @@ public class Simulation {
      */
     private void unloadElevators() {
         for (Elevator elevator : BUILDING.getElevators()) {
-            elevator.unloadPassengers();
+            elevator.unloadPassengers(currentTime);
         }
     }
 
