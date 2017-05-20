@@ -33,10 +33,11 @@ public class Developer extends BuildingOccupant {
     }
 
     /**
-     * @param occupants the set of occupants to search for a rivial developer in
+     * Checks an elevator for any rivals - returns boolean result.
+     * @param elevator the elevator to search for a rival developer in
      */
-    private boolean setContainsRival(Set<BuildingOccupant> occupants) {
-        for (BuildingOccupant passenger : occupants) {
+    private boolean elevatorContainsRival(Elevator elevator) {
+        for (BuildingOccupant passenger : elevator.getPassengers()) {
             if (passenger instanceof Developer && ((Developer) passenger).getCompany() != this.company) {
                 return true;
             }
@@ -54,7 +55,7 @@ public class Developer extends BuildingOccupant {
         // Leave the queue
         floor.removeFromQueue(this);
         // If we have rivals in the elevator.
-        if (setContainsRival(elevator.getPassengers())) {
+        if (elevatorContainsRival(elevator)) {
             LOGGER.debug("Developer rejecting elevator due to rival.");
             // Enter the back of the queue
             floor.addToBackOfQueue(this);
