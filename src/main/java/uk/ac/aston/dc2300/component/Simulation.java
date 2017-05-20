@@ -4,6 +4,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 import uk.ac.aston.dc2300.model.entity.*;
+import uk.ac.aston.dc2300.model.status.SimulationStatus;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
@@ -94,18 +95,21 @@ public class Simulation {
      */
     public void start() {
         setInitialDestinations();
-        while (currentTime <= SIMULATION_RUN_TIME) {
-            LOGGER.debug(String.format("Time: %s", currentTime));
-            randomlyReassignDestinations();
-            checkForArrivingClients(currentTime);
-            checkForArrivingMaintenanceCrew(currentTime);
-            updateElevatorStatuses();
-            unloadElevators();
-            loadElevators();
-            moveElevators();
+    }
 
-            currentTime += 10;
-        }
+    public SimulationStatus tick() {
+        LOGGER.debug(String.format("Time: %s", currentTime));
+        randomlyReassignDestinations();
+        checkForArrivingClients(currentTime);
+        checkForArrivingMaintenanceCrew(currentTime);
+        updateElevatorStatuses();
+        unloadElevators();
+        loadElevators();
+        moveElevators();
+
+        currentTime += 10;
+
+        return new SimulationStatus(BUILDING, currentTime, currentTime <= SIMULATION_RUN_TIME);
     }
 
     /**
