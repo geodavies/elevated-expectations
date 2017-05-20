@@ -2,10 +2,12 @@ package uk.ac.aston.dc2300.model.entity;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import uk.ac.aston.dc2300.model.status.DeveloperCompany;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This class represents a developer that works in the building
@@ -15,13 +17,32 @@ import java.util.List;
  */
 public class Developer extends BuildingOccupant {
 
+    private DeveloperCompany company;
     private static final Logger LOGGER = LogManager.getLogger(Developer.class);
 
     /**
      * @param timeEntered the time in seconds the Developer entered the building following simulation start
      */
-    public Developer(int timeEntered) {
+    public Developer(int timeEntered, DeveloperCompany company) {
         super(1, timeEntered);
+        this.company = company;
+    }
+
+    public DeveloperCompany getCompany() {
+        return this.company;
+    }
+
+    /**
+     * Checks an elevator for any rivals - returns boolean result.
+     * @param elevator the elevator to search for a rival developer in
+     */
+    private boolean elevatorContainsRival(Elevator elevator) {
+        for (BuildingOccupant passenger : elevator.getPassengers()) {
+            if (passenger instanceof Developer && ((Developer) passenger).getCompany() != this.company) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -33,10 +54,18 @@ public class Developer extends BuildingOccupant {
     public void getInElevator(Elevator elevator, Floor floor) {
         // Leave the queue
         floor.removeFromQueue(this);
-        // Leave the floor
-        floor.removeOccupant(this);
-        // Get in the elevator
-        elevator.addOccupant(this);
+        // If we have rivals in the elevator.
+        if (elevatorContainsRival(elevator)) {
+            LOGGER.debug("Developer rejecting elevator due to rival.");
+            // Enter the back of the queue
+            floor.addToBackOfQueue(this);
+        } else {
+            LOGGER.debug("Developer accepting elevator due to no rivals.");
+            // Leave the floor
+            floor.removeOccupant(this);
+            // Get in the elevator
+            elevator.addOccupant(this);
+        }
     }
 
     @Override
