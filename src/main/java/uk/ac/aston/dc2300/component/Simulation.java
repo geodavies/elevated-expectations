@@ -4,6 +4,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 import uk.ac.aston.dc2300.model.entity.*;
+import uk.ac.aston.dc2300.model.status.DeveloperCompany;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
@@ -20,6 +21,8 @@ import java.util.Set;
  * @since 05/04/17
  */
 public class Simulation {
+
+    private final DeveloperCompany[] COMPANIES = new DeveloperCompany[]{DeveloperCompany.GOGGLES, DeveloperCompany.MUGTOME};
 
     private final BigDecimal MAINTENANCE_CREW_ARRIVAL_PROBABILITY = BigDecimal.valueOf(0.005);
 
@@ -66,7 +69,7 @@ public class Simulation {
 
         // Create developer(s) and put in ground floor
         for (int i = 0; i < simulationConfiguration.getNumDevelopers(); i++) {
-            Developer developer = new Developer(currentTime);
+            Developer developer = new Developer(currentTime, COMPANIES[i % 2]);
             floors.get(0).addOccupant(developer);
         }
 
