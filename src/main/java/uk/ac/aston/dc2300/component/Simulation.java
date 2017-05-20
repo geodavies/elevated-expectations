@@ -107,9 +107,10 @@ public class Simulation {
         loadElevators();
         moveElevators();
 
+        SimulationStatus currentStatus = new SimulationStatus(BUILDING, currentTime, currentTime <= SIMULATION_RUN_TIME);
         currentTime += 10;
 
-        return new SimulationStatus(BUILDING, currentTime, currentTime <= SIMULATION_RUN_TIME);
+        return currentStatus;
     }
 
     /**

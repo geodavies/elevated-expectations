@@ -2,10 +2,7 @@ package uk.ac.aston.dc2300.gui;
 
 import org.apache.log4j.LogManager;
 import uk.ac.aston.dc2300.component.Simulation;
-import uk.ac.aston.dc2300.gui.util.BigDecimalVerifier;
-import uk.ac.aston.dc2300.gui.util.IntegerVerifier;
-import uk.ac.aston.dc2300.gui.util.InvalidInputException;
-import uk.ac.aston.dc2300.gui.util.LongVerifier;
+import uk.ac.aston.dc2300.gui.util.*;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 
 import javax.swing.*;
@@ -21,6 +18,8 @@ import java.math.BigDecimal;
  */
 public class LandingConfig {
     private static final org.apache.log4j.Logger LOGGER = LogManager.getLogger(LandingConfig.class);
+
+    private GUIChange changeNotifier;
 
     private JPanel landingConfigPanel;
     private JTextField empFloorChangeProbabilityField;
@@ -56,7 +55,7 @@ public class LandingConfig {
     // Defining Required Simulation Config Data
     private Simulation simulation;
 
-    public LandingConfig(){
+    public LandingConfig(GUIChange changeNotifier){
         // Setup input verifiers
         empFloorChangeProbabilityField.setInputVerifier(new BigDecimalVerifier());
         clientArrivalProbabilityField.setInputVerifier(new BigDecimalVerifier());
@@ -88,12 +87,13 @@ public class LandingConfig {
                 SimulationConfiguration configObject = getSimulationConfiguration();
                 LOGGER.debug("[GUI] Constructed config obj: " + configObject.toString());
 
-                /*
-                    SimulationConfiguration Object Instantiated.
-                    Instantiate Simulation and run it.
+               /*
+                    Call GUI Change listener
                 */
-                simulation = new Simulation(configObject);
-                simulation.start();
+               if (changeNotifier != null) {
+                   LOGGER.info("[GUI] Passing changes to controller");
+                   changeNotifier.guiChange(configObject);
+               }
 
             } catch (InvalidInputException invalidException){
                 JOptionPane.showMessageDialog(getConfigPanel(), invalidException.toString());
