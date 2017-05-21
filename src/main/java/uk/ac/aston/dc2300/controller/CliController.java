@@ -31,7 +31,6 @@ public class CliController implements ApplicationController {
 
     @Override
     public void start() {
-        simulation.start();
         simulationRunning = true;
         SimulationStatus currentStatus = null;
         while (simulationRunning) {

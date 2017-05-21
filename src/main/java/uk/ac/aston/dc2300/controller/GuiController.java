@@ -24,6 +24,13 @@ public class GuiController implements ApplicationController {
         LOGGER.info("Initializing application in 'GUI' mode");
     }
 
+
+    @Override
+    public void start() {
+        LOGGER.info("Starting GUI from controller to allow configuration.");
+        startConfigUI();
+    }
+
     private void startConfigUI() {
 
         LandingConfig landingConfig = new LandingConfig((SimulationConfiguration configuration) -> {
@@ -52,17 +59,10 @@ public class GuiController implements ApplicationController {
         configFrame.setLocation(xPosition, yPosition);
     }
 
-    @Override
-    public void start() {
-        LOGGER.info("Starting GUI from controller to allow configuration.");
-        startConfigUI();
-    }
-
     public void setupSimulation(SimulationConfiguration configuration) {
 
         // Construct new simulation from GUI config
         Simulation simulation = new Simulation(configuration);
-        simulation.start();
 
         // Set initial running status
         boolean simulationRunning = true;

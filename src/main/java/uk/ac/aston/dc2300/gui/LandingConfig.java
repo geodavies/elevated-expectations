@@ -19,8 +19,6 @@ import java.math.BigDecimal;
 public class LandingConfig {
     private static final org.apache.log4j.Logger LOGGER = LogManager.getLogger(LandingConfig.class);
 
-    private GUIChange changeNotifier;
-
     private JPanel landingConfigPanel;
     private JTextField empFloorChangeProbabilityField;
     private JTextField clientArrivalProbabilityField;

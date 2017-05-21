@@ -7,27 +7,27 @@ import uk.ac.aston.dc2300.model.entity.Building;
  */
 public class SimulationStatus {
 
-    private Building buildingState;
+    private Building building;
 
     private int time;
 
-    private boolean isSimulationRunning;
+    private boolean simulationRunning;
 
-    public SimulationStatus(Building buildingState, int time, boolean isSimulationRunning) {
-        this.buildingState = buildingState;
+    public SimulationStatus(Building building, int time, boolean simulationRunning) {
+        this.building = building;
         this.time = time;
-        this.isSimulationRunning = isSimulationRunning;
+        this.simulationRunning = simulationRunning;
     }
 
     public int getTime() {
         return time;
     }
 
-    public Building getBuildingState() {
-        return buildingState;
+    public Building getBuilding() {
+        return building;
     }
 
     public boolean isSimulationRunning() {
-        return isSimulationRunning;
+        return simulationRunning;
     }
 }

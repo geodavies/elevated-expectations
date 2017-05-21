@@ -86,15 +86,11 @@ public class Simulation {
         // Set time to run simulation for
         SIMULATION_RUN_TIME = simulationConfiguration.getSimulationTime();
 
+        // Initialise simulation state
+        initialise();
+
         LOGGER.info("Finished creating simulation");
 
-    }
-
-    /**
-     * Begins the simulation
-     */
-    public void start() {
-        setInitialDestinations();
     }
 
     public SimulationStatus tick() {
@@ -152,7 +148,7 @@ public class Simulation {
     /**
      * Sets the initial destinations of the building occupants and makes them call the elevator
      */
-    private void setInitialDestinations() {
+    private void initialise() {
         LOGGER.info("Setting initial occupant destinations...");
         // Get all the occupants on the ground floor
         Floor groundFloor = BUILDING.getFloors().get(0);
