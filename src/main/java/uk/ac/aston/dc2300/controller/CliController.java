@@ -4,6 +4,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.component.Simulation;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
+import uk.ac.aston.dc2300.model.status.SimulationStatus;
 import uk.ac.aston.dc2300.utility.CliUtils;
 
 import java.math.BigDecimal;
@@ -18,6 +19,8 @@ public class CliController implements ApplicationController {
 
     private final Simulation simulation;
 
+    private boolean simulationRunning;
+
     private static final Logger LOGGER = LogManager.getLogger(CliController.class);
 
     public CliController() {
@@ -28,7 +31,13 @@ public class CliController implements ApplicationController {
 
     @Override
     public void start() {
-        simulation.start();
+        simulationRunning = true;
+        SimulationStatus currentStatus = null;
+        while (simulationRunning) {
+            currentStatus = simulation.tick();
+            simulationRunning = currentStatus.isSimulationRunning();
+        }
+        LOGGER.info(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
     }
 
     /**

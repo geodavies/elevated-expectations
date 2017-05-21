@@ -4,6 +4,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 import uk.ac.aston.dc2300.model.entity.*;
+import uk.ac.aston.dc2300.model.status.SimulationStatus;
 import uk.ac.aston.dc2300.model.status.DeveloperCompany;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
@@ -88,27 +89,27 @@ public class Simulation {
         // Set time to run simulation for
         SIMULATION_RUN_TIME = simulationConfiguration.getSimulationTime();
 
+        // Initialise simulation state
+        initialise();
+
         LOGGER.info("Finished creating simulation");
 
     }
 
-    /**
-     * Begins the simulation
-     */
-    public void start() {
-        setInitialDestinations();
-        while (currentTime <= SIMULATION_RUN_TIME) {
-            LOGGER.debug(String.format("Time: %s", currentTime));
-            randomlyReassignDestinations();
-            checkForArrivingClients(currentTime);
-            checkForArrivingMaintenanceCrew(currentTime);
-            updateElevatorStatuses();
-            unloadElevators();
-            loadElevators();
-            moveElevators();
+    public SimulationStatus tick() {
+        LOGGER.debug(String.format("Time: %s", currentTime));
+        randomlyReassignDestinations();
+        checkForArrivingClients(currentTime);
+        checkForArrivingMaintenanceCrew(currentTime);
+        updateElevatorStatuses();
+        unloadElevators();
+        loadElevators();
+        moveElevators();
 
-            currentTime += 10;
-        }
+        SimulationStatus currentStatus = new SimulationStatus(BUILDING, currentTime, currentTime <= SIMULATION_RUN_TIME);
+        currentTime += 10;
+
+        return currentStatus;
     }
 
     /**
@@ -150,7 +151,7 @@ public class Simulation {
     /**
      * Sets the initial destinations of the building occupants and makes them call the elevator
      */
-    private void setInitialDestinations() {
+    private void initialise() {
         LOGGER.info("Setting initial occupant destinations...");
         // Get all the occupants on the ground floor
         Floor groundFloor = BUILDING.getFloors().get(0);
