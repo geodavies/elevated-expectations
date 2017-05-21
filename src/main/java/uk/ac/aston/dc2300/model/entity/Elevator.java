@@ -110,6 +110,14 @@ public class Elevator {
     }
 
     /**
+     * Gets any passengers currently in the elevator.
+     * @return Passengers
+     */
+    public Set<BuildingOccupant> getPassengers(){
+        return currentOccupants;
+    }
+
+    /**
      * Gets any passengers from the current floor and puts them into the elevator if there's enough space and rules are
      * met.
      */
@@ -118,11 +126,12 @@ public class Elevator {
             // Create a copy of the occupants to allow for concurrent modification
             LinkedList<BuildingOccupant> elevatorQueue = new LinkedList<>(currentFloor.getElevatorQueue());
             for (BuildingOccupant buildingOccupant : elevatorQueue) {
+                int usedCapacity = getUsedCapacity();
                 // If the elevator is full then stop loading
-                if (MAX_CAPACITY == getUsedCapacity()) {
+                if (MAX_CAPACITY == usedCapacity) {
                     break;
                 }
-                if (getUsedCapacity() + buildingOccupant.getSize() <= MAX_CAPACITY) {
+                if (usedCapacity + buildingOccupant.getSize() <= MAX_CAPACITY) {
                     // Command the passenger to get in the elevator
                     buildingOccupant.getInElevator(this, currentFloor);
                     LOGGER.info(String.format("Picked up new passenger going to floor %s", buildingOccupant.getDestination().getFloorNumber()));
