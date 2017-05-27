@@ -1,7 +1,5 @@
 package uk.ac.aston.dc2300.controller;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.component.Simulation;
 import uk.ac.aston.dc2300.gui.LandingConfig;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
@@ -18,23 +16,20 @@ import java.awt.*;
  */
 public class GuiController implements ApplicationController {
 
-    private static final Logger LOGGER = LogManager.getLogger(GuiController.class);
-
     public GuiController() {
-        LOGGER.info("Initializing application in 'GUI' mode");
+        System.out.println("Initializing application in 'GUI' mode");
     }
-
 
     @Override
     public void start() {
-        LOGGER.info("Starting GUI from controller to allow configuration.");
+        System.out.println("Starting GUI from controller to allow configuration.");
         startConfigUI();
     }
 
     private void startConfigUI() {
 
         LandingConfig landingConfig = new LandingConfig((SimulationConfiguration configuration) -> {
-            LOGGER.info("[GUI] Config completed - initialising simulation");
+            System.out.println("[GUI] Config completed - initialising simulation");
             setupSimulation(configuration);
         });
 
@@ -49,13 +44,13 @@ public class GuiController implements ApplicationController {
         final Dimension screenDimensions = Toolkit.getDefaultToolkit().getScreenSize();
         final Dimension frameDimensions = configFrame.getSize();
 
-        LOGGER.debug("[GUI] Screen Dimensions: X-" + screenDimensions.width + " & Y-" + screenDimensions.height);
-        LOGGER.debug("[GUI] Frame Dimensions: X-" + frameDimensions.width + " & Y-" + frameDimensions.height);
+        System.out.println("[GUI] Screen Dimensions: X-" + screenDimensions.width + " & Y-" + screenDimensions.height);
+        System.out.println("[GUI] Frame Dimensions: X-" + frameDimensions.width + " & Y-" + frameDimensions.height);
 
         int xPosition = (screenDimensions.width / 2) - (frameDimensions.width / 2);
         int yPosition = (screenDimensions.height / 2) - (frameDimensions.height / 2);
 
-        LOGGER.debug("[GUI] Centering Window @ position: X-" + xPosition + " & Y-" + yPosition);
+        System.out.println("[GUI] Centering Window @ position: X-" + xPosition + " & Y-" + yPosition);
         configFrame.setLocation(xPosition, yPosition);
     }
 
@@ -74,6 +69,6 @@ public class GuiController implements ApplicationController {
             simulationRunning = currentStatus.isSimulationRunning();
         }
 
-        LOGGER.info(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
+        System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
     }
 }

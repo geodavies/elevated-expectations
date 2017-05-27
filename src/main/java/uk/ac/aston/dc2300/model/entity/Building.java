@@ -1,5 +1,6 @@
 package uk.ac.aston.dc2300.model.entity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -87,6 +88,16 @@ public class Building {
             occupants.addAll(floor.getOccupants());
         }
         return occupants;
+    }
+
+    public List<Elevator> getElevatorsOnFloor(Floor floor) {
+        List<Elevator> elevatorsOnFloor = new ArrayList<>();
+        for (Elevator elevator : elevators) {
+            if (elevator.getCurrentFloor().equals(floor)) {
+                elevatorsOnFloor.add(elevator);
+            }
+        }
+        return elevatorsOnFloor;
     }
 
 }

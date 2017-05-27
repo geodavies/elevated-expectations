@@ -1,7 +1,5 @@
 package uk.ac.aston.dc2300.model.entity;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
@@ -13,8 +11,6 @@ import java.math.BigDecimal;
  * @since 04/04/17
  */
 public class Employee extends BuildingOccupant {
-
-    private static final Logger LOGGER = LogManager.getLogger(Employee.class);
 
     /**
      * @param timeEntered The time the Employee entered the building
@@ -51,7 +47,7 @@ public class Employee extends BuildingOccupant {
             }
             Floor destination = building.getFloors().get(randomFloorIndex);
             setDestination(building.getFloors().get(randomFloorIndex));
-            LOGGER.debug(String.format("Employee on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
+            System.out.println(String.format("Employee on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
             callElevator(currentFloor);
         }
     }

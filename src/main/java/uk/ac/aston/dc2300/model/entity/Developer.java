@@ -1,13 +1,10 @@
 package uk.ac.aston.dc2300.model.entity;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.model.status.DeveloperCompany;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 /**
  * This class represents a developer that works in the building
@@ -18,7 +15,6 @@ import java.util.Set;
 public class Developer extends BuildingOccupant {
 
     private DeveloperCompany company;
-    private static final Logger LOGGER = LogManager.getLogger(Developer.class);
 
     /**
      * @param timeEntered the time in seconds the Developer entered the building following simulation start
@@ -56,11 +52,11 @@ public class Developer extends BuildingOccupant {
         floor.removeFromQueue(this);
         // If we have rivals in the elevator.
         if (elevatorContainsRival(elevator)) {
-            LOGGER.debug("Developer rejecting elevator due to rival.");
+            System.out.println("Developer rejecting elevator due to rival.");
             // Enter the back of the queue
             floor.addToBackOfQueue(this);
         } else {
-            LOGGER.debug("Developer accepting elevator due to no rivals.");
+            System.out.println("Developer accepting elevator due to no rivals.");
             // Leave the floor
             floor.removeOccupant(this);
             // Get in the elevator
@@ -81,7 +77,7 @@ public class Developer extends BuildingOccupant {
             }
             Floor destination = topHalfFloors.get(randomFloorIndex);
             setDestination(destination);
-            LOGGER.debug(String.format("Developer on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
+            System.out.println(String.format("Developer on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
             callElevator(currentFloor);
         }
     }

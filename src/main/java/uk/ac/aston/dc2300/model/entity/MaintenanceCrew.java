@@ -1,7 +1,5 @@
 package uk.ac.aston.dc2300.model.entity;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
@@ -17,8 +15,6 @@ import java.util.List;
 public class MaintenanceCrew extends BuildingOccupant {
 
     private int leaveAfterArrivalTime;
-
-    private static final Logger LOGGER = LogManager.getLogger(MaintenanceCrew.class);
 
     /**
      * @param timeEntered the time in seconds the MaintenanceCrew entered the building following simulation start
@@ -53,15 +49,15 @@ public class MaintenanceCrew extends BuildingOccupant {
             // Assign maintenance workers to the top floor
             List<Floor> floors = building.getFloors();
             this.setDestination(floors.get(floors.size() - 1));
-            LOGGER.debug(String.format("Maintenance Crew arrived on floor %s set destination floor %s", currentFloor.getFloorNumber(), floors.size() - 1));
+            System.out.println(String.format("Maintenance Crew arrived on floor %s set destination floor %s", currentFloor.getFloorNumber(), floors.size() - 1));
             callElevator(currentFloor);
         } else if (currentFloor.equals(groundFloor) && destination.equals(groundFloor)) {
             leaveBuilding(currentFloor);
-            LOGGER.info("Maintenance Crew has left the building");
+            System.out.println("Maintenance Crew has left the building");
         } else if (destination.equals(currentFloor) && currentTime >= destinationArrivalTime + leaveAfterArrivalTime) {
             // Set destination to ground floor to leave
             setDestination(groundFloor);
-            LOGGER.debug(String.format("Maintenance Crew on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
+            System.out.println(String.format("Maintenance Crew on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
             callElevator(currentFloor);
         }
     }
