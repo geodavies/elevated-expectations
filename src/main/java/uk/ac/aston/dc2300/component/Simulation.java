@@ -1,11 +1,9 @@
 package uk.ac.aston.dc2300.component;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 import uk.ac.aston.dc2300.model.entity.*;
-import uk.ac.aston.dc2300.model.status.SimulationStatus;
 import uk.ac.aston.dc2300.model.status.DeveloperCompany;
+import uk.ac.aston.dc2300.model.status.SimulationStatus;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
@@ -39,8 +37,6 @@ public class Simulation {
 
     private int currentTime = 0;
 
-    private static final Logger LOGGER = LogManager.getLogger(Simulation.class);
-
     /**
      * Constructor for Simulation. Requires a populated configuration object.
      *
@@ -48,7 +44,7 @@ public class Simulation {
      */
     public Simulation(SimulationConfiguration simulationConfiguration) {
 
-        LOGGER.info("Creating simulation...");
+        System.out.println("Creating simulation");
 
         // Create floor(s)
         List<Floor> floors = new ArrayList<>();
@@ -92,12 +88,27 @@ public class Simulation {
         // Initialise simulation state
         initialise();
 
-        LOGGER.info("Finished creating simulation");
+        System.out.println("Finished creating simulation");
 
     }
 
+    /**
+     * Sets the initial destinations of the building occupants and makes them call the elevator
+     */
+    private void initialise() {
+        System.out.println("Setting initial occupant destinations...");
+        // Get all the occupants on the ground floor
+        Floor groundFloor = BUILDING.getFloors().get(0);
+        Set<BuildingOccupant> initialOccupants = groundFloor.getOccupants();
+        for (BuildingOccupant buildingOccupant : initialOccupants) {
+            // Give them new destination floors
+            buildingOccupant.setNewDestination(BUILDING, RANDOM_UTILS, BigDecimal.ONE, currentTime);
+        }
+        System.out.println("Finished setting destinations");
+    }
+
     public SimulationStatus tick() {
-        LOGGER.debug(String.format("Time: %s", currentTime));
+        System.out.println(String.format("Time: %s", currentTime));
         randomlyReassignDestinations();
         checkForArrivingClients(currentTime);
         checkForArrivingMaintenanceCrew(currentTime);
@@ -146,21 +157,6 @@ public class Simulation {
             // Assign initial destination floor
             arrivingMaintenanceCrew.setNewDestination(BUILDING, RANDOM_UTILS, null, currentTime);
         }
-    }
-
-    /**
-     * Sets the initial destinations of the building occupants and makes them call the elevator
-     */
-    private void initialise() {
-        LOGGER.info("Setting initial occupant destinations...");
-        // Get all the occupants on the ground floor
-        Floor groundFloor = BUILDING.getFloors().get(0);
-        Set<BuildingOccupant> initialOccupants = groundFloor.getOccupants();
-        for (BuildingOccupant buildingOccupant : initialOccupants) {
-            // Give them new destination floors
-            buildingOccupant.setNewDestination(BUILDING, RANDOM_UTILS, BigDecimal.ONE, currentTime);
-        }
-        LOGGER.info("Finished setting destinations");
     }
 
     /**

@@ -1,7 +1,5 @@
 package uk.ac.aston.dc2300.model.entity;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.model.status.ElevatorDoorStatus;
 import uk.ac.aston.dc2300.model.status.ElevatorMovementStatus;
 
@@ -24,17 +22,17 @@ import static uk.ac.aston.dc2300.model.status.ElevatorMovementStatus.STATIONARY;
 public class Elevator {
 
     private Floor previousFloor;
+
     private Floor currentFloor;
 
     private Set<BuildingOccupant> currentOccupants;
-    private Set<BuildingOccupant> occupantsLastTick;
 
+    private Set<BuildingOccupant> occupantsLastTick;
     private final int MAX_CAPACITY;
 
     private ElevatorDoorStatus doorStatus;
-    private ElevatorMovementStatus movementStatus;
 
-    private static final Logger LOGGER = LogManager.getLogger(Elevator.class);
+    private ElevatorMovementStatus movementStatus;
 
     /**
      * @param maxCapacity the maximum amount of spaces available inside the elevator
@@ -134,7 +132,7 @@ public class Elevator {
                 if (usedCapacity + buildingOccupant.getSize() <= MAX_CAPACITY) {
                     // Command the passenger to get in the elevator
                     buildingOccupant.getInElevator(this, currentFloor);
-                    LOGGER.info(String.format("Picked up new passenger going to floor %s", buildingOccupant.getDestination().getFloorNumber()));
+                    System.out.println(String.format("Picked up new passenger going to floor %s", buildingOccupant.getDestination().getFloorNumber()));
                 }
             }
         }
@@ -165,12 +163,12 @@ public class Elevator {
             case OPENING:
                 // If the doors are opening, finish opening them
                 doorStatus = OPEN;
-                LOGGER.debug("Elevator doors are now open");
+                System.out.println("Elevator doors are now open");
                 break;
             case CLOSING:
                 // If the doors are closing, finish closing them
                 doorStatus = CLOSED;
-                LOGGER.debug("Elevator doors are now closed");
+                System.out.println("Elevator doors are now closed");
                 break;
             case OPEN:
                 // If the doors are open and nobody entered last tick then begin closing doors
@@ -242,7 +240,7 @@ public class Elevator {
             previousFloor = currentFloor;
             // Increment current floor
             currentFloor = floors.get(currentFloor.getFloorNumber() + 1);
-            LOGGER.info(String.format("Elevator moving up from floor %s to floor %s", previousFloor.getFloorNumber(), currentFloor.getFloorNumber()));
+            System.out.println(String.format("Elevator moving up from floor %s to floor %s", previousFloor.getFloorNumber(), currentFloor.getFloorNumber()));
         }
     }
 
@@ -257,7 +255,7 @@ public class Elevator {
             previousFloor = currentFloor;
             // Decrement current floor
             currentFloor = floors.get(currentFloor.getFloorNumber() - 1);
-            LOGGER.info(String.format("Elevator moving down from floor %s to floor %s", previousFloor.getFloorNumber(), currentFloor.getFloorNumber()));
+            System.out.println(String.format("Elevator moving down from floor %s to floor %s", previousFloor.getFloorNumber(), currentFloor.getFloorNumber()));
         }
     }
 
@@ -292,7 +290,7 @@ public class Elevator {
      * Sets the doorStatus to opening which takes one tick to complete
      */
     private void openDoors() {
-        LOGGER.debug("Opening elevator doors");
+        System.out.println("Opening elevator doors");
         doorStatus = OPENING;
     }
 
@@ -300,8 +298,12 @@ public class Elevator {
      * Sets the doorStatus to closing which takes one tick to complete
      */
     private void closeDoors() {
-        LOGGER.debug("Closing elevator doors");
+        System.out.println("Closing elevator doors");
         doorStatus = CLOSING;
+    }
+
+    public Floor getCurrentFloor() {
+        return currentFloor;
     }
 
 }

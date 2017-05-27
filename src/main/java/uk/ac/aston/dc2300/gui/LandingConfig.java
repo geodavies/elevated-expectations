@@ -1,6 +1,5 @@
 package uk.ac.aston.dc2300.gui;
 
-import org.apache.log4j.LogManager;
 import uk.ac.aston.dc2300.component.Simulation;
 import uk.ac.aston.dc2300.gui.util.*;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
@@ -17,7 +16,6 @@ import java.math.BigDecimal;
  * @since 06/04/17
  */
 public class LandingConfig {
-    private static final org.apache.log4j.Logger LOGGER = LogManager.getLogger(LandingConfig.class);
 
     private JPanel landingConfigPanel;
     private JTextField empFloorChangeProbabilityField;
@@ -76,20 +74,20 @@ public class LandingConfig {
                 /*
                     Button Pressed - Populate Values
                  */
-                LOGGER.info("[GUI] Button Pressed - Initiating Simulation");
+                System.out.println("[GUI] Button Pressed - Initiating Simulation");
                 collectInputData();
 
                 /*
                     Values Retrieved - Pass to Config Object
                 */
                 SimulationConfiguration configObject = getSimulationConfiguration();
-                LOGGER.debug("[GUI] Constructed config obj: " + configObject.toString());
+                System.out.println("[GUI] Constructed config obj: " + configObject.toString());
 
                /*
                     Call GUI Change listener
                 */
                if (changeNotifier != null) {
-                   LOGGER.info("[GUI] Passing changes to controller");
+                   System.out.println("[GUI] Passing changes to controller");
                    changeNotifier.guiChange(configObject);
                }
 
@@ -109,7 +107,7 @@ public class LandingConfig {
     private void validateFields() throws InvalidInputException {
         for (JTextField currentField: inputFields) {
 
-            LOGGER.debug("[GUI] Current field is valid: "
+            System.out.println("[GUI] Current field is valid: "
                     + currentField.getInputVerifier().verify(currentField));
 
             // Get input verifier and validate fields with it.
@@ -138,7 +136,7 @@ public class LandingConfig {
      * the type-parsed results in appropriate class fields.
      */
     private void collectInputData() {
-        LOGGER.info("[GUI] Collecting Values from Fields");
+        System.out.println("[GUI] Collecting Values from Fields");
 
         // Collect and parse values from each field.
         empFloorChangeProbability = new BigDecimal(empFloorChangeProbabilityField.getText());
@@ -151,15 +149,15 @@ public class LandingConfig {
         simulationTime = Integer.parseInt(simulationTimeField.getText());
 
         // Log collected values.
-        LOGGER.debug("[GUI] Collected following values from input");
-        LOGGER.debug("[GUI] EmpChange: " + empFloorChangeProbability);
-        LOGGER.debug("[GUI] ClientArrive: " + clientArrivalProbability);
-        LOGGER.debug("[GUI] RandSeed: " + seed);
-        LOGGER.debug("[GUI] NumEmp: " + numEmployees);
-        LOGGER.debug("[GUI] NumDev: " + numDevelopers);
-        LOGGER.debug("[GUI] NumFloors: " + numFloors);
-        LOGGER.debug("[GUI] ElevatorCapacity: " + elevatorCapacity);
-        LOGGER.debug("[GUI] SimulationTime: " + simulationTime);
+        System.out.println("[GUI] Collected following values from input");
+        System.out.println("[GUI] EmpChange: " + empFloorChangeProbability);
+        System.out.println("[GUI] ClientArrive: " + clientArrivalProbability);
+        System.out.println("[GUI] RandSeed: " + seed);
+        System.out.println("[GUI] NumEmp: " + numEmployees);
+        System.out.println("[GUI] NumDev: " + numDevelopers);
+        System.out.println("[GUI] NumFloors: " + numFloors);
+        System.out.println("[GUI] ElevatorCapacity: " + elevatorCapacity);
+        System.out.println("[GUI] SimulationTime: " + simulationTime);
     }
 
     /**

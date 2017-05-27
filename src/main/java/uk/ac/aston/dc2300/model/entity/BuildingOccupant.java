@@ -1,7 +1,5 @@
 package uk.ac.aston.dc2300.model.entity;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
@@ -22,8 +20,6 @@ public abstract class BuildingOccupant {
 
     protected Floor destination;
     protected int destinationArrivalTime;
-
-    private static final Logger LOGGER = LogManager.getLogger(BuildingOccupant.class);
 
     /**
      * @param occupantSize the number of spaces the occupant takes in the elevator
@@ -86,7 +82,7 @@ public abstract class BuildingOccupant {
         floor.addOccupant(this);
         // Update destination arrival time to now
         destinationArrivalTime = currentTime;
-        LOGGER.info(String.format("Passenger got out of elevator at floor %s", floor.getFloorNumber()));
+        System.out.println(String.format("Passenger got out of elevator at floor %s", floor.getFloorNumber()));
     }
 
     /**

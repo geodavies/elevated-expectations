@@ -1,7 +1,5 @@
 package uk.ac.aston.dc2300.model.entity;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
@@ -16,8 +14,6 @@ import java.util.List;
 public class Client extends BuildingOccupant {
 
     private int leaveAfterArrivalTime;
-
-    private static final Logger LOGGER = LogManager.getLogger(Client.class);
 
     /**
      * @param timeEntered the time in seconds the Client entered the building following simulation start
@@ -58,15 +54,15 @@ public class Client extends BuildingOccupant {
             }
             Floor destination = bottomHalfFloors.get(randomFloorIndex);
             setDestination(destination);
-            LOGGER.debug(String.format("Client arrived on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
+            System.out.println(String.format("Client arrived on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
             callElevator(currentFloor);
         } else if (currentFloor.equals(groundFloor) && destination.equals(groundFloor)) {
             leaveBuilding(currentFloor);
-            LOGGER.info("Client has left the building");
+            System.out.println("Client has left the building");
         } else if (destination.equals(currentFloor) && currentTime >= destinationArrivalTime + leaveAfterArrivalTime) {
             // Set destination to ground floor to leave
             setDestination(groundFloor);
-            LOGGER.debug(String.format("Client on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
+            System.out.println(String.format("Client on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
             callElevator(currentFloor);
         }
     }
