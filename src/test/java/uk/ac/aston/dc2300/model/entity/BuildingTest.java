@@ -8,11 +8,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
- * Created by dev on 18/04/17.
+ * Test class for the Building functions
+ *
+ * @author Scott Janes
+ * @since 18/04/17
  */
 public class BuildingTest {
 
@@ -22,42 +24,57 @@ public class BuildingTest {
 
     private Employee employee;
 
-    private int topFloor;
+    private static int TOP_FLOOR = 5;
 
-
-
+    /**
+     * Setup before each test run for a basic building
+     */
     @Before
-    public void setUp() throws Exception {
-        List<Floor> floorList = new ArrayList<>();
-        for(int i = 0; i < 6; i++){
-            floorList.add(new Floor(i));
+    public void setup() throws Exception {
+        List<Floor> floors = new ArrayList<>();
+        for(int i = 0; i <= TOP_FLOOR; i++){
+            floors.add(new Floor(i));
         }
-        Set<Elevator> elevatorSet = new HashSet<>();
-        elevatorSet.add(new Elevator(4, floorList.get(0)));
-        building = new Building(elevatorSet, floorList);
+        Set<Elevator> elevators = new HashSet<>();
+        elevators.add(new Elevator(4, floors.get(0)));
+        building = new Building(elevators, floors);
         developer = new Developer();
         employee = new Employee();
-        topFloor = floorList.size() -1;
-        floorList.get(0).addOccupant(employee);
-        floorList.get(topFloor).addOccupant(developer);
+        floors.get(0).addOccupant(employee);
+        floors.get(TOP_FLOOR).addOccupant(developer);
     }
 
+    /**
+     * Test to ensure the building sets the correct floors for the top half of the building
+     */
     @Test
     public void getTopHalfFloors() throws Exception {
-        List<Floor> newFloorList = building.getTopHalfFloors();
-        assertEquals(newFloorList.size(), 3);
+        List<Floor> topHalfFloors = building.getTopHalfFloors();
+        assertEquals(topHalfFloors.size(), 3);
+        assertEquals(topHalfFloors.get(0).floorNumber, 3);
+        assertEquals(topHalfFloors.get(1).floorNumber, 4);
+        assertEquals(topHalfFloors.get(2).floorNumber, 5);
     }
 
+    /**
+     * Test to ensure the building sets the correct floors for the bottom half of the building
+     */
     @Test
     public void getBottomHalfFloors() throws Exception {
-        List<Floor> newFloorList = building.getBottomHalfFloors();
-        assertEquals(newFloorList.size(), 3);
+        List<Floor> bottomHalfFloors = building.getBottomHalfFloors();
+        assertEquals(bottomHalfFloors.size(), 3);
+        assertEquals(bottomHalfFloors.get(0).floorNumber, 0);
+        assertEquals(bottomHalfFloors.get(1).floorNumber, 1);
+        assertEquals(bottomHalfFloors.get(2).floorNumber, 2);
     }
 
+    /**
+     * Test to ensure the building states the correct floor for building occupant
+     */
     @Test
     public void getFloorContainingOccupant() throws Exception {
         Floor devFloor = building.getFloorContainingOccupant(developer);
-        assertEquals(devFloor.getFloorNumber(), topFloor);
+        assertEquals(devFloor.getFloorNumber(), TOP_FLOOR);
         assertEquals(devFloor.getOccupants().size(), 1);
         assertEquals(devFloor.getElevatorQueue().size(), 0);
 

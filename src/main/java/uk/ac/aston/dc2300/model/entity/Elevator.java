@@ -33,8 +33,8 @@ public class Elevator {
     private final int MAX_CAPACITY;
 
     private ElevatorDoorStatus doorStatus;
-
     private ElevatorMovementStatus movementStatus;
+
     private static final Logger LOGGER = LogManager.getLogger(Elevator.class);
 
     /**
