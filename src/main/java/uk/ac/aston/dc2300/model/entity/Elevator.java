@@ -76,30 +76,30 @@ public class Elevator {
         if (movementStatus.equals(MOVING)) {
             movementStatus = STATIONARY;
         } else {
-            if (currentFloor.getFloorNumber() != 0 && !anyoneWaitingOnFloors(floors)) { // There's nobody waiting return to ground floor
+            if (currentFloor.getFloorNumber() != 0 && !anyoneWaitingForFloors(floors)) { // There's nobody waiting return to ground floor
                 moveDown(floors);
             } else if (currentFloor.getFloorNumber() == 0) { // The elevator is currently on the ground floor
                 // If there's anyone waiting above current floor move up
-                if (anyoneWaitingOnFloors(getFloorsAbove(floors))) {
+                if (anyoneWaitingForFloors(getFloorsAbove(floors))) {
                     moveUp(floors);
                 }
             } else if(currentFloor.getFloorNumber() > previousFloor.getFloorNumber()){ // If the elevator last moved up
                 // If there's anyone waiting above then continue moving up
-                if (anyoneWaitingOnFloors(getFloorsAbove(floors))) {
+                if (anyoneWaitingForFloors(getFloorsAbove(floors))) {
                     moveUp(floors);
                 } else {
                     // Otherwise move down if there's people below
-                    if (anyoneWaitingOnFloors(getFloorsBelow(floors))) {
+                    if (anyoneWaitingForFloors(getFloorsBelow(floors))) {
                         moveDown(floors);
                     }
                 }
             } else if (currentFloor.getFloorNumber() < previousFloor.getFloorNumber()) { // If the elevator last moved down
                 // If there's anyone waiting below then continue moving down
-                if (anyoneWaitingOnFloors(getFloorsBelow(floors))) {
+                if (anyoneWaitingForFloors(getFloorsBelow(floors))) {
                     moveDown(floors);
                 } else {
                     // Otherwise move up if there's people above
-                    if (anyoneWaitingOnFloors(getFloorsAbove(floors))) {
+                    if (anyoneWaitingForFloors(getFloorsAbove(floors))) {
                         moveUp(floors);
                     }
                 }
@@ -119,7 +119,7 @@ public class Elevator {
      * Gets any passengers from the current floor and puts them into the elevator if there's enough space and rules are
      * met.
      */
-    public void loadPassengers() {
+    public void loadPassengers(int topFloorNumber) {
         if (doorStatus.equals(OPEN)) {
             // Create a copy of the occupants to allow for concurrent modification
             LinkedList<BuildingOccupant> elevatorQueue = new LinkedList<>(currentFloor.getElevatorQueue());
@@ -129,13 +129,40 @@ public class Elevator {
                 if (MAX_CAPACITY == usedCapacity) {
                     break;
                 }
-                if (usedCapacity + buildingOccupant.getSize() <= MAX_CAPACITY) {
-                    // Command the passenger to get in the elevator
-                    buildingOccupant.getInElevator(this, currentFloor);
-                    System.out.println(String.format("Picked up new passenger going to floor %s", buildingOccupant.getDestination().getFloorNumber()));
+                if (usedCapacity + buildingOccupant.getSize() <= MAX_CAPACITY &&
+                        travellingInCorrectDirection(buildingOccupant, topFloorNumber)) {
+                    loadPassenger(buildingOccupant);
                 }
             }
         }
+    }
+
+    private void loadPassenger(BuildingOccupant buildingOccupant) {
+        buildingOccupant.getInElevator(this, currentFloor);
+        System.out.println(String.format("Picked up new passenger going to floor %s", buildingOccupant.getDestination().getFloorNumber()));
+    }
+
+    private boolean travellingInCorrectDirection(BuildingOccupant buildingOccupant, int topFloorNumber) {
+        if (currentFloor.getFloorNumber() != 0 && currentFloor.getFloorNumber() != topFloorNumber) {
+            // Check direction of travel
+            if (previousFloor.getFloorNumber() < currentFloor.getFloorNumber()) {
+                // Elevator going up
+                if (buildingOccupant.getDestination().getFloorNumber() > currentFloor.getFloorNumber()) {
+                    // Elevator going in same direction as destination, get in
+                    return true;
+                }
+            } else if (previousFloor.getFloorNumber() > currentFloor.getFloorNumber()) {
+                // Elevator going down
+                if (buildingOccupant.getDestination().getFloorNumber() < currentFloor.getFloorNumber()) {
+                    // Elevator going in same direction as destination, get in
+                    return true;
+                }
+            }
+        } else {
+            // Occupant is on top or bottom floor, so always get in
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -158,7 +185,7 @@ public class Elevator {
      * This method looks at destinations of passengers and queue on current floor and determine whether the doors need
      * to be opened or closed.
      */
-    public void updateElevatorStatus() {
+    public void updateDoorStatus(int topFloorNumber) {
         switch (doorStatus) {
             case OPENING:
                 // If the doors are opening, finish opening them
@@ -175,8 +202,17 @@ public class Elevator {
                 if (currentOccupants.equals(occupantsLastTick)) closeDoors();
                 break;
             case CLOSED:
+                // Check if anyone is waiting outside elevator
+                boolean occupantsWaitingToEnter = false;
+                for (BuildingOccupant buildingOccupant : currentFloor.getElevatorQueue()) {
+                    if (travellingInCorrectDirection(buildingOccupant, topFloorNumber)) {
+                        occupantsWaitingToEnter = true;
+                    }
+                }
+
                 // If the doors are closed, the elevator is stationary and people are waiting to get in or out then begin opening doors
-                if (movementStatus.equals(STATIONARY) && (anyPassengerDestinationCurrentFloor() || currentFloor.isAnyoneWaiting())) openDoors();
+                if (movementStatus.equals(STATIONARY) && (anyPassengerDestinationCurrentFloor() || occupantsWaitingToEnter)) openDoors();
+
                 break;
         }
         // Make the previous stored tick become this one
@@ -210,7 +246,7 @@ public class Elevator {
      * @param floors the floors to check
      * @return boolean status true=passengersWaiting, false=noneWaiting
      */
-    private boolean anyoneWaitingOnFloors(List<Floor> floors) {
+    private boolean anyoneWaitingForFloors(List<Floor> floors) {
         boolean waiting = false;
         for (Floor floor : floors) {
             // If there's someone queuing on that floor
