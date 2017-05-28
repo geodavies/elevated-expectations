@@ -2,6 +2,7 @@ package uk.ac.aston.dc2300.controller;
 
 import uk.ac.aston.dc2300.component.Simulation;
 import uk.ac.aston.dc2300.gui.LandingConfig;
+import uk.ac.aston.dc2300.gui.SimulationSummary;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 import uk.ac.aston.dc2300.model.status.SimulationStatus;
 
@@ -16,8 +17,11 @@ import java.awt.*;
  */
 public class GuiController implements ApplicationController {
 
+    private JFrame configFrame;
+
     public GuiController() {
         System.out.println("Initializing application in 'GUI' mode");
+        configFrame = new JFrame("Elevator Simulation");
     }
 
     @Override
@@ -33,7 +37,6 @@ public class GuiController implements ApplicationController {
             setupSimulation(configuration);
         });
 
-        JFrame configFrame = new JFrame("Elevator Simulation");
         configFrame.setContentPane(landingConfig.getConfigPanel());
         configFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         configFrame.setResizable(false);
@@ -56,19 +59,44 @@ public class GuiController implements ApplicationController {
 
     public void setupSimulation(SimulationConfiguration configuration) {
 
-        // Construct new simulation from GUI config
-        Simulation simulation = new Simulation(configuration);
 
-        // Set initial running status
-        boolean simulationRunning = true;
-        SimulationStatus currentStatus = null;
+        configFrame.setVisible(false);
+        configFrame.dispose();
 
-        // Loop until simulation isn't running
-        while (simulationRunning) {
-            currentStatus = simulation.tick();
-            simulationRunning = currentStatus.isSimulationRunning();
-        }
+        SimulationSummary runningFrame = new SimulationSummary(e -> {
+            configFrame.setVisible(false);
+            configFrame.dispose();
+            startConfigUI();
+        });
 
-        System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
+        configFrame.setContentPane(runningFrame.getFrame());
+        configFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        configFrame.setResizable(true);
+        configFrame.pack();
+        configFrame.setVisible(true);
+
+
+        Runnable sim = () -> {
+
+            // Construct new simulation from GUI config
+            Simulation simulation = new Simulation(configuration);
+            boolean simulationRunning = true;
+            SimulationStatus currentStatus = null;
+
+            String summary = "";
+
+            // Loop until simulation isn't running
+            while (simulationRunning) {
+                currentStatus = simulation.tick();
+                simulationRunning = currentStatus.isSimulationRunning();
+                summary += currentStatus.getBuilding().toString();
+            }
+            runningFrame.updateText(summary);
+            System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
+
+        };
+        SwingUtilities.invokeLater(sim);
+
+
     }
 }

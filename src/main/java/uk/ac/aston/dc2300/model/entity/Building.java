@@ -100,4 +100,58 @@ public class Building {
         return elevatorsOnFloor;
     }
 
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        // Roof
+        stringBuilder.append("\n    Lift Queue           Floor\n");
+        stringBuilder.append("   +====+===============+==========+\n");
+
+        List<Floor> buildingFloors = this.getFloors();
+        for (int i = buildingFloors.size() - 1; i >= 0; i--) {
+            Floor currentFloor = buildingFloors.get(i);
+
+            StringBuilder queueStringBuilder = new StringBuilder();
+            for (BuildingOccupant occupant : currentFloor.getElevatorQueue()) {
+                queueStringBuilder.append(getLetterForBuildingOccupant(occupant));
+            }
+
+            StringBuilder floorStringBuilder = new StringBuilder();
+            for (BuildingOccupant occupant : currentFloor.getOccupants()) {
+                if (!currentFloor.getElevatorQueue().contains(occupant)) {
+                    floorStringBuilder.append(getLetterForBuildingOccupant(occupant));
+                }
+            }
+
+            StringBuilder elevatorStringBuilder = new StringBuilder();
+            List<Elevator> elevatorsOnFloor = this.getElevatorsOnFloor(currentFloor);
+            if (elevatorsOnFloor.size() > 0) {
+                for (BuildingOccupant occupant : elevatorsOnFloor.get(0).getPassengers()) {
+                    elevatorStringBuilder.append(getLetterForBuildingOccupant(occupant));
+                }
+            }
+
+            String elevatorPointer = "";
+            if (elevatorsOnFloor.size() > 0) {
+                elevatorPointer = ">";
+            }
+            stringBuilder.append(String.format("%1s %1s|%-4s|%-15s|%10s|\n", i, elevatorPointer, elevatorStringBuilder.toString(), queueStringBuilder.toString(), floorStringBuilder.toString()));
+        }
+        stringBuilder.append("   +====+===============+==========+\n");
+        return stringBuilder.toString();
+    }
+
+    private String getLetterForBuildingOccupant(BuildingOccupant buildingOccupant) {
+        if (buildingOccupant instanceof Client) {
+            return "C";
+        } else if (buildingOccupant instanceof Developer) {
+            return "D";
+        } else if (buildingOccupant instanceof Employee) {
+            return "E";
+        } else if (buildingOccupant instanceof MaintenanceCrew) {
+            return "M";
+        } else {
+            return "?";
+        }
+    }
 }
