@@ -130,7 +130,7 @@ public class Elevator {
                     break;
                 }
                 if (usedCapacity + buildingOccupant.getSize() <= MAX_CAPACITY &&
-                        travellingInCorrectDirection(buildingOccupant, topFloorNumber)) {
+                        travellingInSameDirection(buildingOccupant, topFloorNumber)) {
                     loadPassenger(buildingOccupant);
                 }
             }
@@ -142,7 +142,7 @@ public class Elevator {
         System.out.println(String.format("Picked up new passenger going to floor %s", buildingOccupant.getDestination().getFloorNumber()));
     }
 
-    private boolean travellingInCorrectDirection(BuildingOccupant buildingOccupant, int topFloorNumber) {
+    private boolean travellingInSameDirection(BuildingOccupant buildingOccupant, int topFloorNumber) {
         if (currentFloor.getFloorNumber() != 0 && currentFloor.getFloorNumber() != topFloorNumber) {
             // Check direction of travel
             if (previousFloor.getFloorNumber() < currentFloor.getFloorNumber()) {
@@ -205,7 +205,7 @@ public class Elevator {
                 // Check if anyone is waiting outside elevator
                 boolean occupantsWaitingToEnter = false;
                 for (BuildingOccupant buildingOccupant : currentFloor.getElevatorQueue()) {
-                    if (travellingInCorrectDirection(buildingOccupant, topFloorNumber)) {
+                    if (travellingInSameDirection(buildingOccupant, topFloorNumber)) {
                         occupantsWaitingToEnter = true;
                         break;
                     }
