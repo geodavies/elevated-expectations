@@ -207,13 +207,13 @@ public class Elevator {
                 for (BuildingOccupant buildingOccupant : currentFloor.getElevatorQueue()) {
                     if (travellingInCorrectDirection(buildingOccupant, topFloorNumber)) {
                         occupantsWaitingToEnter = true;
+                        break;
                     }
                 }
 
                 // If the doors are closed, the elevator is stationary and people are waiting to get in or out then begin opening doors
                 if (movementStatus.equals(STATIONARY) && (anyPassengerDestinationCurrentFloor() || occupantsWaitingToEnter)) openDoors();
 
-                break;
         }
         // Make the previous stored tick become this one
         occupantsLastTick.clear();
