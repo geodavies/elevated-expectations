@@ -1,6 +1,5 @@
 package uk.ac.aston.dc2300.gui.frames;
 
-import sun.applet.Main;
 import uk.ac.aston.dc2300.model.entity.*;
 import uk.ac.aston.dc2300.model.status.DeveloperCompany;
 
