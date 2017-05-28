@@ -1,4 +1,4 @@
-package uk.ac.aston.dc2300.gui;
+package uk.ac.aston.dc2300.gui.frames;
 
 import uk.ac.aston.dc2300.component.Simulation;
 import uk.ac.aston.dc2300.gui.util.*;
