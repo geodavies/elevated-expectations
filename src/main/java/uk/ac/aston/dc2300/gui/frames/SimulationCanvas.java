@@ -39,25 +39,22 @@ public class SimulationCanvas extends JPanel {
     @Override
     protected void paintComponent ( Graphics g ) {
         super.paintComponent ( g );
-        g.drawString("Lift", BORDER, BORDER_Y);
-        g.drawString("Queue", BORDER + SECTION_WIDTH, BORDER_Y);
-        g.drawString("On-Floor", BORDER + (SECTION_WIDTH * 2), BORDER_Y);
+        drawTitles(g);
 
+        // Check we have a building
         if (building != null) {
+
+            // Get the list of floors
             java.util.List<Floor> floors = building.getFloors();
             int numFloors = floors.size();
 
+            // Iterate through
             for (int f = 0; f < numFloors; f++) {
-                // Setup basic floor layout
-                g.drawRect(BORDER, BORDER_Y + BORDER + (SECTION_HEIGHT * f), SECTION_WIDTH, SECTION_HEIGHT);
-                g.drawRect(BORDER + SECTION_WIDTH, BORDER_Y + BORDER + (SECTION_HEIGHT * f), SECTION_WIDTH, SECTION_HEIGHT);
-                g.drawRect(BORDER + (2 * SECTION_WIDTH), BORDER_Y + BORDER + (SECTION_HEIGHT * f), SECTION_WIDTH, SECTION_HEIGHT);
-
                 // Get the current floor
                 Floor currentFloor = floors.get(numFloors - 1 - f);
-
-                g.drawString(currentFloor.getFloorNumber() + "", 0, BORDER_Y + BORDER + (SECTION_HEIGHT * f) + 10);
-
+                // Draw the basic skeleton
+                drawFloorSkeleton(currentFloor, g);
+                // Populate with people
                 populateFloor(currentFloor, g);
             }
 
@@ -66,8 +63,23 @@ public class SimulationCanvas extends JPanel {
             drawElevators(elevators, g);
 
         }
+        // Reset color
         g.setColor(Color.BLACK);
 
+    }
+
+    private void drawFloorSkeleton(Floor currentFloor, Graphics g) {
+        // Setup basic floor layout
+        g.drawRect(BORDER, BORDER_Y + BORDER + (SECTION_HEIGHT * currentFloor.getFloorNumber()), SECTION_WIDTH, SECTION_HEIGHT);
+        g.drawRect(BORDER + SECTION_WIDTH, BORDER_Y + BORDER + (SECTION_HEIGHT * currentFloor.getFloorNumber()), SECTION_WIDTH, SECTION_HEIGHT);
+        g.drawRect(BORDER + (2 * SECTION_WIDTH), BORDER_Y + BORDER + (SECTION_HEIGHT * currentFloor.getFloorNumber()), SECTION_WIDTH, SECTION_HEIGHT);
+        g.drawString(currentFloor.getFloorNumber() + "", 0, BORDER_Y + BORDER + (SECTION_HEIGHT * currentFloor.getFloorNumber()) + 10);
+    }
+
+    private void drawTitles(Graphics g) {
+        g.drawString("Lift", BORDER, BORDER_Y);
+        g.drawString("Queue", BORDER + SECTION_WIDTH, BORDER_Y);
+        g.drawString("On-Floor", BORDER + (SECTION_WIDTH * 2), BORDER_Y);
     }
 
     private void drawElevators(Set<Elevator> elevators, Graphics g) {
