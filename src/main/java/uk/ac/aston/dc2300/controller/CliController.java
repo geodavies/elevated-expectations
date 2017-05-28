@@ -1,13 +1,13 @@
 package uk.ac.aston.dc2300.controller;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.component.Simulation;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
+import uk.ac.aston.dc2300.model.entity.*;
+import uk.ac.aston.dc2300.model.status.SimulationStatus;
 import uk.ac.aston.dc2300.utility.CliUtils;
 
 import java.math.BigDecimal;
-import java.util.Scanner;
+import java.util.List;
 
 /**
  * An implementation of ApplicationController which allows command line interaction.
@@ -17,20 +17,14 @@ import java.util.Scanner;
  */
 public class CliController implements ApplicationController {
 
-    private static final Logger LOGGER = LogManager.getLogger(CliController.class);
-
     private final Simulation simulation;
 
+    private boolean simulationRunning;
 
     public CliController() {
-        LOGGER.info("Initializing application in 'cli' mode");
+        System.out.println("Initializing application in 'cli' mode");
         SimulationConfiguration simulationConfiguration = getConfigurationInput();
         simulation = new Simulation(simulationConfiguration);
-    }
-
-    @Override
-    public void start() {
-        simulation.start();
     }
 
     /**
@@ -72,21 +66,90 @@ public class CliController implements ApplicationController {
         /*
             Log collected values.
         */
-        LOGGER.debug("[CLI] Collected following values from input");
-        LOGGER.debug("[CLI] EmpChange: " + empFloorChangeProbability);
-        LOGGER.debug("[CLI] ClientArrive: " + clientArrivalProbability);
-        LOGGER.debug("[CLI] RandSeed: " + seed);
-        LOGGER.debug("[CLI] NumEmp: " + numEmployees);
-        LOGGER.debug("[CLI] NumDev: " + numDevelopers);
-        LOGGER.debug("[CLI] NumFloors: " + numFloors);
-        LOGGER.debug("[CLI] ElevatorCapacity: " + elevatorCapacity);
-        LOGGER.debug("[CLI] SimulationTime: " + simulationTime);
+        System.out.println("[CLI] Collected following values from input");
+        System.out.println("[CLI] EmpChange: " + empFloorChangeProbability);
+        System.out.println("[CLI] ClientArrive: " + clientArrivalProbability);
+        System.out.println("[CLI] RandSeed: " + seed);
+        System.out.println("[CLI] NumEmp: " + numEmployees);
+        System.out.println("[CLI] NumDev: " + numDevelopers);
+        System.out.println("[CLI] NumFloors: " + numFloors);
+        System.out.println("[CLI] ElevatorCapacity: " + elevatorCapacity);
+        System.out.println("[CLI] SimulationTime: " + simulationTime);
 
         // Create some space to improve legibility
         System.out.print("\n");
 
         return new SimulationConfiguration(empFloorChangeProbability, clientArrivalProbability, seed, numEmployees,
                 numDevelopers, numFloors, elevatorCapacity, simulationTime);
+    }
+
+    @Override
+    public void start() {
+        simulationRunning = true;
+        SimulationStatus currentStatus = null;
+        while (simulationRunning) {
+            currentStatus = simulation.tick();
+
+            displayBuilding(currentStatus.getBuilding());
+
+            simulationRunning = currentStatus.isSimulationRunning();
+        }
+        System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
+    }
+
+    private void displayBuilding(Building building) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        // Roof
+        stringBuilder.append("\n    Lift Queue           Floor\n");
+        stringBuilder.append("   +====+===============+==========+\n");
+
+        List<Floor> buildingFloors = building.getFloors();
+        for (int i = buildingFloors.size() - 1; i >= 0; i--) {
+            Floor currentFloor = buildingFloors.get(i);
+
+            StringBuilder queueStringBuilder = new StringBuilder();
+            for (BuildingOccupant occupant : currentFloor.getElevatorQueue()) {
+                queueStringBuilder.append(getLetterForBuildingOccupant(occupant));
+            }
+
+            StringBuilder floorStringBuilder = new StringBuilder();
+            for (BuildingOccupant occupant : currentFloor.getOccupants()) {
+                if (!currentFloor.getElevatorQueue().contains(occupant)) {
+                    floorStringBuilder.append(getLetterForBuildingOccupant(occupant));
+                }
+            }
+
+            StringBuilder elevatorStringBuilder = new StringBuilder();
+            List<Elevator> elevatorsOnFloor = building.getElevatorsOnFloor(currentFloor);
+            if (elevatorsOnFloor.size() > 0) {
+                for (BuildingOccupant occupant : elevatorsOnFloor.get(0).getPassengers()) {
+                    elevatorStringBuilder.append(getLetterForBuildingOccupant(occupant));
+                }
+            }
+
+            String elevatorPointer = "";
+            if (elevatorsOnFloor.size() > 0) {
+                elevatorPointer = ">";
+            }
+            stringBuilder.append(String.format("%1s %1s|%-4s|%-15s|%10s|\n", i, elevatorPointer, elevatorStringBuilder.toString(), queueStringBuilder.toString(), floorStringBuilder.toString()));
+        }
+        stringBuilder.append("   +====+===============+==========+\n");
+        System.out.println(stringBuilder.toString());
+    }
+
+    private String getLetterForBuildingOccupant(BuildingOccupant buildingOccupant) {
+        if (buildingOccupant instanceof Client) {
+            return "C";
+        } else if (buildingOccupant instanceof Developer) {
+            return "D";
+        } else if (buildingOccupant instanceof Employee) {
+            return "E";
+        } else if (buildingOccupant instanceof MaintenanceCrew) {
+            return "M";
+        } else {
+            return "?";
+        }
     }
 
 }

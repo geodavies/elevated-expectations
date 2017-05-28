@@ -1,5 +1,7 @@
 package uk.ac.aston.dc2300.model.entity;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,10 +15,7 @@ import java.util.Set;
 public class Building {
 
     private final Set<Elevator> elevators;
-
     private final List<Floor> floors;
-
-    private int numComplaints;
 
     /**
      * @param elevators The set of elevators inside the building
@@ -33,17 +32,6 @@ public class Building {
 
     public List<Floor> getFloors() {
         return floors;
-    }
-
-    /**
-     * Increments the number of complaints received by one
-     */
-    public void addComplaint() {
-        this.numComplaints  = numComplaints + 1;
-    }
-
-    public int getNumComplaints() {
-        return this.numComplaints;
     }
 
     /**
@@ -89,6 +77,29 @@ public class Building {
             if (floor.getOccupants().contains(buildingOccupant)) return floor;
         }
         return null;
+    }
+
+    /**
+     * Collects all of the occupants from each of the floors and returns them
+     *
+     * @return occupants from all floors
+     */
+    public Set<BuildingOccupant> getAllOccupants() {
+        Set<BuildingOccupant> occupants = new HashSet<>();
+        for (Floor floor : floors) {
+            occupants.addAll(floor.getOccupants());
+        }
+        return occupants;
+    }
+
+    public List<Elevator> getElevatorsOnFloor(Floor floor) {
+        List<Elevator> elevatorsOnFloor = new ArrayList<>();
+        for (Elevator elevator : elevators) {
+            if (elevator.getCurrentFloor().equals(floor)) {
+                elevatorsOnFloor.add(elevator);
+            }
+        }
+        return elevatorsOnFloor;
     }
 
 }

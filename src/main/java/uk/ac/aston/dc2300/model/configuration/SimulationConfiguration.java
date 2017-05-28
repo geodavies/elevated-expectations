@@ -29,7 +29,7 @@ public class SimulationConfiguration {
 
     /**
      * @param empFloorChangeProbability the probability each tick that an employee or developer will change their
-     *                                       current
+     *                                  current floor
      * @param clientArrivalProbability the probability each tick that a client will arrive at the building
      * @param seed the seed used to generate the randomness
      * @param numEmployees number of employees to begin simulation with

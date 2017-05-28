@@ -1,5 +1,11 @@
 package uk.ac.aston.dc2300.model.entity;
 
+import uk.ac.aston.dc2300.model.status.DeveloperCompany;
+import uk.ac.aston.dc2300.utility.RandomUtils;
+
+import java.math.BigDecimal;
+import java.util.List;
+
 /**
  * This class represents a developer that works in the building
  *
@@ -8,8 +14,31 @@ package uk.ac.aston.dc2300.model.entity;
  */
 public class Developer extends BuildingOccupant {
 
-    public Developer() {
-        super(1, 0);
+    private DeveloperCompany company;
+
+    /**
+     * @param timeEntered the time in seconds the Developer entered the building following simulation start
+     */
+    public Developer(int timeEntered, DeveloperCompany company) {
+        super(1, timeEntered);
+        this.company = company;
+    }
+
+    public DeveloperCompany getCompany() {
+        return this.company;
+    }
+
+    /**
+     * Checks an elevator for any rivals - returns boolean result.
+     * @param elevator the elevator to search for a rival developer in
+     */
+    private boolean elevatorContainsRival(Elevator elevator) {
+        for (BuildingOccupant passenger : elevator.getPassengers()) {
+            if (passenger instanceof Developer && ((Developer) passenger).getCompany() != this.company) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -21,10 +50,36 @@ public class Developer extends BuildingOccupant {
     public void getInElevator(Elevator elevator, Floor floor) {
         // Leave the queue
         floor.removeFromQueue(this);
-        // Leave the floor
-        floor.removeOccupant(this);
-        // Get in the elevator
-        elevator.addOccupant(this);
+        // If we have rivals in the elevator.
+        if (elevatorContainsRival(elevator)) {
+            System.out.println("Developer rejecting elevator due to rival.");
+            // Enter the back of the queue
+            floor.addToBackOfQueue(this);
+        } else {
+            System.out.println("Developer accepting elevator due to no rivals.");
+            // Leave the floor
+            floor.removeOccupant(this);
+            // Get in the elevator
+            elevator.addOccupant(this);
+        }
+    }
+
+    @Override
+    public void setNewDestination(Building building, RandomUtils randomUtils, BigDecimal probability, int currentTime) {
+        if (randomUtils.getBigDecimal().compareTo(probability) <= 0) {
+            Floor currentFloor = building.getFloorContainingOccupant(this);
+            // Assign developers a floor in the top half
+            List<Floor> topHalfFloors = building.getTopHalfFloors();
+            int randomFloorIndex = randomUtils.getIntInRange(0, topHalfFloors.size() - 1);
+            while (randomFloorIndex == currentFloor.getFloorNumber()) {
+                // If random floor is current floor try again
+                randomFloorIndex = randomUtils.getIntInRange(0, topHalfFloors.size() - 1);
+            }
+            Floor destination = topHalfFloors.get(randomFloorIndex);
+            setDestination(destination);
+            System.out.println(String.format("Developer on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
+            callElevator(currentFloor);
+        }
     }
 
 }

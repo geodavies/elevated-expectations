@@ -1,11 +1,7 @@
 package uk.ac.aston.dc2300.gui;
 
-import org.apache.log4j.LogManager;
 import uk.ac.aston.dc2300.component.Simulation;
-import uk.ac.aston.dc2300.gui.util.BigDecimalVerifier;
-import uk.ac.aston.dc2300.gui.util.IntegerVerifier;
-import uk.ac.aston.dc2300.gui.util.InvalidInputException;
-import uk.ac.aston.dc2300.gui.util.LongVerifier;
+import uk.ac.aston.dc2300.gui.util.*;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 
 import javax.swing.*;
@@ -20,7 +16,6 @@ import java.math.BigDecimal;
  * @since 06/04/17
  */
 public class LandingConfig {
-    private static final org.apache.log4j.Logger LOGGER = LogManager.getLogger(LandingConfig.class);
 
     private JPanel landingConfigPanel;
     private JTextField empFloorChangeProbabilityField;
@@ -33,9 +28,7 @@ public class LandingConfig {
     private JTextField elevatorCapacityField;
     private JTextField simulationTimeField;
 
-    /*
-        Define array of input fields
-    */
+    // Define array of input fields
     private final JTextField[] inputFields = {empFloorChangeProbabilityField,
             clientArrivalProbabilityField,
             randomSeedField,
@@ -45,9 +38,7 @@ public class LandingConfig {
             elevatorCapacityField,
             simulationTimeField};
 
-    /*
-        Defining Required Simulation Config Data
-    */
+    // Defining Required Simulation Config Data
     private BigDecimal empFloorChangeProbability;
     private BigDecimal clientArrivalProbability;
     private long seed;
@@ -57,18 +48,14 @@ public class LandingConfig {
     private int elevatorCapacity;
     private int simulationTime;
 
-    /*
-        Defining Required Simulation Config Data
-    */
+    // Defining Required Simulation Config Data
     private Simulation simulation;
 
-    public LandingConfig(){
+    public LandingConfig(GUIChange changeNotifier){
         // Setup input verifiers
         empFloorChangeProbabilityField.setInputVerifier(new BigDecimalVerifier());
         clientArrivalProbabilityField.setInputVerifier(new BigDecimalVerifier());
-
         randomSeedField.setInputVerifier(new LongVerifier());
-
         numberEmployeesField.setInputVerifier(new IntegerVerifier());
         numberDevelopersField.setInputVerifier(new IntegerVerifier());
         numberFloorsField.setInputVerifier(new IntegerVerifier());
@@ -87,21 +74,22 @@ public class LandingConfig {
                 /*
                     Button Pressed - Populate Values
                  */
-                LOGGER.info("[GUI] Button Pressed - Initiating Simulation");
+                System.out.println("[GUI] Button Pressed - Initiating Simulation");
                 collectInputData();
 
                 /*
                     Values Retrieved - Pass to Config Object
                 */
                 SimulationConfiguration configObject = getSimulationConfiguration();
-                LOGGER.debug("[GUI] Constructed config obj: " + configObject.toString());
+                System.out.println("[GUI] Constructed config obj: " + configObject.toString());
 
-                /*
-                    SimulationConfiguration Object Instantiated.
-                    Instantiate Simulation and run it.
+               /*
+                    Call GUI Change listener
                 */
-                simulation = new Simulation(configObject);
-                simulation.start();
+               if (changeNotifier != null) {
+                   System.out.println("[GUI] Passing changes to controller");
+                   changeNotifier.guiChange(configObject);
+               }
 
             } catch (InvalidInputException invalidException){
                 JOptionPane.showMessageDialog(getConfigPanel(), invalidException.toString());
@@ -111,7 +99,7 @@ public class LandingConfig {
     }
 
     /**
-     * Method validates all inputfields against their respective input
+     * Method validates all input fields against their respective input
      * verifiers.
      *
      * @throws InvalidInputException if any input field doesn't validate
@@ -119,7 +107,7 @@ public class LandingConfig {
     private void validateFields() throws InvalidInputException {
         for (JTextField currentField: inputFields) {
 
-            LOGGER.debug("[GUI] Current field is valid: "
+            System.out.println("[GUI] Current field is valid: "
                     + currentField.getInputVerifier().verify(currentField));
 
             // Get input verifier and validate fields with it.
@@ -148,10 +136,9 @@ public class LandingConfig {
      * the type-parsed results in appropriate class fields.
      */
     private void collectInputData() {
-        LOGGER.info("[GUI] Collecting Values from Fields");
-        /*
-            Collect and parse values from each field.
-        */
+        System.out.println("[GUI] Collecting Values from Fields");
+
+        // Collect and parse values from each field.
         empFloorChangeProbability = new BigDecimal(empFloorChangeProbabilityField.getText());
         clientArrivalProbability = new BigDecimal(clientArrivalProbabilityField.getText());
         seed = Long.parseLong(randomSeedField.getText());
@@ -161,18 +148,16 @@ public class LandingConfig {
         elevatorCapacity = Integer.parseInt(elevatorCapacityField.getText());
         simulationTime = Integer.parseInt(simulationTimeField.getText());
 
-        /*
-            Log collected values.
-        */
-        LOGGER.debug("[GUI] Collected following values from input");
-        LOGGER.debug("[GUI] EmpChange: " + empFloorChangeProbability);
-        LOGGER.debug("[GUI] ClientArrive: " + clientArrivalProbability);
-        LOGGER.debug("[GUI] RandSeed: " + seed);
-        LOGGER.debug("[GUI] NumEmp: " + numEmployees);
-        LOGGER.debug("[GUI] NumDev: " + numDevelopers);
-        LOGGER.debug("[GUI] NumFloors: " + numFloors);
-        LOGGER.debug("[GUI] ElevatorCapacity: " + elevatorCapacity);
-        LOGGER.debug("[GUI] SimulationTime: " + simulationTime);
+        // Log collected values.
+        System.out.println("[GUI] Collected following values from input");
+        System.out.println("[GUI] EmpChange: " + empFloorChangeProbability);
+        System.out.println("[GUI] ClientArrive: " + clientArrivalProbability);
+        System.out.println("[GUI] RandSeed: " + seed);
+        System.out.println("[GUI] NumEmp: " + numEmployees);
+        System.out.println("[GUI] NumDev: " + numDevelopers);
+        System.out.println("[GUI] NumFloors: " + numFloors);
+        System.out.println("[GUI] ElevatorCapacity: " + elevatorCapacity);
+        System.out.println("[GUI] SimulationTime: " + simulationTime);
     }
 
     /**
@@ -185,7 +170,4 @@ public class LandingConfig {
         return landingConfigPanel;
     }
 
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
-    }
 }

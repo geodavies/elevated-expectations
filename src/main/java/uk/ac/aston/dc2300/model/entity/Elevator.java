@@ -1,7 +1,5 @@
 package uk.ac.aston.dc2300.model.entity;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import uk.ac.aston.dc2300.model.status.ElevatorDoorStatus;
 import uk.ac.aston.dc2300.model.status.ElevatorMovementStatus;
 
@@ -33,38 +31,25 @@ public class Elevator {
     private final int MAX_CAPACITY;
 
     private ElevatorDoorStatus doorStatus;
+
     private ElevatorMovementStatus movementStatus;
 
-    private static final Logger LOGGER = LogManager.getLogger(Elevator.class);
-
     /**
-     * @param MAX_CAPACITY the maximum amount of spaces available inside the elevator
+     * @param maxCapacity the maximum amount of spaces available inside the elevator
      * @param currentFloor the floor at which the elevator is to start
      */
-    public Elevator(int MAX_CAPACITY, Floor currentFloor){
-        this.MAX_CAPACITY = MAX_CAPACITY;
+    public Elevator(int maxCapacity, Floor currentFloor){
+        MAX_CAPACITY = maxCapacity;
         this.currentFloor = currentFloor;
-        this.previousFloor = currentFloor;
+        previousFloor = currentFloor;
         currentOccupants = new HashSet<>();
         occupantsLastTick = new HashSet<>();
         doorStatus = CLOSED;
         movementStatus = STATIONARY;
     }
-
-    public Floor getCurrentFloor() {
-        return currentFloor;
-    }
-
-    public Set<BuildingOccupant> getOccupants() {
-        return currentOccupants;
-    }
-
-    public int getMaxCapacity() {
-        return MAX_CAPACITY;
-    }
-
+  
     /**
-     * Adds a BuildingOccupant to the elevator
+     * Adds a BuildingOccupant to the elevator.
      *
      * @param buildingOccupant the BuildingOccupant to be added
      */
@@ -73,7 +58,7 @@ public class Elevator {
     }
 
     /**
-     * Removes a BuildingOccupant from the elevator
+     * Removes a BuildingOccupant from the elevator.
      *
      * @param buildingOccupant the BuildingOccupant to be removed
      */
@@ -88,7 +73,6 @@ public class Elevator {
      * @param floors list of floors in the building
      */
     public void moveIfRequested(List<Floor> floors) {
-
         if (movementStatus.equals(MOVING)) {
             movementStatus = STATIONARY;
         } else {
@@ -121,27 +105,34 @@ public class Elevator {
                 }
             }
         }
+    }
 
-
+    /**
+     * Gets any passengers currently in the elevator.
+     * @return Passengers
+     */
+    public Set<BuildingOccupant> getPassengers(){
+        return currentOccupants;
     }
 
     /**
      * Gets any passengers from the current floor and puts them into the elevator if there's enough space and rules are
-     * met
+     * met.
      */
     public void loadPassengers() {
         if (doorStatus.equals(OPEN)) {
             // Create a copy of the occupants to allow for concurrent modification
             LinkedList<BuildingOccupant> elevatorQueue = new LinkedList<>(currentFloor.getElevatorQueue());
             for (BuildingOccupant buildingOccupant : elevatorQueue) {
+                int usedCapacity = getUsedCapacity();
                 // If the elevator is full then stop loading
-                if (MAX_CAPACITY == getUsedCapacity()) {
+                if (MAX_CAPACITY == usedCapacity) {
                     break;
                 }
-                if (getUsedCapacity() + buildingOccupant.getSize() <= MAX_CAPACITY) {
+                if (usedCapacity + buildingOccupant.getSize() <= MAX_CAPACITY) {
                     // Command the passenger to get in the elevator
                     buildingOccupant.getInElevator(this, currentFloor);
-                    LOGGER.info(String.format("Picked up new passenger going to floor %s", buildingOccupant.getDestination().getFloorNumber()));
+                    System.out.println(String.format("Picked up new passenger going to floor %s", buildingOccupant.getDestination().getFloorNumber()));
                 }
             }
         }
@@ -150,32 +141,34 @@ public class Elevator {
     /**
      * Gets any passengers currently in the elevator that have a destination of the current floor and moves them onto
      * that floor.
+     *
+     * @param currentTime The current time of the simulation
      */
-    public void unloadPassengers() {
+    public void unloadPassengers(int currentTime) {
         if (doorStatus.equals(OPEN)) {
             // Create a copy of the occupants to allow for concurrent modification
             Set<BuildingOccupant> elevatorOccupants = new HashSet<>(currentOccupants);
             for (BuildingOccupant buildingOccupant : elevatorOccupants) {
-                buildingOccupant.getOutElevatorIfAtDestination(this, currentFloor);
+                buildingOccupant.getOutElevatorIfAtDestination(this, currentFloor, currentTime);
             }
         }
     }
 
     /**
      * This method looks at destinations of passengers and queue on current floor and determine whether the doors need
-     * to be opened or closed
+     * to be opened or closed.
      */
     public void updateElevatorStatus() {
         switch (doorStatus) {
             case OPENING:
                 // If the doors are opening, finish opening them
                 doorStatus = OPEN;
-                LOGGER.debug("Elevator doors are now open");
+                System.out.println("Elevator doors are now open");
                 break;
             case CLOSING:
                 // If the doors are closing, finish closing them
                 doorStatus = CLOSED;
-                LOGGER.debug("Elevator doors are now closed");
+                System.out.println("Elevator doors are now closed");
                 break;
             case OPEN:
                 // If the doors are open and nobody entered last tick then begin closing doors
@@ -247,7 +240,7 @@ public class Elevator {
             previousFloor = currentFloor;
             // Increment current floor
             currentFloor = floors.get(currentFloor.getFloorNumber() + 1);
-            LOGGER.info(String.format("Elevator moving up from floor %s to floor %s", previousFloor.getFloorNumber(), currentFloor.getFloorNumber()));
+            System.out.println(String.format("Elevator moving up from floor %s to floor %s", previousFloor.getFloorNumber(), currentFloor.getFloorNumber()));
         }
     }
 
@@ -262,7 +255,7 @@ public class Elevator {
             previousFloor = currentFloor;
             // Decrement current floor
             currentFloor = floors.get(currentFloor.getFloorNumber() - 1);
-            LOGGER.info(String.format("Elevator moving down from floor %s to floor %s", previousFloor.getFloorNumber(), currentFloor.getFloorNumber()));
+            System.out.println(String.format("Elevator moving down from floor %s to floor %s", previousFloor.getFloorNumber(), currentFloor.getFloorNumber()));
         }
     }
 
@@ -297,7 +290,7 @@ public class Elevator {
      * Sets the doorStatus to opening which takes one tick to complete
      */
     private void openDoors() {
-        LOGGER.debug("Opening elevator doors");
+        System.out.println("Opening elevator doors");
         doorStatus = OPENING;
     }
 
@@ -305,8 +298,20 @@ public class Elevator {
      * Sets the doorStatus to closing which takes one tick to complete
      */
     private void closeDoors() {
-        LOGGER.debug("Closing elevator doors");
+        System.out.println("Closing elevator doors");
         doorStatus = CLOSING;
+    }
+  
+    public Floor getCurrentFloor() {
+        return currentFloor;
+    }
+
+    public Set<BuildingOccupant> getOccupants() {
+        return currentOccupants;
+    }
+
+    public int getMaxCapacity() {
+        return MAX_CAPACITY;
     }
 
 }
