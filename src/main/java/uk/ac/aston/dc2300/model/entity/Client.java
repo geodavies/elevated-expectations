@@ -14,6 +14,7 @@ import java.util.List;
 public class Client extends BuildingOccupant {
 
     private int leaveAfterArrivalTime;
+    private int queueEnterTime;
 
     /**
      * @param timeEntered the time in seconds the Client entered the building following simulation start
@@ -22,6 +23,15 @@ public class Client extends BuildingOccupant {
     public Client(int timeEntered, int leaveAfterArrivalTime) {
         super(1, timeEntered);
         this.leaveAfterArrivalTime = leaveAfterArrivalTime;
+        this.queueEnterTime = -1;
+    }
+
+    public boolean wouldLikeToComplain(int currentTime) {
+        if (queueEnterTime > -1 && (currentTime - queueEnterTime) >= 600) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -37,6 +47,13 @@ public class Client extends BuildingOccupant {
         floor.removeOccupant(this);
         // Get in the elevator
         elevator.addOccupant(this);
+        // Leaving queue
+        queueEnterTime = -1;
+    }
+
+    public void getReadyToLeave(Floor ground) {
+        setDestination(ground);
+        queueEnterTime = -1;
     }
 
     @Override
@@ -56,6 +73,8 @@ public class Client extends BuildingOccupant {
             setDestination(destination);
             System.out.println(String.format("Client arrived on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
             callElevator(currentFloor);
+            // Entered queue, start the clock
+            queueEnterTime = currentTime;
         } else if (currentFloor.equals(groundFloor) && destination.equals(groundFloor)) {
             leaveBuilding(currentFloor);
             System.out.println("Client has left the building");
@@ -64,6 +83,8 @@ public class Client extends BuildingOccupant {
             setDestination(groundFloor);
             System.out.println(String.format("Client on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
             callElevator(currentFloor);
+            // Entered queue, start the clock
+            queueEnterTime = currentTime;
         }
     }
 }

@@ -16,6 +16,7 @@ public class Building {
 
     private final Set<Elevator> elevators;
     private final List<Floor> floors;
+    private int numberComplaints;
 
     /**
      * @param elevators The set of elevators inside the building
@@ -24,6 +25,7 @@ public class Building {
     public Building(Set<Elevator> elevators, List<Floor> floors) {
         this.elevators = elevators;
         this.floors = floors;
+        numberComplaints = 0;
     }
 
     public Set<Elevator> getElevators() {
@@ -100,4 +102,31 @@ public class Building {
         return elevatorsOnFloor;
     }
 
+
+    /**
+     * Check for client complaints.
+     *
+     * @param currentTime the current time - to check for clients waiting
+     *                    longer than 10 mins
+     */
+    public int getClientComplaints(int currentTime) {
+        Set<BuildingOccupant> occupants = getAllOccupants();
+        for(BuildingOccupant occupant : occupants) {
+            if (occupant instanceof Client) {
+                Client client = (Client) occupant;
+                if (client.wouldLikeToComplain(currentTime)) {
+                    // Complain
+                    numberComplaints++;
+                    System.out.println("Client complaining and leaving, total complaints: " + numberComplaints);
+                    // Leave
+                    client.getReadyToLeave(getFloors().get(0));
+                }
+            }
+        }
+        return numberComplaints;
+    }
+
+    public int getNumberComplaints() {
+        return numberComplaints;
+    }
 }

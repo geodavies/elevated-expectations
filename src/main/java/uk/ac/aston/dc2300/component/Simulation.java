@@ -117,6 +117,8 @@ public class Simulation {
         loadElevators();
         moveElevators();
 
+        BUILDING.getClientComplaints(currentTime);
+
         SimulationStatus currentStatus = new SimulationStatus(BUILDING, currentTime, currentTime <= SIMULATION_RUN_TIME);
         currentTime += 10;
 
