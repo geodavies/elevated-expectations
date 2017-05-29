@@ -53,14 +53,14 @@ public class SimulationCanvas extends JPanel {
                 // Get the current floor
                 Floor currentFloor = floors.get(numFloors - 1 - f);
                 // Draw the basic skeleton
-                drawFloorSkeleton(currentFloor, g);
+                drawFloorSkeleton(currentFloor, g, numFloors);
                 // Populate with people
-                populateFloor(currentFloor, g);
+                populateFloor(currentFloor, g, numFloors);
             }
 
             // Draw elevators
             Set<Elevator> elevators = building.getElevators();
-            drawElevators(elevators, g);
+            drawElevators(elevators, g, numFloors);
 
         }
         // Reset color
@@ -68,12 +68,13 @@ public class SimulationCanvas extends JPanel {
 
     }
 
-    private void drawFloorSkeleton(Floor currentFloor, Graphics g) {
+    private void drawFloorSkeleton(Floor currentFloor, Graphics g, int numFloors) {
+        int floorPosition = numFloors - 1 - currentFloor.getFloorNumber();
         // Setup basic floor layout
-        g.drawRect(BORDER, BORDER_Y + BORDER + (SECTION_HEIGHT * currentFloor.getFloorNumber()), SECTION_WIDTH, SECTION_HEIGHT);
-        g.drawRect(BORDER + SECTION_WIDTH, BORDER_Y + BORDER + (SECTION_HEIGHT * currentFloor.getFloorNumber()), SECTION_WIDTH, SECTION_HEIGHT);
-        g.drawRect(BORDER + (2 * SECTION_WIDTH), BORDER_Y + BORDER + (SECTION_HEIGHT * currentFloor.getFloorNumber()), SECTION_WIDTH, SECTION_HEIGHT);
-        g.drawString(currentFloor.getFloorNumber() + "", 0, BORDER_Y + BORDER + (SECTION_HEIGHT * currentFloor.getFloorNumber()) + 10);
+        g.drawRect(BORDER, BORDER_Y + BORDER + (SECTION_HEIGHT * floorPosition), SECTION_WIDTH, SECTION_HEIGHT);
+        g.drawRect(BORDER + SECTION_WIDTH, BORDER_Y + BORDER + (SECTION_HEIGHT * floorPosition), SECTION_WIDTH, SECTION_HEIGHT);
+        g.drawRect(BORDER + (2 * SECTION_WIDTH), BORDER_Y + BORDER + (SECTION_HEIGHT * floorPosition), SECTION_WIDTH, SECTION_HEIGHT);
+        g.drawString(currentFloor.getFloorNumber() + "", 0, BORDER_Y + BORDER + (SECTION_HEIGHT * floorPosition) + 10);
     }
 
     private void drawTitles(Graphics g) {
@@ -82,7 +83,7 @@ public class SimulationCanvas extends JPanel {
         g.drawString("On-Floor", BORDER + (SECTION_WIDTH * 2), BORDER_Y);
     }
 
-    private void drawElevators(Set<Elevator> elevators, Graphics g) {
+    private void drawElevators(Set<Elevator> elevators, Graphics g, int numFloors) {
 
         int elevatorCount = elevators.size();
         int elevatorId = 0;
@@ -93,10 +94,10 @@ public class SimulationCanvas extends JPanel {
         for (Elevator elevator: elevators) {
 
             Set<BuildingOccupant> passengers = elevator.getPassengers();
-            int currentFloorNumber = elevator.getCurrentFloor().getFloorNumber();
+            int floorPosition = numFloors - elevator.getCurrentFloor().getFloorNumber() - 1;
 
             int elevatorX = BORDER + (elevatorId * sectionWidth) + 5;
-            int elevatorY = BORDER_Y + BORDER + 5 + (SECTION_HEIGHT * currentFloorNumber);
+            int elevatorY = BORDER_Y + BORDER + 5 + (SECTION_HEIGHT * floorPosition);
 
             g.drawRect(elevatorX, elevatorY, sectionWidth, elevatorHeight);
 
@@ -114,7 +115,17 @@ public class SimulationCanvas extends JPanel {
 
     }
 
-    private void populateFloor(Floor currentFloor, Graphics g) {
+
+    /**
+     * Method populates a given floor on the UI both with the occupants
+     * in the elevator queue and generally on the given floor.
+     *
+     * @param currentFloor The floor to populate
+     * @param g the graphics context to use to draw the occupants
+     */
+    private void populateFloor(Floor currentFloor, Graphics g, int floorCount) {
+
+        int floorPos = floorCount - currentFloor.getFloorNumber() - 1;
 
         // Get the elevator queue
         LinkedList<BuildingOccupant> queue = currentFloor.getElevatorQueue();
@@ -123,7 +134,7 @@ public class SimulationCanvas extends JPanel {
         // Draw each person in the queue
         for (int position = 0; position < queueLength; position++) {
             g.setColor(getColorForOccupant(queue.get(position)));
-            g.fillOval( (BORDER * 2) + SECTION_WIDTH + (position * PERSON_RADIUS) + 2, BORDER_Y + (BORDER * 2) + (SECTION_HEIGHT * currentFloor.getFloorNumber()), PERSON_RADIUS, PERSON_RADIUS);
+            g.fillOval( (BORDER * 2) + SECTION_WIDTH + (position * PERSON_RADIUS) + 2, BORDER_Y + (BORDER * 2) + (SECTION_HEIGHT * floorPos), PERSON_RADIUS, PERSON_RADIUS);
         }
 
         // Get the floor occupants
@@ -134,13 +145,20 @@ public class SimulationCanvas extends JPanel {
         for(BuildingOccupant occupant : floorOccupants) {
             position++;
             g.setColor(getColorForOccupant(occupant));
-            g.fillOval( (BORDER * 2) + (2 * SECTION_WIDTH) + (position * PERSON_RADIUS) + 2, BORDER_Y + (BORDER * 2) + (SECTION_HEIGHT * currentFloor.getFloorNumber()), PERSON_RADIUS, PERSON_RADIUS);
+            g.fillOval( (BORDER * 2) + (2 * SECTION_WIDTH) + (position * PERSON_RADIUS) + 2, BORDER_Y + (BORDER * 2) + (SECTION_HEIGHT * floorPos), PERSON_RADIUS, PERSON_RADIUS);
         }
 
         g.setColor ( Color.BLACK );
 
     }
 
+    /**
+     * Method returns an appropriate fill color for the BuildingOccupant provided.
+     *
+     * @param buildingOccupant The occupant to find a color for
+     *
+     * @return The fill color for the building occupant provided
+     */
     private Color getColorForOccupant(BuildingOccupant buildingOccupant) {
         if (buildingOccupant instanceof Client) {
             return Color.BLUE;

@@ -42,22 +42,12 @@ public class LandingConfig {
     private int elevatorCapacity;
     private int simulationTime;
 
-    // Defining Required Simulation Config Data
-    private Simulation simulation;
-
     public LandingConfig(GUIChange changeNotifier){
         // Construct UI
         constructUI();
 
         // Setup input verifiers
-        empFloorChangeProbabilityField.setInputVerifier(new BigDecimalVerifier());
-        clientArrivalProbabilityField.setInputVerifier(new BigDecimalVerifier());
-        randomSeedField.setInputVerifier(new LongVerifier());
-        numberEmployeesField.setInputVerifier(new IntegerVerifier());
-        numberDevelopersField.setInputVerifier(new IntegerVerifier());
-        numberFloorsField.setInputVerifier(new IntegerVerifier());
-        elevatorCapacityField.setInputVerifier(new IntegerVerifier());
-        simulationTimeField.setInputVerifier(new IntegerVerifier());
+        setupInputVerifiers();
 
         // Setup save button listener
         saveButton.addActionListener(e -> {
@@ -95,6 +85,25 @@ public class LandingConfig {
         });
     }
 
+    /**
+     * Method performs initial UI setup -
+     * registering input verifiers on each of the 8 fields.
+     */
+    private void setupInputVerifiers() {
+        empFloorChangeProbabilityField.setInputVerifier(new BigDecimalVerifier());
+        clientArrivalProbabilityField.setInputVerifier(new BigDecimalVerifier());
+        randomSeedField.setInputVerifier(new LongVerifier());
+        numberEmployeesField.setInputVerifier(new IntegerVerifier());
+        numberDevelopersField.setInputVerifier(new IntegerVerifier());
+        numberFloorsField.setInputVerifier(new IntegerVerifier());
+        elevatorCapacityField.setInputVerifier(new IntegerVerifier());
+        simulationTimeField.setInputVerifier(new IntegerVerifier());
+    }
+
+    /**
+     * Method performs initial UI construction of the 8 form fields,
+     * title, labels and 'run' button.
+     */
     private void constructUI() {
 
         landingConfigPanel = new JPanel();
@@ -153,6 +162,14 @@ public class LandingConfig {
                 simulationTimeField};
     }
 
+    /**
+     * Method wraps a given form field with a label to the left with a title provided.
+     *
+     * @param label The label to display to the left of the textfield
+     * @param textField The text-field to wrap with a label
+     *
+     * @return A JPanel with the label and text field horizontally contained.
+     */
     private JPanel wrapFieldWithLabel(String label, JTextField textField) {
         JPanel formContainer = new JPanel();
         formContainer.setLayout(new GridLayout(1, 2));
