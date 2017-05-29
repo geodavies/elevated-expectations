@@ -111,10 +111,10 @@ public class LandingConfig {
         // Add title
         JLabel title = new JLabel("Elevated Expectations");
         title.setFont(new Font(null, Font.BOLD, 20));
-        Box b1 = Box.createHorizontalBox();
-        b1.add( title );
-        b1.add( Box.createHorizontalGlue() );
-        landingConfigPanel.add(b1);
+        Box titleBox = Box.createHorizontalBox();
+        titleBox.add(title);
+        titleBox.add(Box.createHorizontalGlue());
+        landingConfigPanel.add(titleBox);
 
 
         empFloorChangeProbabilityField = new LabelledSliderFP("FloorChangeProbability", 0.01, 0, 100, 100);
