@@ -93,7 +93,8 @@ public class SimulationCanvas extends JPanel {
 
         for (Elevator elevator: elevators) {
 
-            Set<BuildingOccupant> passengers = elevator.getPassengers();
+            Set<BuildingOccupant> passengers = new HashSet<>();
+            passengers.addAll(elevator.getPassengers());
             int floorPosition = numFloors - elevator.getCurrentFloor().getFloorNumber() - 1;
 
             int elevatorX = BORDER + (elevatorId * sectionWidth) + 5;
@@ -128,7 +129,9 @@ public class SimulationCanvas extends JPanel {
         int floorPos = floorCount - currentFloor.getFloorNumber() - 1;
 
         // Get the elevator queue
-        LinkedList<BuildingOccupant> queue = currentFloor.getElevatorQueue();
+        LinkedList<BuildingOccupant> queue =  new LinkedList<>();
+        queue.addAll(currentFloor.getElevatorQueue());
+
         int queueLength = queue.size();
 
         // Draw each person in the queue
@@ -137,8 +140,9 @@ public class SimulationCanvas extends JPanel {
             g.fillOval( (BORDER * 2) + SECTION_WIDTH + (position * PERSON_RADIUS) + 2, BORDER_Y + (BORDER * 2) + (SECTION_HEIGHT * floorPos), PERSON_RADIUS, PERSON_RADIUS);
         }
 
+        Set<BuildingOccupant> floorOccupants = new HashSet<>();
         // Get the floor occupants
-        Set<BuildingOccupant> floorOccupants = currentFloor.getOccupants();
+        floorOccupants.addAll(currentFloor.getOccupants());
 
         // Draw each person on the floor
         int position = 0;
