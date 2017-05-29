@@ -1,0 +1,173 @@
+package uk.ac.aston.dc2300.model.entity;
+
+import org.junit.Before;
+import org.junit.Test;
+import uk.ac.aston.dc2300.model.status.DeveloperCompany;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+/**
+ * Test class for the Elevator functions
+ *
+ * @author Scott Janes
+ * @since 29/05/17
+ */
+public class FloorTest {
+
+    private List<Floor> floors;
+
+
+    /**
+     * Setup before each test run for a basic elevator
+     */
+    @Before
+    public void setup() {
+        floors = new ArrayList<>();
+        for(int i = 0; i < 6; i++) {
+            floors.add(new Floor(i));
+        }
+    }
+
+    /**
+     * Test to check occupant is added to floor correctly
+     */
+    @Test
+    public void addOccupantToFloor() {
+        // Create new employee
+        Employee employee = new Employee(0);
+        // Get ground floor
+        Floor groundFloor = floors.get(0);
+        // Floor contains no occupants
+        assertEquals(0, groundFloor.getOccupants().size());
+        // Add occupant to ground floor
+        groundFloor.addOccupant(employee);
+        // Floor contains one occupant
+        assertEquals(1, groundFloor.getOccupants().size());
+    }
+
+    /**
+     * Test to check occupant is removed from floor correctly
+     */
+    @Test
+    public void removeOccupantFromFloor() {
+        // Create new employee
+        Employee employee = new Employee(0);
+        // Get ground floor
+        Floor groundFloor = floors.get(0);
+        // Add occupant to ground floor
+        groundFloor.addOccupant(employee);
+        // Floor contains one occupant
+        assertEquals(1, groundFloor.getOccupants().size());
+        // Remove occupant from ground floor
+        groundFloor.removeOccupant(employee);
+        // Floor contains no occupants
+        assertEquals(0, groundFloor.getOccupants().size());
+    }
+
+    /**
+     * Test to check occupant is added to the back of the elevator queue correctly
+     */
+    @Test
+    public void addOccupantToBackOfQueue() {
+        // Create new employee
+        Employee employee = new Employee(0);
+        // Create new developer
+        Developer developer = new Developer(0, DeveloperCompany.GOGGLES);
+        // Get ground floor
+        Floor groundFloor = floors.get(0);
+        // Add employee to elevator queue
+        groundFloor.addToBackOfQueue(employee);
+        // Elevator queue contains one occupant
+        assertEquals(1, groundFloor.getElevatorQueue().size());
+        // Elevator queue contains employee
+        assertEquals(groundFloor.getElevatorQueue().get(0), employee);
+        // Add developer to back of queue behind employee
+        groundFloor.addToBackOfQueue(developer);
+
+        LinkedList<BuildingOccupant> elevatorQueue = groundFloor.getElevatorQueue();
+        // Employee is first in elevator queue
+        assertEquals(elevatorQueue.get(0), employee);
+        // Developer is last in elevator queue
+        assertEquals(elevatorQueue.get(1), developer);
+    }
+
+    /**
+     * Test to check occupant is added to the front of the elevator queue correctly
+     */
+    @Test
+    public void addOccupantToFrontOfQueue() {
+        // Create new employee
+        Employee employee = new Employee(0);
+        // Create new developer
+        Developer developer = new Developer(0, DeveloperCompany.GOGGLES);
+        // Get ground floor
+        Floor groundFloor = floors.get(0);
+        // Add employee to elevator queue
+        groundFloor.addToFrontOfQueue(employee);
+        // Elevator queue contains one occupant
+        assertEquals(1, groundFloor.getElevatorQueue().size());
+        // Elevator queue contains employee
+        assertEquals(groundFloor.getElevatorQueue().get(0), employee);
+        // Add developer to front of queue before employee
+        groundFloor.addToFrontOfQueue(developer);
+
+        LinkedList<BuildingOccupant> elevatorQueue = groundFloor.getElevatorQueue();
+        // Developer is first in elevator queue
+        assertEquals(elevatorQueue.get(0), developer);
+        // Employee is last in elevator queue
+        assertEquals(elevatorQueue.get(1), employee);
+    }
+
+    /**
+     * Test to check occupant is removed from elevator queue correctly
+     */
+    @Test
+    public void removeOccupantFromElevatorQueue() {
+        // Create new employee
+        Employee employee = new Employee(0);
+        // Get ground floor
+        Floor groundFloor = floors.get(0);
+        // Add employee to elevator queue
+        groundFloor.addToBackOfQueue(employee);
+        // Elevator queue contains one occupant
+        assertEquals(1, groundFloor.getElevatorQueue().size());
+        // Remove occupant from elevator queue
+        groundFloor.removeFromQueue(employee);
+        // Elevator queue contains no occupants
+        assertEquals(0, groundFloor.getElevatorQueue().size());
+    }
+
+    /**
+     * Test to check occupant is waiting for elevator
+     */
+    @Test
+    public void occupantIsWaitingForElevator() {
+        // Create new employee
+        Employee employee = new Employee(0);
+        // Get ground floor
+        Floor groundFloor = floors.get(0);
+        // Add employee to elevator queue
+        groundFloor.addToBackOfQueue(employee);
+        // Occupant is waiting for elevator
+        assertTrue(groundFloor.isAnyoneWaiting());
+    }
+
+    /**
+     * Test to check occupant isn't waiting for elevator
+     */
+    @Test
+    public void occupantIsntWaitingForElevator() {
+        // Create new employee
+        Employee employee = new Employee(0);
+        // Get ground floor
+        Floor groundFloor = floors.get(0);
+        // Occupant is waiting for elevator
+        assertFalse(groundFloor.isAnyoneWaiting());
+    }
+}
