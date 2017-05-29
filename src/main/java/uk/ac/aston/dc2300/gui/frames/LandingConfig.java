@@ -6,6 +6,7 @@ import uk.ac.aston.dc2300.gui.util.*;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.math.BigDecimal;
 
@@ -106,6 +107,8 @@ public class LandingConfig {
     private void constructUI() {
 
         landingConfigPanel = new JPanel();
+        landingConfigPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
         landingConfigPanel.setLayout(new BoxLayout(landingConfigPanel, BoxLayout.Y_AXIS));
 
         // Add title
