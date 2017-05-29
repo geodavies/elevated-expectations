@@ -180,7 +180,7 @@ public class Simulation {
      */
     private void updateElevatorStatuses() {
         for (Elevator elevator : BUILDING.getElevators()) {
-            elevator.updateElevatorStatus();
+            elevator.updateDoorStatus(BUILDING.getFloors().size() - 1);
         }
     }
 
@@ -198,7 +198,7 @@ public class Simulation {
      */
     private void loadElevators() {
         for (Elevator elevator : BUILDING.getElevators()) {
-            elevator.loadPassengers();
+            elevator.loadPassengers(BUILDING.getFloors().size() - 1);
         }
     }
 
