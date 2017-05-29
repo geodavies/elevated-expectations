@@ -5,6 +5,7 @@ import uk.ac.aston.dc2300.gui.util.*;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 
 import javax.swing.*;
+import java.awt.*;
 import java.math.BigDecimal;
 
 /**
@@ -29,14 +30,7 @@ public class LandingConfig {
     private JTextField simulationTimeField;
 
     // Define array of input fields
-    private final JTextField[] inputFields = {empFloorChangeProbabilityField,
-            clientArrivalProbabilityField,
-            randomSeedField,
-            numberEmployeesField,
-            numberDevelopersField,
-            numberFloorsField,
-            elevatorCapacityField,
-            simulationTimeField};
+    private JTextField[] inputFields;
 
     // Defining Required Simulation Config Data
     private BigDecimal empFloorChangeProbability;
@@ -52,6 +46,9 @@ public class LandingConfig {
     private Simulation simulation;
 
     public LandingConfig(GUIChange changeNotifier){
+        // Construct UI
+        constructUI();
+
         // Setup input verifiers
         empFloorChangeProbabilityField.setInputVerifier(new BigDecimalVerifier());
         clientArrivalProbabilityField.setInputVerifier(new BigDecimalVerifier());
@@ -86,16 +83,82 @@ public class LandingConfig {
                /*
                     Call GUI Change listener
                 */
-               if (changeNotifier != null) {
-                   System.out.println("[GUI] Passing changes to controller");
-                   changeNotifier.guiChange(configObject);
-               }
+                if (changeNotifier != null) {
+                    System.out.println("[GUI] Passing changes to controller");
+                    changeNotifier.guiChange(configObject);
+                }
 
             } catch (InvalidInputException invalidException){
                 JOptionPane.showMessageDialog(getConfigPanel(), invalidException.toString());
             }
 
         });
+    }
+
+    private void constructUI() {
+
+        landingConfigPanel = new JPanel();
+        landingConfigPanel.setLayout(new GridLayout(10,1));
+
+        // Add title
+        JLabel title = new JLabel("Elevated Expectations");
+        landingConfigPanel.add(title);
+
+
+        empFloorChangeProbabilityField = new JTextField();
+        empFloorChangeProbabilityField.setText("0.01");
+        landingConfigPanel.add(wrapFieldWithLabel("Floor Change probability:", empFloorChangeProbabilityField));
+
+        clientArrivalProbabilityField = new JTextField();
+        clientArrivalProbabilityField.setText("0.005");
+        landingConfigPanel.add(wrapFieldWithLabel("Client arrival probability:", clientArrivalProbabilityField));
+
+        randomSeedField = new JTextField();
+        randomSeedField.setText("420");
+        landingConfigPanel.add(wrapFieldWithLabel("Random Seed:", randomSeedField));
+
+        numberEmployeesField = new JTextField();
+        numberEmployeesField.setText("10");
+        landingConfigPanel.add(wrapFieldWithLabel("Number of Employees:", numberEmployeesField));
+
+        numberDevelopersField = new JTextField();
+        numberDevelopersField.setText("10");
+        landingConfigPanel.add(wrapFieldWithLabel("Number of Developers:", numberDevelopersField));
+
+        numberFloorsField = new JTextField();
+        numberFloorsField.setText("6");
+        landingConfigPanel.add(wrapFieldWithLabel("Number of floors:", numberFloorsField));
+
+        elevatorCapacityField = new JTextField();
+        elevatorCapacityField.setText("4");
+        landingConfigPanel.add(wrapFieldWithLabel("Elevator Capacity:", elevatorCapacityField));
+
+        simulationTimeField = new JTextField();
+        simulationTimeField.setText("28800");
+        landingConfigPanel.add(wrapFieldWithLabel("Time to run sim (s):", simulationTimeField));
+
+        saveButton = new JButton();
+        saveButton.setText("Run Simulation");
+        landingConfigPanel.add(saveButton);
+
+
+        // Setup array
+        inputFields = new JTextField[]{empFloorChangeProbabilityField,
+                clientArrivalProbabilityField,
+                randomSeedField,
+                numberEmployeesField,
+                numberDevelopersField,
+                numberFloorsField,
+                elevatorCapacityField,
+                simulationTimeField};
+    }
+
+    private JPanel wrapFieldWithLabel(String label, JTextField textField) {
+        JPanel formContainer = new JPanel();
+        formContainer.setLayout(new GridLayout(1, 2));
+        formContainer.add(new JLabel(label));
+        formContainer.add(textField);
+        return formContainer;
     }
 
     /**

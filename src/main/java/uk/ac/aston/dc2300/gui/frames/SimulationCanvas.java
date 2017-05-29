@@ -123,12 +123,11 @@ public class SimulationCanvas extends JPanel {
         // Draw each person in the queue
         for (int position = 0; position < queueLength; position++) {
             g.setColor(getColorForOccupant(queue.get(position)));
-            g.fillOval( (BORDER * 2) + (1 * SECTION_WIDTH) + (position * PERSON_RADIUS) + 2, BORDER_Y + (BORDER * 2) + (SECTION_HEIGHT * currentFloor.getFloorNumber()), PERSON_RADIUS, PERSON_RADIUS);
+            g.fillOval( (BORDER * 2) + SECTION_WIDTH + (position * PERSON_RADIUS) + 2, BORDER_Y + (BORDER * 2) + (SECTION_HEIGHT * currentFloor.getFloorNumber()), PERSON_RADIUS, PERSON_RADIUS);
         }
 
         // Get the floor occupants
         Set<BuildingOccupant> floorOccupants = currentFloor.getOccupants();
-        int numberOfOccupants = floorOccupants.size();
 
         // Draw each person on the floor
         int position = 0;
