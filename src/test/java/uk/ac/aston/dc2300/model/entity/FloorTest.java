@@ -165,9 +165,9 @@ public class FloorTest {
     public void occupantIsntWaitingForElevator() {
         // Create new employee
         Employee employee = new Employee(0);
-        // Get ground floor
-        Floor groundFloor = floors.get(0);
-        // Occupant is waiting for elevator
-        assertFalse(groundFloor.isAnyoneWaiting());
+        // Add occupant to floor 1 elevator queue
+        floors.get(1).addToFrontOfQueue(employee);
+        // Occupant isn't waiting for elevator on floor 0
+        assertFalse(floors.get(0).isAnyoneWaiting());
     }
 }
