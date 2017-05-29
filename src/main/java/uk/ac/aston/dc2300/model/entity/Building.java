@@ -28,6 +28,17 @@ public class Building {
         numberComplaints = 0;
     }
 
+    /**
+     * @param building The building to copy
+     */
+    public Building(Building building) {
+        this.elevators = new HashSet<>();
+        this.elevators.addAll(building.getElevators());
+        this.floors = new ArrayList<>();
+        this.floors.addAll(building.getFloors());
+        numberComplaints = 0;
+    }
+
     public Set<Elevator> getElevators() {
         return elevators;
     }

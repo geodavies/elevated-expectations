@@ -4,6 +4,7 @@ import uk.ac.aston.dc2300.component.Simulation;
 import uk.ac.aston.dc2300.gui.frames.LandingConfig;
 import uk.ac.aston.dc2300.gui.frames.SimulationCanvas;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
+import uk.ac.aston.dc2300.model.entity.Building;
 import uk.ac.aston.dc2300.model.status.SimulationStatus;
 
 import javax.swing.*;
@@ -82,7 +83,7 @@ public class GuiController implements ApplicationController {
                 while (simulationRunning) {
                     currentStatus = simulation.tick();
                     simulationRunning = currentStatus.isSimulationRunning();
-                    canvas.update(currentStatus.getBuilding());
+                    canvas.update(new Building(currentStatus.getBuilding()));
                 }
 
                 System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
