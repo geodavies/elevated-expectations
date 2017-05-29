@@ -14,7 +14,7 @@ import java.util.List;
 public class Client extends BuildingOccupant {
 
     private int leaveAfterArrivalTime;
-    private Integer queueEnterTime;
+    private int queueEnterTime;
 
     /**
      * @param timeEntered the time in seconds the Client entered the building following simulation start
@@ -23,11 +23,11 @@ public class Client extends BuildingOccupant {
     public Client(int timeEntered, int leaveAfterArrivalTime) {
         super(1, timeEntered);
         this.leaveAfterArrivalTime = leaveAfterArrivalTime;
-        this.queueEnterTime = null;
+        this.queueEnterTime = -1;
     }
 
     public boolean wouldLikeToComplain(int currentTime) {
-        if (queueEnterTime != null && (currentTime - queueEnterTime) >= 600) {
+        if (queueEnterTime > -1 && (currentTime - queueEnterTime) >= 600) {
             return true;
         } else {
             return false;
@@ -48,12 +48,12 @@ public class Client extends BuildingOccupant {
         // Get in the elevator
         elevator.addOccupant(this);
         // Leaving queue
-        queueEnterTime = null;
+        queueEnterTime = -1;
     }
 
     public void getReadyToLeave(Floor ground) {
         setDestination(ground);
-        queueEnterTime = null;
+        queueEnterTime = -1;
     }
 
     @Override
