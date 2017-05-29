@@ -2,6 +2,7 @@ package uk.ac.aston.dc2300.model.entity;
 
 import org.junit.Before;
 import org.junit.Test;
+import uk.ac.aston.dc2300.model.status.DeveloperCompany;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for the Building functions
@@ -26,20 +28,22 @@ public class BuildingTest {
 
     private static int TOP_FLOOR = 5;
 
+    private List<Floor> floors;
+
     /**
      * Setup before each test run for a basic building
      */
     @Before
     public void setup() throws Exception {
-        List<Floor> floors = new ArrayList<>();
+        floors = new ArrayList<>();
         for(int i = 0; i <= TOP_FLOOR; i++){
             floors.add(new Floor(i));
         }
         Set<Elevator> elevators = new HashSet<>();
         elevators.add(new Elevator(4, floors.get(0)));
         building = new Building(elevators, floors);
-        developer = new Developer();
-        employee = new Employee();
+        developer = new Developer(0, DeveloperCompany.GOGGLES);
+        employee = new Employee(0);
         floors.get(0).addOccupant(employee);
         floors.get(TOP_FLOOR).addOccupant(developer);
     }
@@ -83,6 +87,26 @@ public class BuildingTest {
         assertEquals(empFloor.getFloorNumber(), 0);
         assertEquals(empFloor.getOccupants().size(), 1);
         assertEquals(empFloor.getElevatorQueue().size(), 0);
+    }
+
+    /**
+     * Test to ensure the building gets all the current building occupants
+     */
+    @Test
+    public void getAllOccupants() {
+        Set<BuildingOccupant> allBuildingOccupants = building.getAllOccupants();
+        assertEquals(2, allBuildingOccupants.size());
+        assertTrue(allBuildingOccupants.contains(employee));
+        assertTrue(allBuildingOccupants.contains(developer));
+    }
+
+    /**
+     * Test to ensure the building knows which floor the elevator is on
+     */
+    @Test
+    public void elevatorOnFloorOnGroundFloor() {
+        List<Elevator> elevatorsOnGroundFloor = building.getElevatorsOnFloor(floors.get(0));
+        assertEquals(1, elevatorsOnGroundFloor.size());
     }
 
 }

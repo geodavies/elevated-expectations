@@ -2,9 +2,9 @@ package uk.ac.aston.dc2300.model.entity;
 
 import org.junit.Before;
 import org.junit.Test;
+import uk.ac.aston.dc2300.model.status.DeveloperCompany;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -47,66 +47,12 @@ public class ElevatorTest {
     }
 
     /**
-     * Test to check occupant is added to the back of the elevator queue correctly
-     */
-    @Test
-    public void addOccupantToBackOfQueue() {
-        // Create new employee
-        Employee employee = new Employee();
-        // Create new developer
-        Developer developer = new Developer();
-        // Get ground floor
-        Floor groundFloor = floors.get(0);
-        // Add employee to elevator queue
-        groundFloor.addToBackOfQueue(employee);
-        // Elevator queue contains one occupant
-        assertEquals(1, groundFloor.getElevatorQueue().size());
-        // Elevator queue contains employee
-        assertEquals(groundFloor.getElevatorQueue().get(0), employee);
-        // Add developer to back of queue behind employee
-        groundFloor.addToBackOfQueue(developer);
-
-        LinkedList<BuildingOccupant> elevatorQueue = groundFloor.getElevatorQueue();
-        // Employee is first in elevator queue
-        assertEquals(elevatorQueue.get(0), employee);
-        // Developer is last in elevator queue
-        assertEquals(elevatorQueue.get(1), developer);
-    }
-
-    /**
-     * Test to check occupant is added to the front of the elevator queue correctly
-     */
-    @Test
-    public void addOccupantToFrontOfQueue() {
-        // Create new employee
-        Employee employee = new Employee();
-        // Create new developer
-        Developer developer = new Developer();
-        // Get ground floor
-        Floor groundFloor = floors.get(0);
-        // Add employee to elevator queue
-        groundFloor.addToFrontOfQueue(employee);
-        // Elevator queue contains one occupant
-        assertEquals(1, groundFloor.getElevatorQueue().size());
-        // Elevator queue contains employee
-        assertEquals(groundFloor.getElevatorQueue().get(0), employee);
-        // Add developer to front of queue before employee
-        groundFloor.addToFrontOfQueue(developer);
-
-        LinkedList<BuildingOccupant> elevatorQueue = groundFloor.getElevatorQueue();
-        // Developer is first in elevator queue
-        assertEquals(elevatorQueue.get(0), developer);
-        // Employee is last in elevator queue
-        assertEquals(elevatorQueue.get(1), employee);
-    }
-
-    /**
      * Test to check elevator can load a passenger
      */
     @Test
     public void loadPassengers() {
         // Setup occupant for test
-        Employee employee = new Employee();
+        Employee employee = new Employee(0);
         employee.setDestination(floors.get(1));
         floors.get(0).addToFrontOfQueue(employee);
 
@@ -129,7 +75,7 @@ public class ElevatorTest {
     @Test
     public void unloadPassenger() {
         // Setup occupant for test
-        Employee employee = new Employee();
+        Employee employee = new Employee(0);
         employee.setDestination(floors.get(0));
 
         // Setup elevator for test
@@ -141,7 +87,7 @@ public class ElevatorTest {
         assertEquals(1, elevator.getOccupants().size());
 
         // Elevator unloads occupant from elevator
-        elevator.unloadPassengers();
+        elevator.unloadPassengers(0);
         // Elevator contains no occupants
         assertEquals(0, elevator.getOccupants().size());
     }
@@ -152,7 +98,7 @@ public class ElevatorTest {
     @Test
     public void elevatorMovesUpwardsOnRequest() {
         // Create new employee
-        Employee employee = new Employee();
+        Employee employee = new Employee(0);
         // Set employee destination to floor 2
         employee.setDestination(floors.get(2));
         // Add employee to floor 0
@@ -200,7 +146,7 @@ public class ElevatorTest {
     @Test
     public void elevatorAcceptsEmployee() {
         // Create new employee
-        Employee employee = new Employee();
+        Employee employee = new Employee(0);
         // Set employee destination to floor 2
         employee.setDestination(floors.get(2));
         // Add employee to floor 0
@@ -233,7 +179,7 @@ public class ElevatorTest {
     @Test
     public void elevatorAcceptsDeveloper() {
         // Create new developer
-        Developer developer = new Developer();
+        Developer developer = new Developer(0, DeveloperCompany.GOGGLES);
         // Set developer destination to floor 2
         developer.setDestination(floors.get(2));
         // Add developer to the floor 0
@@ -266,7 +212,7 @@ public class ElevatorTest {
     @Test
     public void elevatorAcceptsClient() {
         // Create new client
-        Client client = new Client(0);
+        Client client = new Client(0, 10);
         // Set client destination to floor 2
         client.setDestination(floors.get(2));
         // Add client to the floor 0
@@ -299,7 +245,7 @@ public class ElevatorTest {
     @Test
     public void elevatorAcceptsMaintenanceCrew() {
         // Create new maintenance crew
-        MaintenanceCrew maintenanceCrew = new MaintenanceCrew(0);
+        MaintenanceCrew maintenanceCrew = new MaintenanceCrew(0, 10);
         // Set maintenance crew destination to floor 2
         maintenanceCrew.setDestination(floors.get(2));
         // Add maintenance crew to the floor 0
@@ -331,10 +277,10 @@ public class ElevatorTest {
     @Test
     public void checkElevatorMaxCapacity() {
         // Create new maintenance crew
-        MaintenanceCrew maintenanceCrew = new MaintenanceCrew(0);
+        MaintenanceCrew maintenanceCrew = new MaintenanceCrew(0, 10);
         maintenanceCrew.setDestination(floors.get(1));
         // Create new employee
-        Employee employee = new Employee();
+        Employee employee = new Employee(0);
         employee.setDestination(floors.get(1));
         // Add maintenance crew to queue first and then employee
         floors.get(0).addToBackOfQueue(maintenanceCrew);
@@ -365,10 +311,10 @@ public class ElevatorTest {
     @Test
     public void ensureClientHasPriority() {
         // Create new maintenance crew
-        MaintenanceCrew maintenanceCrew = new MaintenanceCrew(0);
+        MaintenanceCrew maintenanceCrew = new MaintenanceCrew(0, 10);
         maintenanceCrew.setDestination(floors.get(1));
         // Create new client
-        Client client = new Client(0);
+        Client client = new Client(0, 10);
         client.setDestination(floors.get(1));
         // Add maintenance crew to queue first and then client
         floors.get(0).addOccupant(maintenanceCrew);
@@ -393,5 +339,35 @@ public class ElevatorTest {
         // Elevator queue contains maintenance crew due to elevator not having enough space
         assertEquals(1, floors.get(0).getElevatorQueue().size());
         assertTrue(floors.get(0).getElevatorQueue().contains(maintenanceCrew));
+    }
+
+    @Test
+    public void developersFromDifferentCompaniesTest() {
+        // Setup developers for test
+        Developer gogglesDeveloper = new Developer(0, DeveloperCompany.GOGGLES);
+        gogglesDeveloper.setDestination(floors.get(1));
+        floors.get(0).addToFrontOfQueue(gogglesDeveloper);
+
+        Developer mugtomeDeveloper = new Developer(0, DeveloperCompany.MUGTOME);
+        mugtomeDeveloper.setDestination(floors.get(1));
+        floors.get(0).addToBackOfQueue(mugtomeDeveloper);
+
+        // Elevator contains no occupants
+        assertEquals(0, elevator.getOccupants().size());
+        // Elevator queue contains two occupants
+        assertEquals(2, floors.get(0).getElevatorQueue().size());
+        // Elevator doors opening
+        elevator.updateElevatorStatus();
+        // Elevator doors opened
+        elevator.updateElevatorStatus();
+        // Elevator loads gogglesDeveloper from elevator queue
+        elevator.loadPassengers();
+        // Elevator contains one occupant
+        assertEquals(1, elevator.getOccupants().size());
+        // Elevator occupant is gogglesDeveloper
+        assertTrue(elevator.getOccupants().contains(gogglesDeveloper));
+        // Elevator queue contains mugtomeDeveloper due to being developers from rival companies
+        assertEquals(1, floors.get(0).getElevatorQueue().size());
+        assertTrue(floors.get(0).getElevatorQueue().contains(mugtomeDeveloper));
     }
 }
