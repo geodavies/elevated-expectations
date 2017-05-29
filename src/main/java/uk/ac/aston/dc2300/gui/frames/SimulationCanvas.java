@@ -68,6 +68,13 @@ public class SimulationCanvas extends JPanel {
 
     }
 
+    /**
+     * Method draws basic floor skeleton.
+     *
+     * @param currentFloor The current floor to be rendered
+     * @param g the graphics context to use to draw the occupants
+     * @param numFloors the total number of floors (used to calculate positioning)
+     */
     private void drawFloorSkeleton(Floor currentFloor, Graphics g, int numFloors) {
         int floorPosition = numFloors - 1 - currentFloor.getFloorNumber();
         // Setup basic floor layout
@@ -77,12 +84,24 @@ public class SimulationCanvas extends JPanel {
         g.drawString(currentFloor.getFloorNumber() + "", 0, BORDER_Y + BORDER + (SECTION_HEIGHT * floorPosition) + 10);
     }
 
+    /**
+     * Method draws column titles onto graphics context.
+     *
+     * @param g the graphics context to use to draw the occupants
+     */
     private void drawTitles(Graphics g) {
         g.drawString("Lift", BORDER, BORDER_Y);
         g.drawString("Queue", BORDER + SECTION_WIDTH, BORDER_Y);
         g.drawString("On-Floor", BORDER + (SECTION_WIDTH * 2), BORDER_Y);
     }
 
+    /**
+     * Method renders current elevator state to graphics context.
+     *
+     * @param elevators The set of elevators to draw
+     * @param g the graphics context to use to draw the occupants
+     * @param numFloors the total number of floors (used to calculate positioning)
+     */
     private void drawElevators(Set<Elevator> elevators, Graphics g, int numFloors) {
 
         int elevatorCount = elevators.size();
@@ -175,6 +194,11 @@ public class SimulationCanvas extends JPanel {
         return Color.BLACK;
     }
 
+    /**
+     * Method allows simulation to trigger a UI update.
+     *
+     * @param building The latest building object
+     */
     public void update(Building building) {
         this.building = building;
         invalidate();
