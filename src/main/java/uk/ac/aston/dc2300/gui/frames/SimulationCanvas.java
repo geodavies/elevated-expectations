@@ -93,10 +93,10 @@ public class SimulationCanvas extends JPanel {
         for (Elevator elevator: elevators) {
 
             Set<BuildingOccupant> passengers = elevator.getPassengers();
-            int currentFloor = elevator.getCurrentFloor().getFloorNumber();
+            int currentFloorNumber = elevator.getCurrentFloor().getFloorNumber();
 
             int elevatorX = BORDER + (elevatorId * sectionWidth) + 5;
-            int elevatorY = BORDER_Y + BORDER + 5 + (SECTION_HEIGHT * currentFloor);
+            int elevatorY = BORDER_Y + BORDER + 5 + (SECTION_HEIGHT * currentFloorNumber);
 
             g.drawRect(elevatorX, elevatorY, sectionWidth, elevatorHeight);
 
@@ -147,14 +147,12 @@ public class SimulationCanvas extends JPanel {
         } else if (buildingOccupant instanceof MaintenanceCrew) {
             return Color.YELLOW;
         } else if (buildingOccupant instanceof Developer) {
-            try {
-                if (((Developer) buildingOccupant).getCompany() == DeveloperCompany.MUGTOME) {
-                    return Color.MAGENTA;
-                }
-            } catch (Exception error) {
-
+            Developer developer = (Developer) buildingOccupant;
+            if (developer.getCompany() == DeveloperCompany.MUGTOME) {
+                return Color.MAGENTA;
+            } else {
+                return Color.GREEN;
             }
-            return Color.GREEN;
         }
         return Color.BLACK;
     }
