@@ -8,6 +8,7 @@ import uk.ac.aston.dc2300.model.entity.Building;
 import uk.ac.aston.dc2300.model.status.SimulationStatus;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -64,7 +65,22 @@ public class GuiController implements ApplicationController {
         uiFrame.revalidate();
 
         SimulationCanvas canvas = new SimulationCanvas();
-        uiFrame.setContentPane(canvas);
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> {
+            uiFrame.setVisible(false);
+            uiFrame.revalidate();
+            startConfigUI();
+        });
+        backButton.setLocation(790, 10);
+
+        JPanel containerPanel = new JPanel();
+        containerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.Y_AXIS));
+        containerPanel.add(canvas);
+        containerPanel.add(backButton);
+
+
+        uiFrame.setContentPane(containerPanel);
         uiFrame.pack();
         uiFrame.setVisible(true);
 
