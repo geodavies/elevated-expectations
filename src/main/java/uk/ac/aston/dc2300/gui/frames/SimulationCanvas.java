@@ -13,12 +13,12 @@ import java.util.*;
 public class SimulationCanvas extends JPanel {
 
     private static final int WIDTH = 800;
-    private static final int HEIGHT = 500;
+    private static final int HEIGHT = 750;
 
     private static final int BORDER = 15;
     private static final int BORDER_Y = 25;
 
-    private static final int SECTION_HEIGHT = 75;
+    private static final int SECTION_HEIGHT = 100;
     private static final int SECTION_WIDTH = 250;
 
     private static final int PERSON_RADIUS = 10;
@@ -107,7 +107,21 @@ public class SimulationCanvas extends JPanel {
             int occupantCount = 0;
             for (BuildingOccupant passenger: passengers) {
                 g.setColor(getColorForOccupant(passenger));
-                g.fillOval(elevatorX + (occupantCount * PERSON_RADIUS) + 2, elevatorY + PERSON_RADIUS, PERSON_RADIUS, PERSON_RADIUS);
+
+                // Work out how many we can fit
+                int horizontalCapacity = (SECTION_WIDTH / PERSON_RADIUS) - 4;
+                // Set x-offset
+                int offset = ((occupantCount % horizontalCapacity) * PERSON_RADIUS) + 2;
+                // Y offset should begin at zero
+                int offsetY = 0;
+                if (occupantCount > 0) {
+                    // Work out if we're over the capacity
+                    // and how many times over
+                    // use that to work out vertical offset
+                    int offsetCount = (int) Math.floor(occupantCount / horizontalCapacity);
+                    offsetY = offsetCount * PERSON_RADIUS;
+                }
+                g.fillOval(offset + elevatorX + 2, elevatorY + offsetY + PERSON_RADIUS, PERSON_RADIUS, PERSON_RADIUS);
                 occupantCount++;
             }
 
@@ -137,7 +151,21 @@ public class SimulationCanvas extends JPanel {
         // Draw each person in the queue
         for (int position = 0; position < queueLength; position++) {
             g.setColor(getColorForOccupant(queue.get(position)));
-            g.fillOval( (BORDER * 2) + SECTION_WIDTH + (position * PERSON_RADIUS) + 2, BORDER_Y + (BORDER * 2) + (SECTION_HEIGHT * floorPos), PERSON_RADIUS, PERSON_RADIUS);
+
+            // Work out how many we can fit
+            int horizontalCapacity = (SECTION_WIDTH / PERSON_RADIUS) - 1;
+            // Set x-offset
+            int offset = BORDER + ((position % horizontalCapacity) * PERSON_RADIUS) + 2;
+            // Y offset should begin at zero
+            int offsetY = 0;
+            if (position > 0) {
+                // Work out if we're over the capacity
+                // and how many times over
+                // use that to work out vertical offset
+                int offsetCount = (int) Math.floor(position / horizontalCapacity);
+                offsetY = offsetCount * PERSON_RADIUS;
+            }
+            g.fillOval( SECTION_WIDTH + offset + 2, (int) (offsetY + BORDER_Y + BORDER * 1.25 + (SECTION_HEIGHT * floorPos)), PERSON_RADIUS, PERSON_RADIUS);
         }
 
         Set<BuildingOccupant> floorOccupants = new HashSet<>();
@@ -147,9 +175,22 @@ public class SimulationCanvas extends JPanel {
         // Draw each person on the floor
         int position = 0;
         for(BuildingOccupant occupant : floorOccupants) {
-            position++;
             g.setColor(getColorForOccupant(occupant));
-            g.fillOval( (BORDER * 2) + (2 * SECTION_WIDTH) + (position * PERSON_RADIUS) + 2, BORDER_Y + (BORDER * 2) + (SECTION_HEIGHT * floorPos), PERSON_RADIUS, PERSON_RADIUS);
+            // Work out how many we can fit
+            int horizontalCapacity = (SECTION_WIDTH / PERSON_RADIUS) - 1;
+            // Set x-offset
+            int offset = BORDER + ((position % horizontalCapacity) * PERSON_RADIUS) + 2;
+            // Y offset should begin at zero
+            int offsetY = 0;
+            if (position > 0) {
+                // Work out if we're over the capacity
+                // and how many times over
+                // use that to work out vertical offset
+                int offsetCount = (int) Math.floor(position / horizontalCapacity);
+                offsetY = offsetCount * PERSON_RADIUS;
+            }
+            g.fillOval( offset + (2 * SECTION_WIDTH), (int) (offsetY + BORDER_Y + BORDER * 1.25 + (SECTION_HEIGHT * floorPos)), PERSON_RADIUS, PERSON_RADIUS);
+            position++;
         }
 
         g.setColor ( Color.BLACK );
