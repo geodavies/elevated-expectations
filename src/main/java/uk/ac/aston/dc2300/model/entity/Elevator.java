@@ -47,7 +47,7 @@ public class Elevator {
         doorStatus = CLOSED;
         movementStatus = STATIONARY;
     }
-  
+
     /**
      * Adds a BuildingOccupant to the elevator.
      *
@@ -301,7 +301,7 @@ public class Elevator {
         System.out.println("Closing elevator doors");
         doorStatus = CLOSING;
     }
-  
+
     public Floor getCurrentFloor() {
         return currentFloor;
     }
@@ -312,6 +312,10 @@ public class Elevator {
 
     public int getMaxCapacity() {
         return MAX_CAPACITY;
+    }
+
+    public ElevatorDoorStatus getDoorStatus() {
+        return doorStatus;
     }
 
 }

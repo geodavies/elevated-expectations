@@ -3,6 +3,7 @@ package uk.ac.aston.dc2300.model.entity;
 import org.junit.Before;
 import org.junit.Test;
 import uk.ac.aston.dc2300.model.status.DeveloperCompany;
+import uk.ac.aston.dc2300.model.status.ElevatorDoorStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -341,6 +342,9 @@ public class ElevatorTest {
         assertTrue(floors.get(0).getElevatorQueue().contains(maintenanceCrew));
     }
 
+    /**
+     * Test to check that developers from different companies don't enter the same lift
+     */
     @Test
     public void developersFromDifferentCompaniesTest() {
         // Setup developers for test
@@ -369,5 +373,37 @@ public class ElevatorTest {
         // Elevator queue contains mugtomeDeveloper due to being developers from rival companies
         assertEquals(1, floors.get(0).getElevatorQueue().size());
         assertTrue(floors.get(0).getElevatorQueue().contains(mugtomeDeveloper));
+    }
+
+    /**
+     * Test to check that the elevator doors show the right status
+     */
+    @Test
+    public void elevatorDoorTest() {
+        // Create new employee
+        Employee employee = new Employee(0);
+        // Set employee destination to floor 2
+        employee.setDestination(floors.get(2));
+        // Add employee to back of elevator queue
+        floors.get(0).addToBackOfQueue(employee);
+        // Elevator doors are closed
+        assertEquals(elevator.getDoorStatus(), ElevatorDoorStatus.CLOSED);
+        // Elevator doors opening
+        elevator.updateElevatorStatus();
+        assertEquals(elevator.getDoorStatus(), ElevatorDoorStatus.OPENING);
+        // Elevator doors opened
+        elevator.updateElevatorStatus();
+        assertEquals(elevator.getDoorStatus(), ElevatorDoorStatus.OPEN);
+        // Elevator loads occupant from elevator queue
+        elevator.loadPassengers();
+        // Occupant loaded onto elevator
+        elevator.updateElevatorStatus();
+        assertEquals(elevator.getDoorStatus(), ElevatorDoorStatus.OPEN);
+        // Elevator doors closing
+        elevator.updateElevatorStatus();
+        assertEquals(elevator.getDoorStatus(), ElevatorDoorStatus.CLOSING);
+        // Elevator doors closed
+        elevator.updateElevatorStatus();
+        assertEquals(elevator.getDoorStatus(), ElevatorDoorStatus.CLOSED);
     }
 }
