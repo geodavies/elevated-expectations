@@ -1,10 +1,12 @@
 package uk.ac.aston.dc2300.gui.frames;
 
+import aston.nabneyit.GUI.LabelledSliderFP;
 import uk.ac.aston.dc2300.component.Simulation;
 import uk.ac.aston.dc2300.gui.util.*;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.math.BigDecimal;
 
@@ -19,8 +21,8 @@ import java.math.BigDecimal;
 public class LandingConfig {
 
     private JPanel landingConfigPanel;
-    private JTextField empFloorChangeProbabilityField;
-    private JTextField clientArrivalProbabilityField;
+    private LabelledSliderFP empFloorChangeProbabilityField;
+    private LabelledSliderFP clientArrivalProbabilityField;
     private JTextField randomSeedField;
     private JTextField numberEmployeesField;
     private JTextField numberDevelopersField;
@@ -90,8 +92,6 @@ public class LandingConfig {
      * registering input verifiers on each of the 8 fields.
      */
     private void setupInputVerifiers() {
-        empFloorChangeProbabilityField.setInputVerifier(new BigDecimalVerifier());
-        clientArrivalProbabilityField.setInputVerifier(new BigDecimalVerifier());
         randomSeedField.setInputVerifier(new LongVerifier());
         numberEmployeesField.setInputVerifier(new IntegerVerifier());
         numberDevelopersField.setInputVerifier(new IntegerVerifier());
@@ -107,20 +107,24 @@ public class LandingConfig {
     private void constructUI() {
 
         landingConfigPanel = new JPanel();
-        landingConfigPanel.setLayout(new GridLayout(10,1));
+        landingConfigPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        landingConfigPanel.setLayout(new BoxLayout(landingConfigPanel, BoxLayout.Y_AXIS));
 
         // Add title
         JLabel title = new JLabel("Elevated Expectations");
-        landingConfigPanel.add(title);
+        title.setFont(new Font(null, Font.BOLD, 20));
+        Box titleBox = Box.createHorizontalBox();
+        titleBox.add(title);
+        titleBox.add(Box.createHorizontalGlue());
+        landingConfigPanel.add(titleBox);
 
 
-        empFloorChangeProbabilityField = new JTextField();
-        empFloorChangeProbabilityField.setText("0.01");
-        landingConfigPanel.add(wrapFieldWithLabel("Floor Change probability:", empFloorChangeProbabilityField));
+        empFloorChangeProbabilityField = new LabelledSliderFP("FloorChangeProbability", 0.01, 0, 100, 100);
+        landingConfigPanel.add(empFloorChangeProbabilityField);
 
-        clientArrivalProbabilityField = new JTextField();
-        clientArrivalProbabilityField.setText("0.005");
-        landingConfigPanel.add(wrapFieldWithLabel("Client arrival probability:", clientArrivalProbabilityField));
+        clientArrivalProbabilityField = new LabelledSliderFP("ClientArrivalProbability", 0.005, 0, 100, 100);
+        landingConfigPanel.add(clientArrivalProbabilityField);
 
         randomSeedField = new JTextField();
         randomSeedField.setText("420");
@@ -152,8 +156,7 @@ public class LandingConfig {
 
 
         // Setup array
-        inputFields = new JTextField[]{empFloorChangeProbabilityField,
-                clientArrivalProbabilityField,
+        inputFields = new JTextField[]{
                 randomSeedField,
                 numberEmployeesField,
                 numberDevelopersField,
@@ -170,7 +173,7 @@ public class LandingConfig {
      *
      * @return A JPanel with the label and text field horizontally contained.
      */
-    private JPanel wrapFieldWithLabel(String label, JTextField textField) {
+    private JPanel wrapFieldWithLabel(String label, Component textField) {
         JPanel formContainer = new JPanel();
         formContainer.setLayout(new GridLayout(1, 2));
         formContainer.add(new JLabel(label));
@@ -219,8 +222,8 @@ public class LandingConfig {
         System.out.println("[GUI] Collecting Values from Fields");
 
         // Collect and parse values from each field.
-        empFloorChangeProbability = new BigDecimal(empFloorChangeProbabilityField.getText());
-        clientArrivalProbability = new BigDecimal(clientArrivalProbabilityField.getText());
+        empFloorChangeProbability = new BigDecimal(empFloorChangeProbabilityField.getValue());
+        clientArrivalProbability = new BigDecimal(clientArrivalProbabilityField.getValue());
         seed = Long.parseLong(randomSeedField.getText());
         numEmployees = Integer.parseInt(numberEmployeesField.getText());
         numDevelopers = Integer.parseInt(numberDevelopersField.getText());
