@@ -12,8 +12,9 @@ import java.util.*;
  */
 public class SimulationCanvas extends JPanel {
 
-    private static final int WIDTH = 800;
     private static final int HEIGHT = 750;
+    private static final int WIDTH = 975;
+    private static final int HEIGHT = 500;
 
     private static final int BORDER = 15;
     private static final int BORDER_Y = 25;
@@ -40,6 +41,7 @@ public class SimulationCanvas extends JPanel {
     protected void paintComponent ( Graphics g ) {
         super.paintComponent ( g );
         drawTitles(g);
+        paintKey(g);
 
         // Check we have a building
         if (building != null) {
@@ -65,6 +67,33 @@ public class SimulationCanvas extends JPanel {
         }
         // Reset color
         g.setColor(Color.BLACK);
+
+    }
+
+    private void paintKey(Graphics context) {
+        int KEY_LEFT = 775;
+        int KEY_WIDTH = 150;
+        int KEY_TOP = BORDER_Y + BORDER;
+        int KEY_HEIGHT = KEY_WIDTH * 2;
+        // Draw container
+        context.drawRect(KEY_LEFT, KEY_TOP, KEY_WIDTH, KEY_HEIGHT);
+        // Draw title
+        context.drawString("Key: ", KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER);
+
+        // Draw client
+        drawLabel("Client", Color.BLUE, context, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 2);
+        drawLabel("Maintenance Crew", Color.YELLOW, context, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 3);
+        drawLabel("Mugtome Dev", Color.MAGENTA, context, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 4);
+        drawLabel("Goggles Dev", Color.GREEN, context, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 5);
+        drawLabel("Employee", Color.BLACK, context, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 6);
+
+    }
+
+    private void drawLabel(String label, Color color, Graphics context, int x, int y) {
+        context.setColor(color);
+        context.fillOval(x, y, PERSON_RADIUS, PERSON_RADIUS);
+        context.setColor(Color.BLACK);
+        context.drawString(label, x + (PERSON_RADIUS * 2), y + PERSON_RADIUS);
 
     }
 

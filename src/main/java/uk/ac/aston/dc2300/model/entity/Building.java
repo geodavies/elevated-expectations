@@ -50,6 +50,8 @@ public class Building {
     /**
      * Gets all of the floors within the top section of the building
      *
+     * If number of floors is odd, the middle floor will be prioritised to bottom half
+     *
      * @return the list of floors in the top half of the building
      */
     public List<Floor> getTopHalfFloors() {
