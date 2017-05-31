@@ -306,4 +306,16 @@ public class Elevator {
         return currentFloor;
     }
 
+    public Set<BuildingOccupant> getOccupants() {
+        return currentOccupants;
+    }
+
+    public int getMaxCapacity() {
+        return MAX_CAPACITY;
+    }
+
+    public ElevatorDoorStatus getDoorStatus() {
+        return doorStatus;
+    }
+
 }
