@@ -88,8 +88,6 @@ public class Simulation {
         // Initialise simulation state
         initialise();
 
-        System.out.println("Finished creating simulation");
-
     }
 
     /**
@@ -104,7 +102,6 @@ public class Simulation {
             // Give them new destination floors
             buildingOccupant.setNewDestination(BUILDING, RANDOM_UTILS, BigDecimal.ONE, currentTime);
         }
-        System.out.println("Finished setting destinations");
     }
 
     public SimulationStatus tick() {
@@ -117,7 +114,7 @@ public class Simulation {
         loadElevators();
         moveElevators();
 
-        SimulationStatus currentStatus = new SimulationStatus(BUILDING, currentTime, currentTime <= SIMULATION_RUN_TIME);
+        SimulationStatus currentStatus = new SimulationStatus(BUILDING, currentTime, currentTime < SIMULATION_RUN_TIME);
         currentTime += 10;
 
         return currentStatus;
