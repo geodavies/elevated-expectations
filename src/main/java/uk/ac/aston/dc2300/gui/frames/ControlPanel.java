@@ -12,9 +12,11 @@ import java.awt.event.ActionListener;
 public class ControlPanel {
     private ActionListener backHandler;
     private ActionListener speedHandler;
+    private ActionListener pauseHandler;
 
     private JPanel containerPanel;
     private JButton backButton;
+    private JButton pauseButton;
     private JButton normalSpeedButton;
     private JButton twoXSpeedButton;
     private JButton fiveXSpeedButton;
@@ -32,6 +34,7 @@ public class ControlPanel {
 
         // Buttons
         backButton = new JButton("Back");
+        pauseButton = new JButton("Pause");
         normalSpeedButton = new JButton("1x");
         twoXSpeedButton = new JButton("2x");
         fiveXSpeedButton = new JButton("5x");
@@ -39,6 +42,7 @@ public class ControlPanel {
 
         // Add to container
         containerPanel.add(backButton);
+        containerPanel.add(pauseButton);
         containerPanel.add(normalSpeedButton);
         containerPanel.add(twoXSpeedButton);
         containerPanel.add(fiveXSpeedButton);
@@ -74,7 +78,13 @@ public class ControlPanel {
         });
     }
 
+    public void setPauseHandler(ActionListener pauseHandler) {
+        this.pauseHandler = pauseHandler;
+        this.pauseButton.addActionListener(pauseHandler);
+    }
+
     public JPanel getPanel() {
         return containerPanel;
     }
+
 }

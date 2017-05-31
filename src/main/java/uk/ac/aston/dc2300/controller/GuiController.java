@@ -28,6 +28,7 @@ public class GuiController implements ApplicationController {
     private JFrame uiFrame;
     private int simSpeedMultiplier;
     private boolean simulationRunning;
+    private boolean simulationPaused;
     private static final int SIM_SPEED_DEFAULT = 200;
 
     public GuiController() {
@@ -86,7 +87,11 @@ public class GuiController implements ApplicationController {
         });
         controlPanel.setSpeedHandler(e -> {
             // Get new speed and assign to multiplier
-            simSpeedMultiplier = e.getID();
+            this.simulationPaused = false;
+            this.simSpeedMultiplier = e.getID();
+        });
+        controlPanel.setPauseHandler(e -> {
+            this.simulationPaused = true;
         });
 
         JPanel containerPanel = new JPanel();
@@ -114,9 +119,11 @@ public class GuiController implements ApplicationController {
                 // Loop until simulation isn't running
 
                 while (simulationRunning) {
-                    currentStatus = simulation.tick();
-                    canvas.update(new Building(currentStatus.getBuilding()));
-                    simulationRunning = currentStatus.isSimulationRunning();
+                    if (!simulationPaused) {
+                        currentStatus = simulation.tick();
+                        canvas.update(new Building(currentStatus.getBuilding()));
+                        simulationRunning = currentStatus.isSimulationRunning();
+                    }
                     Thread.sleep(SIM_SPEED_DEFAULT / simSpeedMultiplier);
                 }
 
