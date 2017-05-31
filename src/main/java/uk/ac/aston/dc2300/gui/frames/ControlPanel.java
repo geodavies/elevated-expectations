@@ -18,7 +18,7 @@ public class ControlPanel {
     private JButton normalSpeedButton;
     private JButton twoXSpeedButton;
     private JButton fiveXSpeedButton;
-    private JButton fifteenXSpeedButton;
+    private JButton twentyFiveXSpeedButton;
 
     public ControlPanel() {
         setupUI();
@@ -35,14 +35,14 @@ public class ControlPanel {
         normalSpeedButton = new JButton("1x");
         twoXSpeedButton = new JButton("2x");
         fiveXSpeedButton = new JButton("5x");
-        fifteenXSpeedButton = new JButton("15x");
+        twentyFiveXSpeedButton = new JButton("25x");
 
         // Add to container
         containerPanel.add(backButton);
         containerPanel.add(normalSpeedButton);
         containerPanel.add(twoXSpeedButton);
         containerPanel.add(fiveXSpeedButton);
-        containerPanel.add(fifteenXSpeedButton);
+        containerPanel.add(twentyFiveXSpeedButton);
     }
 
     public void setSpeedHandler(ActionListener speedHandler) {
@@ -68,8 +68,8 @@ public class ControlPanel {
             ActionEvent speedEvent = new ActionEvent(fiveXSpeedButton, 5, null);
             this.speedHandler.actionPerformed(speedEvent);
         });
-        this.fifteenXSpeedButton.addActionListener(e -> {
-            ActionEvent speedEvent = new ActionEvent(fifteenXSpeedButton, 15, null);
+        this.twentyFiveXSpeedButton.addActionListener(e -> {
+            ActionEvent speedEvent = new ActionEvent(twentyFiveXSpeedButton, 25, null);
             this.speedHandler.actionPerformed(speedEvent);
         });
     }

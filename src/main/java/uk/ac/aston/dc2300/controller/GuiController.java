@@ -112,10 +112,11 @@ public class GuiController implements ApplicationController {
                 SimulationStatus currentStatus = null;
 
                 // Loop until simulation isn't running
+
                 while (simulationRunning) {
                     currentStatus = simulation.tick();
-                    simulationRunning = currentStatus.isSimulationRunning();
                     canvas.update(new Building(currentStatus.getBuilding()));
+                    simulationRunning = currentStatus.isSimulationRunning();
                     Thread.sleep(SIM_SPEED_DEFAULT / simSpeedMultiplier);
                 }
 
