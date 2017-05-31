@@ -14,7 +14,6 @@ public class SimulationCanvas extends JPanel {
 
     private static final int HEIGHT = 750;
     private static final int WIDTH = 975;
-    private static final int HEIGHT = 500;
 
     private static final int BORDER = 15;
     private static final int BORDER_Y = 25;
