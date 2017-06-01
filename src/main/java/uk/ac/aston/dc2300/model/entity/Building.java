@@ -16,6 +16,7 @@ public class Building {
 
     private final Set<Elevator> elevators;
     private final List<Floor> floors;
+    private int numberComplaints;
 
     /**
      * @param elevators The set of elevators inside the building
@@ -24,6 +25,18 @@ public class Building {
     public Building(Set<Elevator> elevators, List<Floor> floors) {
         this.elevators = elevators;
         this.floors = floors;
+        numberComplaints = 0;
+    }
+
+    /**
+     * @param building The building to copy
+     */
+    public Building(Building building) {
+        this.elevators = new HashSet<>();
+        this.elevators.addAll(building.getElevators());
+        this.floors = new ArrayList<>();
+        this.floors.addAll(building.getFloors());
+        numberComplaints = 0;
     }
 
     public Set<Elevator> getElevators() {
@@ -36,6 +49,8 @@ public class Building {
 
     /**
      * Gets all of the floors within the top section of the building
+     *
+     * If number of floors is odd, the middle floor will be prioritised to bottom half
      *
      * @return the list of floors in the top half of the building
      */
@@ -100,4 +115,31 @@ public class Building {
         return elevatorsOnFloor;
     }
 
+
+    /**
+     * Check for client complaints.
+     *
+     * @param currentTime the current time - to check for clients waiting
+     *                    longer than 10 mins
+     */
+    public int getClientComplaints(int currentTime) {
+        Set<BuildingOccupant> occupants = getAllOccupants();
+        for(BuildingOccupant occupant : occupants) {
+            if (occupant instanceof Client) {
+                Client client = (Client) occupant;
+                if (client.wouldLikeToComplain(currentTime)) {
+                    // Complain
+                    numberComplaints++;
+                    System.out.println("Client complaining and leaving, total complaints: " + numberComplaints);
+                    // Leave
+                    client.getReadyToLeave(getFloors().get(0));
+                }
+            }
+        }
+        return numberComplaints;
+    }
+
+    public int getNumberComplaints() {
+        return numberComplaints;
+    }
 }

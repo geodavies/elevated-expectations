@@ -1,10 +1,13 @@
-package uk.ac.aston.dc2300.gui;
+package uk.ac.aston.dc2300.gui.frames;
 
+import aston.nabneyit.GUI.LabelledSliderFP;
 import uk.ac.aston.dc2300.component.Simulation;
 import uk.ac.aston.dc2300.gui.util.*;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.math.BigDecimal;
 
 /**
@@ -18,8 +21,8 @@ import java.math.BigDecimal;
 public class LandingConfig {
 
     private JPanel landingConfigPanel;
-    private JTextField empFloorChangeProbabilityField;
-    private JTextField clientArrivalProbabilityField;
+    private LabelledSliderFP empFloorChangeProbabilityField;
+    private LabelledSliderFP clientArrivalProbabilityField;
     private JTextField randomSeedField;
     private JTextField numberEmployeesField;
     private JTextField numberDevelopersField;
@@ -29,14 +32,7 @@ public class LandingConfig {
     private JTextField simulationTimeField;
 
     // Define array of input fields
-    private final JTextField[] inputFields = {empFloorChangeProbabilityField,
-            clientArrivalProbabilityField,
-            randomSeedField,
-            numberEmployeesField,
-            numberDevelopersField,
-            numberFloorsField,
-            elevatorCapacityField,
-            simulationTimeField};
+    private JTextField[] inputFields;
 
     // Defining Required Simulation Config Data
     private BigDecimal empFloorChangeProbability;
@@ -48,19 +44,12 @@ public class LandingConfig {
     private int elevatorCapacity;
     private int simulationTime;
 
-    // Defining Required Simulation Config Data
-    private Simulation simulation;
-
     public LandingConfig(GUIChange changeNotifier){
+        // Construct UI
+        constructUI();
+
         // Setup input verifiers
-        empFloorChangeProbabilityField.setInputVerifier(new BigDecimalVerifier());
-        clientArrivalProbabilityField.setInputVerifier(new BigDecimalVerifier());
-        randomSeedField.setInputVerifier(new LongVerifier());
-        numberEmployeesField.setInputVerifier(new IntegerVerifier());
-        numberDevelopersField.setInputVerifier(new IntegerVerifier());
-        numberFloorsField.setInputVerifier(new IntegerVerifier());
-        elevatorCapacityField.setInputVerifier(new IntegerVerifier());
-        simulationTimeField.setInputVerifier(new IntegerVerifier());
+        setupInputVerifiers();
 
         // Setup save button listener
         saveButton.addActionListener(e -> {
@@ -86,16 +75,110 @@ public class LandingConfig {
                /*
                     Call GUI Change listener
                 */
-               if (changeNotifier != null) {
-                   System.out.println("[GUI] Passing changes to controller");
-                   changeNotifier.guiChange(configObject);
-               }
+                if (changeNotifier != null) {
+                    System.out.println("[GUI] Passing changes to controller");
+                    changeNotifier.guiChange(configObject);
+                }
 
             } catch (InvalidInputException invalidException){
                 JOptionPane.showMessageDialog(getConfigPanel(), invalidException.toString());
             }
 
         });
+    }
+
+    /**
+     * Method performs initial UI setup -
+     * registering input verifiers on each of the 8 fields.
+     */
+    private void setupInputVerifiers() {
+        randomSeedField.setInputVerifier(new LongVerifier());
+        numberEmployeesField.setInputVerifier(new IntegerVerifier());
+        numberDevelopersField.setInputVerifier(new IntegerVerifier());
+        numberFloorsField.setInputVerifier(new IntegerVerifier());
+        elevatorCapacityField.setInputVerifier(new IntegerVerifier());
+        simulationTimeField.setInputVerifier(new IntegerVerifier());
+    }
+
+    /**
+     * Method performs initial UI construction of the 8 form fields,
+     * title, labels and 'run' button.
+     */
+    private void constructUI() {
+
+        landingConfigPanel = new JPanel();
+        landingConfigPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        landingConfigPanel.setLayout(new BoxLayout(landingConfigPanel, BoxLayout.Y_AXIS));
+
+        // Add title
+        JLabel title = new JLabel("Elevated Expectations");
+        title.setFont(new Font(null, Font.BOLD, 20));
+        Box titleBox = Box.createHorizontalBox();
+        titleBox.add(title);
+        titleBox.add(Box.createHorizontalGlue());
+        landingConfigPanel.add(titleBox);
+
+
+        empFloorChangeProbabilityField = new LabelledSliderFP("FloorChangeProbability", 0.01, 0, 100, 100);
+        landingConfigPanel.add(empFloorChangeProbabilityField);
+
+        clientArrivalProbabilityField = new LabelledSliderFP("ClientArrivalProbability", 0.005, 0, 100, 100);
+        landingConfigPanel.add(clientArrivalProbabilityField);
+
+        randomSeedField = new JTextField();
+        randomSeedField.setText("420");
+        landingConfigPanel.add(wrapFieldWithLabel("Random Seed:", randomSeedField));
+
+        numberEmployeesField = new JTextField();
+        numberEmployeesField.setText("10");
+        landingConfigPanel.add(wrapFieldWithLabel("Number of Employees:", numberEmployeesField));
+
+        numberDevelopersField = new JTextField();
+        numberDevelopersField.setText("10");
+        landingConfigPanel.add(wrapFieldWithLabel("Number of Developers:", numberDevelopersField));
+
+        numberFloorsField = new JTextField();
+        numberFloorsField.setText("6");
+        landingConfigPanel.add(wrapFieldWithLabel("Number of floors:", numberFloorsField));
+
+        elevatorCapacityField = new JTextField();
+        elevatorCapacityField.setText("4");
+        landingConfigPanel.add(wrapFieldWithLabel("Elevator Capacity:", elevatorCapacityField));
+
+        simulationTimeField = new JTextField();
+        simulationTimeField.setText("28800");
+        landingConfigPanel.add(wrapFieldWithLabel("Time to run sim (s):", simulationTimeField));
+
+        saveButton = new JButton();
+        saveButton.setText("Run Simulation");
+        landingConfigPanel.add(saveButton);
+
+
+        // Setup array
+        inputFields = new JTextField[]{
+                randomSeedField,
+                numberEmployeesField,
+                numberDevelopersField,
+                numberFloorsField,
+                elevatorCapacityField,
+                simulationTimeField};
+    }
+
+    /**
+     * Method wraps a given form field with a label to the left with a title provided.
+     *
+     * @param label The label to display to the left of the textfield
+     * @param textField The text-field to wrap with a label
+     *
+     * @return A JPanel with the label and text field horizontally contained.
+     */
+    private JPanel wrapFieldWithLabel(String label, Component textField) {
+        JPanel formContainer = new JPanel();
+        formContainer.setLayout(new GridLayout(1, 2));
+        formContainer.add(new JLabel(label));
+        formContainer.add(textField);
+        return formContainer;
     }
 
     /**
@@ -139,8 +222,8 @@ public class LandingConfig {
         System.out.println("[GUI] Collecting Values from Fields");
 
         // Collect and parse values from each field.
-        empFloorChangeProbability = new BigDecimal(empFloorChangeProbabilityField.getText());
-        clientArrivalProbability = new BigDecimal(clientArrivalProbabilityField.getText());
+        empFloorChangeProbability = new BigDecimal(empFloorChangeProbabilityField.getValue());
+        clientArrivalProbability = new BigDecimal(clientArrivalProbabilityField.getValue());
         seed = Long.parseLong(randomSeedField.getText());
         numEmployees = Integer.parseInt(numberEmployeesField.getText());
         numDevelopers = Integer.parseInt(numberDevelopersField.getText());
