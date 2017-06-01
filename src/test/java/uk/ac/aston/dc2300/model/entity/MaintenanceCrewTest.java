@@ -23,12 +23,9 @@ public class MaintenanceCrewTest {
     private Floor groundFloor;
     private Elevator elevator;
     private MaintenanceCrew maintenanceCrew;
-    private Set<Elevator> elevators;
     private Building building;
     private List<Floor> floors;
-
-    // Set seed to be the same for multiple tests
-    private static final RandomUtils randomUtils = new RandomUtils(420);
+    private RandomUtils randomUtils;
 
     /**
      * Setup before each test run for generic test components
@@ -47,7 +44,7 @@ public class MaintenanceCrewTest {
         elevator = new Elevator(4, groundFloor);
 
         // Setup all elevators in building
-        elevators = new HashSet<>();
+        Set<Elevator> elevators = new HashSet<>();
         elevators.add(new Elevator(4, floors.get(0)));
 
         // Setup building
@@ -55,6 +52,9 @@ public class MaintenanceCrewTest {
 
         // Setup maintenance crew for tests
         maintenanceCrew = new MaintenanceCrew(0, 1200);
+
+        // Setup seed
+        randomUtils = new RandomUtils(420);
     }
 
     /**
@@ -102,7 +102,6 @@ public class MaintenanceCrewTest {
     public void maintenanceCrewLeavesBuildingAfterTimeExpired() {
         // Add maintenance crew to the ground floor
         groundFloor.addOccupant(maintenanceCrew);
-        assertEquals(groundFloor.getOccupants().size(), 1);
 
         // Set maintenance crew destination to ground floor
         maintenanceCrew.setDestination(groundFloor);
@@ -122,7 +121,6 @@ public class MaintenanceCrewTest {
         // Set maintenance crew destination to floor 1 and add maintenance crew to floor 1
         maintenanceCrew.setDestination(floors.get(1));
         floors.get(1).addOccupant(maintenanceCrew);
-        assertTrue(floors.get(1).getOccupants().contains(maintenanceCrew));
 
         // Maintenance crew leaves building due to time expiring
         maintenanceCrew.setNewDestination(building, randomUtils, BigDecimal.ONE, 1201);
@@ -141,7 +139,6 @@ public class MaintenanceCrewTest {
         maintenanceCrew.setDestination(floors.get(1));
         // Add Maintenance crew to elevator
         elevator.addOccupant(maintenanceCrew);
-        assertTrue(elevator.getOccupants().contains(maintenanceCrew));
 
         // Elevator is on floor 1 and maintenance crew gets out of elevator
         maintenanceCrew.getOutElevatorIfAtDestination(elevator, floors.get(1), 20);
@@ -157,10 +154,11 @@ public class MaintenanceCrewTest {
         maintenanceCrew.setDestination(floors.get(1));
         // Add maintenance crew to elevator
         elevator.addOccupant(maintenanceCrew);
-        assertTrue(elevator.getOccupants().contains(maintenanceCrew));
 
         // Elevator is on floor 2 and maintenance crew doesn't get out of elevator
         maintenanceCrew.getOutElevatorIfAtDestination(elevator, floors.get(2), 20);
         assertTrue(elevator.getOccupants().contains(maintenanceCrew));
+        assertFalse(floors.get(2).getOccupants().contains(maintenanceCrew));
+        assertFalse(floors.get(2).getElevatorQueue().contains(maintenanceCrew));
     }
 }

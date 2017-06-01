@@ -23,12 +23,9 @@ public class ClientTest {
     private Floor groundFloor;
     private Elevator elevator;
     private Client client;
-    private Set<Elevator> elevators;
     private Building building;
     private List<Floor> floors;
-
-    // Set seed to be the same for multiple tests
-    private static final RandomUtils randomUtils = new RandomUtils(420);
+    private RandomUtils randomUtils;
 
     /**
      * Setup before each test run for generic test components
@@ -47,7 +44,7 @@ public class ClientTest {
         elevator = new Elevator(4, groundFloor);
 
         // Setup all elevators in building
-        elevators = new HashSet<>();
+        Set<Elevator> elevators = new HashSet<>();
         elevators.add(new Elevator(4, floors.get(0)));
 
         // Setup building
@@ -55,6 +52,9 @@ public class ClientTest {
 
         // Setup client for tests
         client = new Client(0, 1200);
+
+        // Setup seed
+        randomUtils = new RandomUtils(420);
     }
 
     /**
@@ -62,10 +62,12 @@ public class ClientTest {
      */
     @Test
     public void clientCantComplain() {
+        // Setup for test
+        groundFloor.addOccupant(client);
         // Client entered queue at 10 seconds
-        client.setQueueEnterTime(10);
-        // Client complains at 609 (9 minutes 59 seconds after entering queue
-        assertFalse(client.wouldLikeToComplain(609));
+        client.setNewDestination(building, randomUtils, BigDecimal.ONE,0);
+        // Client complains at 599 (9 minutes 59 seconds after entering queue)
+        assertFalse(client.wouldLikeToComplain(599));
     }
 
     /**
@@ -73,10 +75,12 @@ public class ClientTest {
      */
     @Test
     public void clientCanComplain() {
+        // Setup for test
+        groundFloor.addOccupant(client);
         // Client entered queue at 10 seconds
-        client.setQueueEnterTime(10);
-        // Client complains at 610 (10 minutes after entering queue
-        assertTrue(client.wouldLikeToComplain(610));
+        client.setNewDestination(building, randomUtils, BigDecimal.ONE,0);
+        // Client complains at 600 (10 minutes after entering queue)
+        assertTrue(client.wouldLikeToComplain(600));
     }
 
     /**
@@ -95,10 +99,15 @@ public class ClientTest {
      */
     @Test
     public void clientCanEnterElevator() {
+        // Add client to ground floor and elevator queue
+        groundFloor.addOccupant(client);
+        groundFloor.addToBackOfQueue(client);
         // Client enters elevator on ground floor
         client.getInElevator(elevator, groundFloor);
         // Client is in elevator
         assertTrue(elevator.getOccupants().contains(client));
+        assertEquals(groundFloor.getOccupants().size(), 0);
+        assertEquals(groundFloor.getElevatorQueue().size(), 0);
     }
 
     /**
@@ -151,7 +160,6 @@ public class ClientTest {
     public void clientLeavesBuildingAfterTimeExpired() {
         // Add client to the ground floor
         groundFloor.addOccupant(client);
-        assertEquals(groundFloor.getOccupants().size(), 1);
 
         // Set client destination to ground floor
         client.setDestination(groundFloor);
@@ -171,7 +179,6 @@ public class ClientTest {
         // Set client destination to floor 1 and add client to floor 1
         client.setDestination(floors.get(1));
         floors.get(1).addOccupant(client);
-        assertTrue(floors.get(1).getOccupants().contains(client));
 
         // Client leaves building due to time expiring
         client.setNewDestination(building, randomUtils, BigDecimal.ONE, 1201);
@@ -190,7 +197,6 @@ public class ClientTest {
         client.setDestination(floors.get(1));
         // Add client to elevator
         elevator.addOccupant(client);
-        assertTrue(elevator.getOccupants().contains(client));
 
         // Elevator is on floor 1 and client gets out of elevator
         client.getOutElevatorIfAtDestination(elevator, floors.get(1), 20);
@@ -206,10 +212,11 @@ public class ClientTest {
         client.setDestination(floors.get(1));
         // Add client to elevator
         elevator.addOccupant(client);
-        assertTrue(elevator.getOccupants().contains(client));
 
         // Elevator is on floor 2 and client doesn't get out of elevator
         client.getOutElevatorIfAtDestination(elevator, floors.get(2), 20);
         assertTrue(elevator.getOccupants().contains(client));
+        assertFalse(floors.get(2).getOccupants().contains(client));
+        assertFalse(floors.get(2).getElevatorQueue().contains(client));
     }
 }

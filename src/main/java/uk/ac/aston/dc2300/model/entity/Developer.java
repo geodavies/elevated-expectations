@@ -71,7 +71,7 @@ public class Developer extends BuildingOccupant {
             // Assign developers a floor in the top half
             List<Floor> topHalfFloors = building.getTopHalfFloors();
             int randomFloorIndex = randomUtils.getIntInRange(0, topHalfFloors.size() - 1);
-            while (randomFloorIndex == currentFloor.getFloorNumber()) {
+            while ((randomFloorIndex + topHalfFloors.size()) == currentFloor.getFloorNumber()) {
                 // If random floor is current floor try again
                 randomFloorIndex = randomUtils.getIntInRange(0, topHalfFloors.size() - 1);
             }

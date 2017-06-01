@@ -11,9 +11,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * <p>
@@ -68,9 +65,6 @@ public class LandingConfig {
                 /*
                     Button Pressed - Populate Values
                  */
-                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                Date date = new Date();
-                System.out.println(dateFormat.format(date));
                 System.out.println("[GUI] Button Pressed - Initiating Simulation");
                 collectInputData();
 
