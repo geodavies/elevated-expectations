@@ -109,4 +109,23 @@ public class BuildingTest {
         assertEquals(1, elevatorsOnGroundFloor.size());
     }
 
+    @Test
+    public void numberOfComplaints() {
+        // Building currently has no complaints
+        assertEquals(building.getNumberComplaints(), 0);
+
+        // Add two clients that will complain
+        Client client1 = new Client(0, 1200);
+        Client client2 = new Client(0, 1200);
+        floors.get(0).addOccupant(client1);
+        floors.get(0).addOccupant(client2);
+        floors.get(0).addToFrontOfQueue(client1);
+        floors.get(0).addToFrontOfQueue(client2);
+        client1.setQueueEnterTime(0);
+        client2.setQueueEnterTime(0);
+
+
+        assertEquals(building.getClientComplaints(620), 2);
+    }
+
 }
