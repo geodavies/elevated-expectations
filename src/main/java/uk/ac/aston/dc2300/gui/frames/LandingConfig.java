@@ -1,14 +1,19 @@
 package uk.ac.aston.dc2300.gui.frames;
 
 import aston.nabneyit.GUI.LabelledSliderFP;
-import uk.ac.aston.dc2300.component.Simulation;
-import uk.ac.aston.dc2300.gui.util.*;
+import uk.ac.aston.dc2300.gui.util.GUIChange;
+import uk.ac.aston.dc2300.gui.util.IntegerVerifier;
+import uk.ac.aston.dc2300.gui.util.InvalidInputException;
+import uk.ac.aston.dc2300.gui.util.LongVerifier;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * <p>
@@ -63,6 +68,9 @@ public class LandingConfig {
                 /*
                     Button Pressed - Populate Values
                  */
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Date date = new Date();
+                System.out.println(dateFormat.format(date));
                 System.out.println("[GUI] Button Pressed - Initiating Simulation");
                 collectInputData();
 
