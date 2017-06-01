@@ -87,4 +87,9 @@ public class Client extends BuildingOccupant {
             queueEnterTime = currentTime;
         }
     }
+
+    public void setQueueEnterTime(int queueEnterTime) {
+        this.queueEnterTime = queueEnterTime;
+    }
+
 }
