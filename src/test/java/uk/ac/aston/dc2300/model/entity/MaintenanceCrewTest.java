@@ -63,7 +63,7 @@ public class MaintenanceCrewTest {
      * Test to ensure the maintenance crew can call the elevator
      */
     @Test
-    public void clientCanCallElevator() {
+    public void maintenanceCrewCanCallElevator() {
         // Maintenance crew calls elevator on ground floor
         maintenanceCrew.callElevator(groundFloor);
         // Maintenance crew is in elevator queue for the ground floor
@@ -74,7 +74,7 @@ public class MaintenanceCrewTest {
      * Test to ensure the maintenance crew can enter elevator
      */
     @Test
-    public void clientCanEnterElevator() {
+    public void maintenanceCrewCanEnterElevator() {
         // Maintenance crew enters elevator on ground floor
         maintenanceCrew.getInElevator(elevator, groundFloor);
         // Maintenance crew is in elevator
@@ -85,7 +85,7 @@ public class MaintenanceCrewTest {
      * Test to ensure on arrival the maintenance crew get's a destination of the top floor
      */
     @Test
-    public void clientMovesToTopFloorOnArrival() {
+    public void maintenanceCrewMovesToTopFloorOnArrival() {
         // Add maintenance crew to the ground floor
         groundFloor.addOccupant(maintenanceCrew);
 
@@ -101,7 +101,7 @@ public class MaintenanceCrewTest {
      * Test to ensure the maintenance crew leaves the building after leave time expires
      */
     @Test
-    public void clientLeavesBuildingAfterTimeExpired() {
+    public void maintenanceCrewLeavesBuildingAfterTimeExpired() {
         // Add maintenance crew to the ground floor
         groundFloor.addOccupant(maintenanceCrew);
         assertEquals(groundFloor.getOccupants().size(), 1);
@@ -120,8 +120,8 @@ public class MaintenanceCrewTest {
      * Test to ensure the maintenance crew starts to leave the building after leave time expires by setting destination to ground floor
      */
     @Test
-    public void clientSetsDestinationToGroundFloorAfterTimeExpired() {
-        // Set maintenance crew destination to floor 1 and add client to floor 1
+    public void maintenanceCrewSetsDestinationToGroundFloorAfterTimeExpired() {
+        // Set maintenance crew destination to floor 1 and add maintenance crew to floor 1
         maintenanceCrew.setDestination(floors.get(1));
         floors.get(1).addOccupant(maintenanceCrew);
         assertTrue(floors.get(1).getOccupants().contains(maintenanceCrew));
@@ -138,7 +138,7 @@ public class MaintenanceCrewTest {
      * Test to ensure the maintenance crew leaves elevator on the correct floor
      */
     @Test
-    public void clientGetsOutOfElevatorOnCorrectFloor() {
+    public void maintenanceCrewGetsOutOfElevatorOnCorrectFloor() {
         // Set maintenance crew destination to floor 1
         maintenanceCrew.setDestination(floors.get(1));
         // Add Maintenance crew to elevator
@@ -154,7 +154,7 @@ public class MaintenanceCrewTest {
      * Test to ensure the maintenance crew doesn't leave the elevator on the wrong floor
      */
     @Test
-    public void clientDoesntGetOutOfElevatorIfOnWrongFloor() {
+    public void maintenanceCrewDoesntGetOutOfElevatorIfOnWrongFloor() {
         // Set maintenance crew destination to floor 1
         maintenanceCrew.setDestination(floors.get(1));
         // Add maintenance crew to elevator
