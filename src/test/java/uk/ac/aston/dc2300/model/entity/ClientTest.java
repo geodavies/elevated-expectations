@@ -13,13 +13,12 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 /**
- * Test class for the Elevator functions
+ * Test class for the Client functions
  *
  * @author Scott Janes
  * @since 01/06/17
  */
 public class ClientTest {
-
 
     private Floor groundFloor;
     private Elevator elevator;
@@ -28,7 +27,7 @@ public class ClientTest {
     private Building building;
     private List<Floor> floors;
 
-    // Set seed to be the same for each test
+    // Set seed to be the same for multiple tests
     private static final RandomUtils randomUtils = new RandomUtils(420);
 
     /**
@@ -80,6 +79,9 @@ public class ClientTest {
         assertTrue(client.wouldLikeToComplain(610));
     }
 
+    /**
+     * Test to ensure the client can call the elevator
+     */
     @Test
     public void clientCanCallElevator() {
         // Client calls elevator on ground floor
@@ -99,6 +101,9 @@ public class ClientTest {
         assertTrue(elevator.getOccupants().contains(client));
     }
 
+    /**
+     * Test to ensure the client leaves the building
+     */
     @Test
     public void clientIsReadyToLeave() {
         // Client is ready to leave the building
