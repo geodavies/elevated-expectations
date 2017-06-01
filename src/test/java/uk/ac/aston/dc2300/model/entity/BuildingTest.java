@@ -30,6 +30,8 @@ public class BuildingTest {
 
     private List<Floor> floors;
 
+    private Set<Elevator> elevators;
+
     /**
      * Setup before each test run for a basic building
      */
@@ -39,7 +41,7 @@ public class BuildingTest {
         for(int i = 0; i <= TOP_FLOOR; i++){
             floors.add(new Floor(i));
         }
-        Set<Elevator> elevators = new HashSet<>();
+        elevators = new HashSet<>();
         elevators.add(new Elevator(4, floors.get(0)));
         building = new Building(elevators, floors);
         developer = new Developer(0, DeveloperCompany.GOGGLES);
@@ -109,6 +111,9 @@ public class BuildingTest {
         assertEquals(1, elevatorsOnGroundFloor.size());
     }
 
+    /**
+     * Test to ensure the building knows how many complaints are being made
+     */
     @Test
     public void numberOfComplaints() {
         // Building currently has no complaints
@@ -124,8 +129,19 @@ public class BuildingTest {
         client1.setQueueEnterTime(0);
         client2.setQueueEnterTime(0);
 
-
         assertEquals(building.getClientComplaints(620), 2);
+    }
+
+    /**
+     * Test to ensure the building knows which floor the elevator is on
+     */
+    @Test
+    public void multipleElevators() {
+        // Add new elevator to building
+        elevators.add(new Elevator(10, floors.get(0)));
+
+        // Building now has two elevators
+        assertEquals(building.getElevators().size(), 2);
     }
 
 }

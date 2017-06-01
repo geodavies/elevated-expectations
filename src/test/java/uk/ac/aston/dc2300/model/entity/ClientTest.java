@@ -31,7 +31,7 @@ public class ClientTest {
     private static final RandomUtils randomUtils = new RandomUtils(420);
 
     /**
-     * Setup before each test run for a generic test components
+     * Setup before each test run for generic test components
      */
     @Before
     public void setup() {

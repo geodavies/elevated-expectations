@@ -10,9 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Test class for the Maintenance Crew functions
@@ -33,7 +31,7 @@ public class MaintenanceCrewTest {
     private static final RandomUtils randomUtils = new RandomUtils(420);
 
     /**
-     * Setup before each test run for a generic test components
+     * Setup before each test run for generic test components
      */
     @Before
     public void setup() {

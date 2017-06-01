@@ -6,17 +6,12 @@ import uk.ac.aston.dc2300.model.status.DeveloperCompany;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
- * Test class for the Client functions
+ * Test class for the Developer functions
  *
  * @author Scott Janes
  * @since 01/06/17
@@ -34,7 +29,7 @@ public class DeveloperTest {
     private static final RandomUtils randomUtils = new RandomUtils(420);
 
     /**
-     * Setup before each test run for a generic test components
+     * Setup before each test run for generic test components
      */
     @Before
     public void setup() {
@@ -83,10 +78,18 @@ public class DeveloperTest {
     }
 
     /**
-     * Test to ensure the developer won't enter elevator if a developer from a rival company is present
+     * Test to ensure the developer won't enter elevator if a developer from a rival company is present and developer will move to back of the queue
      */
     @Test
     public void developerWontEnterElevator() {
+        // Add developer to front of queue
+        floors.get(0).addToFrontOfQueue(developer);
+        // Add employee to back of queue
+        floors.get(0).addToBackOfQueue(new Employee(0));
+        // Developer is at front of queue
+        LinkedList<BuildingOccupant> elevatorQueue = floors.get(0).getElevatorQueue();
+        assertTrue(elevatorQueue.get(0) instanceof Developer);
+
         // Add developer from rival company to elevator
         Developer rivalDeveloper = new Developer(0, DeveloperCompany.MUGTOME);
         elevator.addOccupant(rivalDeveloper);
@@ -96,6 +99,10 @@ public class DeveloperTest {
         assertFalse(elevator.getOccupants().contains(developer));
         //Rival developer is in elevator
         assertTrue(elevator.getOccupants().contains(rivalDeveloper));
+        // Developer was moved to back of queue
+        elevatorQueue = floors.get(0).getElevatorQueue();
+        assertFalse(elevatorQueue.get(0) instanceof Developer);
+        assertTrue(elevatorQueue.get(1) instanceof Developer);
     }
 
     /**
@@ -109,7 +116,7 @@ public class DeveloperTest {
         // Developer sets a destination
         developer.setNewDestination(building, randomUtils, BigDecimal.ONE, 0);
 
-        // Developer's new destination is floor 2
+        // Developer's new destination is floor 4
         assertEquals(developer.getDestination().floorNumber, 4);
         assertEquals(developer.getDestination(), floors.get(4));
     }
@@ -134,7 +141,7 @@ public class DeveloperTest {
      * Test to ensure the developer leaves elevator on the correct floor
      */
     @Test
-    public void setDeveloperGetsOutOfElevatorOnCorrectFloor() {
+    public void developerGetsOutOfElevatorOnCorrectFloor() {
         // Set developers destination to floor 1
         developer.setDestination(floors.get(1));
         // Add developer to elevator
