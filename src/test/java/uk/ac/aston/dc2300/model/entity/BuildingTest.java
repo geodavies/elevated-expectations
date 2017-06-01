@@ -3,7 +3,9 @@ package uk.ac.aston.dc2300.model.entity;
 import org.junit.Before;
 import org.junit.Test;
 import uk.ac.aston.dc2300.model.status.DeveloperCompany;
+import uk.ac.aston.dc2300.utility.RandomUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -103,12 +105,14 @@ public class BuildingTest {
     }
 
     /**
-     * Test to ensure the building knows which floor the elevator is on
+     * Test to ensure the building knows the number of elevators on each floor
      */
     @Test
-    public void elevatorOnFloorOnGroundFloor() {
-        List<Elevator> elevatorsOnGroundFloor = building.getElevatorsOnFloor(floors.get(0));
-        assertEquals(1, elevatorsOnGroundFloor.size());
+    public void numberOfElevatorsOnFloor() {
+        elevators.add(new Elevator(10, floors.get(2)));
+        assertEquals(1, building.getElevatorsOnFloor(floors.get(0)).size());
+        assertEquals(0, building.getElevatorsOnFloor(floors.get(1)).size());
+        assertEquals(1, building.getElevatorsOnFloor(floors.get(2)).size());
     }
 
     /**
@@ -124,16 +128,14 @@ public class BuildingTest {
         Client client2 = new Client(0, 1200);
         floors.get(0).addOccupant(client1);
         floors.get(0).addOccupant(client2);
-        floors.get(0).addToFrontOfQueue(client1);
-        floors.get(0).addToFrontOfQueue(client2);
-        client1.setQueueEnterTime(0);
-        client2.setQueueEnterTime(0);
+        client1.setNewDestination(building, new RandomUtils(420), BigDecimal.ONE,0);
+        client2.setNewDestination(building, new RandomUtils(420), BigDecimal.ONE,0);
 
         assertEquals(building.getClientComplaints(620), 2);
     }
 
     /**
-     * Test to ensure the building knows which floor the elevator is on
+     * Test to ensure the building can contain multiple elevators
      */
     @Test
     public void multipleElevators() {
@@ -142,6 +144,7 @@ public class BuildingTest {
 
         // Building now has two elevators
         assertEquals(building.getElevators().size(), 2);
+
     }
 
 }

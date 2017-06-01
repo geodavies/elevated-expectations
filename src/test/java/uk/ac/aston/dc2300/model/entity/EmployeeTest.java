@@ -23,12 +23,9 @@ public class EmployeeTest {
     private Floor groundFloor;
     private Elevator elevator;
     private Employee employee;
-    private Set<Elevator> elevators;
     private Building building;
     private List<Floor> floors;
-
-    // Set seed to be the same for multiple tests
-    private static final RandomUtils randomUtils = new RandomUtils(420);
+    private RandomUtils randomUtils;
 
     /**
      * Setup before each test run for generic test components
@@ -47,7 +44,7 @@ public class EmployeeTest {
         elevator = new Elevator(4, groundFloor);
 
         // Setup all elevators in building
-        elevators = new HashSet<>();
+        Set<Elevator> elevators = new HashSet<>();
         elevators.add(new Elevator(4, floors.get(0)));
 
         // Setup building
@@ -55,6 +52,9 @@ public class EmployeeTest {
 
         // Setup employee for tests
         employee = new Employee(0);
+
+        // Setup seed
+        randomUtils = new RandomUtils(420);
     }
 
     /**
@@ -96,6 +96,22 @@ public class EmployeeTest {
     }
 
     /**
+     * Test to ensure the employee can get a new destination other than current floor
+     */
+    @Test
+    public void employeeGetsNewDestinationNotSameFloor() {
+        // Add employee to the fourth floor as that is what is returned from getting new destination (see test above)
+        floors.get(1).addOccupant(employee);
+
+        // Employee sets a destination
+        employee.setNewDestination(building, randomUtils, BigDecimal.ONE, 0);
+
+        // Employee's new destination is floor 3
+        assertEquals(employee.getDestination().floorNumber, 3);
+        assertEquals(employee.getDestination(), floors.get(3));
+    }
+
+    /**
      * Test to ensure the employee doesn't get a new destination as not probable to move
      */
     @Test
@@ -120,7 +136,6 @@ public class EmployeeTest {
         employee.setDestination(floors.get(1));
         // Add employee to elevator
         elevator.addOccupant(employee);
-        assertTrue(elevator.getOccupants().contains(employee));
 
         // Elevator is on floor 1 and employee gets out of elevator
         employee.getOutElevatorIfAtDestination(elevator, floors.get(1), 20);
@@ -136,10 +151,11 @@ public class EmployeeTest {
         employee.setDestination(floors.get(1));
         // Add employee to elevator
         elevator.addOccupant(employee);
-        assertTrue(elevator.getOccupants().contains(employee));
 
         // Elevator is on floor 2 and employee doesn't get out of elevator
         employee.getOutElevatorIfAtDestination(elevator, floors.get(2), 20);
         assertTrue(elevator.getOccupants().contains(employee));
+        assertFalse(floors.get(2).getOccupants().contains(employee));
+        assertFalse(floors.get(2).getElevatorQueue().contains(employee));
     }
 }

@@ -21,12 +21,9 @@ public class DeveloperTest {
     private Floor groundFloor;
     private Elevator elevator;
     private Developer developer;
-    private Set<Elevator> elevators;
     private Building building;
     private List<Floor> floors;
-
-    // Set seed to be the same for multiple tests
-    private static final RandomUtils randomUtils = new RandomUtils(420);
+    private RandomUtils randomUtils;
 
     /**
      * Setup before each test run for generic test components
@@ -45,7 +42,7 @@ public class DeveloperTest {
         elevator = new Elevator(4, groundFloor);
 
         // Setup all elevators in building
-        elevators = new HashSet<>();
+        Set<Elevator> elevators = new HashSet<>();
         elevators.add(new Elevator(4, floors.get(0)));
 
         // Setup building
@@ -53,6 +50,9 @@ public class DeveloperTest {
 
         // Setup developer for tests
         developer = new Developer(0, DeveloperCompany.GOGGLES);
+
+        // Setup seed
+        randomUtils = new RandomUtils(420);
     }
 
     /**
@@ -71,10 +71,15 @@ public class DeveloperTest {
      */
     @Test
     public void developerCanEnterElevator() {
+        // Add developer to ground floor and elevator queue
+        groundFloor.addOccupant(developer);
+        groundFloor.addToBackOfQueue(developer);
         // Developer enters elevator on ground floor
         developer.getInElevator(elevator, groundFloor);
-        // Developer is in elevator
+        // Client is in elevator
         assertTrue(elevator.getOccupants().contains(developer));
+        assertEquals(groundFloor.getOccupants().size(), 0);
+        assertEquals(groundFloor.getElevatorQueue().size(), 0);
     }
 
     /**
@@ -110,7 +115,7 @@ public class DeveloperTest {
      */
     @Test
     public void developerGetsNewDestination() {
-        // Add developer crew to the ground floor
+        // Add developer to the ground floor
         groundFloor.addOccupant(developer);
 
         // Developer sets a destination
@@ -119,6 +124,22 @@ public class DeveloperTest {
         // Developer's new destination is floor 4
         assertEquals(developer.getDestination().floorNumber, 4);
         assertEquals(developer.getDestination(), floors.get(4));
+    }
+
+    /**
+     * Test to ensure the developer can get a new destination other than current floor
+     */
+    @Test
+    public void developerGetsNewDestinationNotSameFloor() {
+        // Add developer to the fourth floor as that is what is returned from getting new destination (see test above)
+        floors.get(4).addOccupant(developer);
+
+        // Developer sets a destination
+        developer.setNewDestination(building, randomUtils, BigDecimal.ONE, 0);
+
+        // Developer's new destination is floor 3
+        assertEquals(developer.getDestination().floorNumber, 3);
+        assertEquals(developer.getDestination(), floors.get(3));
     }
 
     /**
@@ -146,7 +167,6 @@ public class DeveloperTest {
         developer.setDestination(floors.get(1));
         // Add developer to elevator
         elevator.addOccupant(developer);
-        assertTrue(elevator.getOccupants().contains(developer));
 
         // Elevator is on floor 1 and developer gets out of elevator
         developer.getOutElevatorIfAtDestination(elevator, floors.get(1), 20);
@@ -162,10 +182,11 @@ public class DeveloperTest {
         developer.setDestination(floors.get(1));
         // Add developer to elevator
         elevator.addOccupant(developer);
-        assertTrue(elevator.getOccupants().contains(developer));
 
         // Elevator is on floor 2 and developer doesn't get out of elevator
         developer.getOutElevatorIfAtDestination(elevator, floors.get(2), 20);
         assertTrue(elevator.getOccupants().contains(developer));
+        assertFalse(floors.get(2).getOccupants().contains(developer));
+        assertFalse(floors.get(2).getElevatorQueue().contains(developer));
     }
 }
