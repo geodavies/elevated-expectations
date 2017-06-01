@@ -22,7 +22,6 @@ public class CliController implements ApplicationController {
 
     private final Simulation simulation;
 
-    private boolean simulationRunning;
     private SimulationStatus currentStatus;
 
     public CliController() {
@@ -76,7 +75,6 @@ public class CliController implements ApplicationController {
 
     @Override
     public void start() {
-        simulationRunning = true;
         currentStatus = new SimulationStatus(null, 0, true);
 
         System.out.println("Simulation configuration complete\n");
