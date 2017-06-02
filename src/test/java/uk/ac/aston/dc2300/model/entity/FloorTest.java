@@ -170,4 +170,32 @@ public class FloorTest {
         // Occupant isn't waiting for elevator on floor 0
         assertFalse(floors.get(0).isAnyoneWaiting());
     }
+
+    /**
+     * Test to check all occupants are added to elevator queue in correct order
+     * Order will be instance of client, employee, developer, maintenance crew
+     * Client will be added last
+     */
+    @Test
+    public void allOccupantTypes() {
+        // Setup occupants
+        Employee employee = new Employee(0);
+        Developer developer = new Developer(0, DeveloperCompany.GOGGLES);
+        MaintenanceCrew maintenanceCrew = new MaintenanceCrew(0, 1200);
+        Client client = new Client(0, 1200);
+
+        Floor groundFloor = floors.get(0);
+
+        // All occupants call elevator
+        employee.callElevator(groundFloor);
+        developer.callElevator(groundFloor);
+        maintenanceCrew.callElevator(groundFloor);
+        client.callElevator(groundFloor);
+
+        LinkedList<BuildingOccupant> elevatorQueue = floors.get(0).getElevatorQueue();
+        assertTrue(elevatorQueue.get(0) instanceof Client);
+        assertTrue(elevatorQueue.get(1) instanceof Employee);
+        assertTrue(elevatorQueue.get(2) instanceof Developer);
+        assertTrue(elevatorQueue.get(3) instanceof MaintenanceCrew);
+    }
 }
