@@ -76,30 +76,30 @@ public class Elevator {
         if (movementStatus.equals(MOVING)) {
             movementStatus = STATIONARY;
         } else {
-            if (currentFloor.getFloorNumber() != 0 && !anyoneWaitingForFloors(floors)) { // There's nobody waiting return to ground floor
+            if (currentFloor.getFloorNumber() != 0 && !shouldElevatorTravelToFloors(floors)) { // There's nobody waiting return to ground floor
                 moveDown(floors);
             } else if (currentFloor.getFloorNumber() == 0) { // The elevator is currently on the ground floor
                 // If there's anyone waiting above current floor move up
-                if (anyoneWaitingForFloors(getFloorsAbove(floors))) {
+                if (shouldElevatorTravelToFloors(getFloorsAbove(floors))) {
                     moveUp(floors);
                 }
             } else if(currentFloor.getFloorNumber() > previousFloor.getFloorNumber()){ // If the elevator last moved up
                 // If there's anyone waiting above then continue moving up
-                if (anyoneWaitingForFloors(getFloorsAbove(floors))) {
+                if (shouldElevatorTravelToFloors(getFloorsAbove(floors))) {
                     moveUp(floors);
                 } else {
                     // Otherwise move down if there's people below
-                    if (anyoneWaitingForFloors(getFloorsBelow(floors))) {
+                    if (shouldElevatorTravelToFloors(getFloorsBelow(floors))) {
                         moveDown(floors);
                     }
                 }
             } else if (currentFloor.getFloorNumber() < previousFloor.getFloorNumber()) { // If the elevator last moved down
                 // If there's anyone waiting below then continue moving down
-                if (anyoneWaitingForFloors(getFloorsBelow(floors))) {
+                if (shouldElevatorTravelToFloors(getFloorsBelow(floors))) {
                     moveDown(floors);
                 } else {
                     // Otherwise move up if there's people above
-                    if (anyoneWaitingForFloors(getFloorsAbove(floors))) {
+                    if (shouldElevatorTravelToFloors(getFloorsAbove(floors))) {
                         moveUp(floors);
                     }
                 }
@@ -246,23 +246,30 @@ public class Elevator {
      * @param floors the floors to check
      * @return boolean status true=passengersWaiting, false=noneWaiting
      */
-    private boolean anyoneWaitingForFloors(List<Floor> floors) {
-        boolean waiting = false;
+    private boolean shouldElevatorTravelToFloors(List<Floor> floors) {
+        return occupantsWaitingOnFloors(floors) || occupantsWaitingForFloors(floors);
+    }
+
+    private boolean occupantsWaitingOnFloors(List<Floor> floors) {
         for (Floor floor : floors) {
             // If there's someone queuing on that floor
             if (floor.isAnyoneWaiting()) {
-                waiting = true;
-                break;
+                return true;
             }
+        }
+        return false;
+    }
+
+    private boolean occupantsWaitingForFloors(List<Floor> floors) {
+        for (Floor floor : floors) {
             for (BuildingOccupant buildingOccupant : currentOccupants) {
                 // If someone currently in the elevator wants to go to that floor
                 if (buildingOccupant.getDestination().equals(floor)) {
-                    waiting = true;
-                    break;
+                    return true;
                 }
             }
         }
-        return waiting;
+        return false;
     }
 
     /**
