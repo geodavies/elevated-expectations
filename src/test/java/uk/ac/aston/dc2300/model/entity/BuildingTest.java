@@ -41,7 +41,7 @@ public class BuildingTest {
         for(int i = 0; i <= TOP_FLOOR; i++){
             floors.add(new Floor(i));
         }
-        List<Elevator> elevators = new ArrayList<>();
+        elevators = new ArrayList<>();
         elevators.add(new Elevator(4, floors.get(0)));
         building = new Building(elevators, floors);
         developer = new Developer(0, DeveloperCompany.GOGGLES);
