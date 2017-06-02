@@ -57,7 +57,7 @@ public abstract class BuildingOccupant {
      *
      * @return the arraylist of waittimes
      */
-    protected ArrayList<Integer> getWaitTimes() {
+    public ArrayList<Integer> getWaitTimes() {
         return this.waitTimes;
     }
 

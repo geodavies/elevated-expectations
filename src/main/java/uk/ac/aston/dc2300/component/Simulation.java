@@ -38,8 +38,6 @@ public class Simulation {
 
     private int currentTime = 0;
 
-    private SimulationStatistics statistics;
-
     /**
      * Constructor for Simulation. Requires a populated configuration object.
      *
@@ -48,8 +46,6 @@ public class Simulation {
     public Simulation(SimulationConfiguration simulationConfiguration) {
 
         System.out.println("Creating simulation");
-
-        statistics = new SimulationStatistics();
 
         // Create floor(s)
         List<Floor> floors = new ArrayList<>();
@@ -107,6 +103,19 @@ public class Simulation {
             // Give them new destination floors
             buildingOccupant.setNewDestination(BUILDING, RANDOM_UTILS, BigDecimal.ONE, currentTime);
         }
+    }
+
+    public SimulationStatistics getStatistics() {
+        SimulationStatistics statistics = new SimulationStatistics(BUILDING.getNumberComplaints());
+
+        Set<BuildingOccupant> occupants  = BUILDING.getAllOccupants();
+
+        // Add all wait times
+        for(BuildingOccupant occupant : occupants) {
+            statistics.addWaitTimes(occupant.getWaitTimes());
+        }
+
+        return statistics;
     }
 
     public SimulationStatus tick() {

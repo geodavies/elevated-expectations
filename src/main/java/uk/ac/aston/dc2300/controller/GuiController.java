@@ -6,6 +6,7 @@ import uk.ac.aston.dc2300.gui.frames.LandingConfig;
 import uk.ac.aston.dc2300.gui.frames.SimulationCanvas;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 import uk.ac.aston.dc2300.model.entity.Building;
+import uk.ac.aston.dc2300.model.status.SimulationStatistics;
 import uk.ac.aston.dc2300.model.status.SimulationStatus;
 
 import javax.naming.ldap.Control;
@@ -126,6 +127,14 @@ public class GuiController implements ApplicationController {
                     }
                     Thread.sleep(SIM_SPEED_DEFAULT / simSpeedMultiplier);
                 }
+
+                SimulationStatistics stats = simulation.getStatistics();
+
+                // Collect end of sim stats.
+                System.out.format("%15s      %15s\n",
+                        "Average Wait Time", "Number of Complaints");
+                System.out.format ("%15s      %15d\n\n",
+                        stats.getAverageTime() + " seconds", stats.getNumberOfComplaints());
 
                 System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
 

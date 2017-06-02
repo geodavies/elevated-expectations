@@ -8,8 +8,10 @@ import java.util.ArrayList;
 public class SimulationStatistics {
 
     private ArrayList<Integer> waitTimes;
+    private int numberOfComplaints;
 
-    public SimulationStatistics() {
+    public SimulationStatistics(int numberOfComplaints) {
+        this.numberOfComplaints = numberOfComplaints;
         waitTimes = new ArrayList<>();
     }
 
@@ -17,14 +19,21 @@ public class SimulationStatistics {
         this.waitTimes.addAll(waitTimes);
     }
 
-    public ArrayList<Integer> getWaitTimes() {
-        return this.waitTimes;
-    }
-
+    /**
+     * Stream the collection containing the wait times through
+     * a reduce in order to reduce to a sum.
+     *
+     * Once we've got the sum, divide it by the number of
+     * entries to return the mean
+     * @return average time as an integer
+     */
     public int getAverageTime() {
         return (this.waitTimes
                 .stream()
                 .reduce(0, (sum, time) -> sum + time)) / this.waitTimes.size();
     }
 
+    public int getNumberOfComplaints() {
+        return this.numberOfComplaints;
+    }
 }
