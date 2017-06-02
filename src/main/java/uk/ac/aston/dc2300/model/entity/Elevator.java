@@ -3,10 +3,7 @@ package uk.ac.aston.dc2300.model.entity;
 import uk.ac.aston.dc2300.model.status.ElevatorDoorStatus;
 import uk.ac.aston.dc2300.model.status.ElevatorMovementStatus;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static uk.ac.aston.dc2300.model.status.ElevatorDoorStatus.*;
 import static uk.ac.aston.dc2300.model.status.ElevatorMovementStatus.MOVING;
@@ -22,16 +19,14 @@ import static uk.ac.aston.dc2300.model.status.ElevatorMovementStatus.STATIONARY;
 public class Elevator {
 
     private Floor previousFloor;
-
     private Floor currentFloor;
 
-    private Set<BuildingOccupant> currentOccupants;
+    private List<BuildingOccupant> currentOccupants;
+    private List<BuildingOccupant> occupantsLastTick;
 
-    private Set<BuildingOccupant> occupantsLastTick;
     private final int MAX_CAPACITY;
 
     private ElevatorDoorStatus doorStatus;
-
     private ElevatorMovementStatus movementStatus;
 
     /**
@@ -42,8 +37,8 @@ public class Elevator {
         MAX_CAPACITY = maxCapacity;
         this.currentFloor = currentFloor;
         previousFloor = currentFloor;
-        currentOccupants = new HashSet<>();
-        occupantsLastTick = new HashSet<>();
+        currentOccupants = new ArrayList<>();
+        occupantsLastTick = new ArrayList<>();
         doorStatus = CLOSED;
         movementStatus = STATIONARY;
     }
@@ -111,7 +106,7 @@ public class Elevator {
      * Gets any passengers currently in the elevator.
      * @return Passengers
      */
-    public Set<BuildingOccupant> getPassengers(){
+    public List<BuildingOccupant> getPassengers(){
         return currentOccupants;
     }
 
@@ -174,7 +169,7 @@ public class Elevator {
     public void unloadPassengers(int currentTime) {
         if (doorStatus.equals(OPEN)) {
             // Create a copy of the occupants to allow for concurrent modification
-            Set<BuildingOccupant> elevatorOccupants = new HashSet<>(currentOccupants);
+            List<BuildingOccupant> elevatorOccupants = new ArrayList<>(currentOccupants);
             for (BuildingOccupant buildingOccupant : elevatorOccupants) {
                 buildingOccupant.getOutElevatorIfAtDestination(this, currentFloor, currentTime);
             }
@@ -349,7 +344,7 @@ public class Elevator {
         return currentFloor;
     }
 
-    public Set<BuildingOccupant> getOccupants() {
+    public List<BuildingOccupant> getOccupants() {
         return currentOccupants;
     }
 

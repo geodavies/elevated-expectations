@@ -44,7 +44,7 @@ public class ClientTest {
         elevator = new Elevator(4, groundFloor);
 
         // Setup all elevators in building
-        Set<Elevator> elevators = new HashSet<>();
+        List<Elevator> elevators = new ArrayList<>();
         elevators.add(new Elevator(4, floors.get(0)));
 
         // Setup building

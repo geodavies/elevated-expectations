@@ -1,8 +1,6 @@
 package uk.ac.aston.dc2300.model.entity;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class represents a floor inside the building. Each building contains multiple occupants and may have a queue of
@@ -15,7 +13,7 @@ public class Floor {
 
     int floorNumber;
 
-    private Set<BuildingOccupant> occupants;
+    private List<BuildingOccupant> occupants;
 
     private LinkedList<BuildingOccupant> elevatorQueue;
 
@@ -25,14 +23,14 @@ public class Floor {
     public Floor(int floorNumber) {
         this.floorNumber = floorNumber;
         elevatorQueue = new LinkedList<>();
-        occupants = new HashSet<>();
+        occupants = new ArrayList<>();
     }
 
     public int getFloorNumber() {
         return floorNumber;
     }
 
-    public Set<BuildingOccupant> getOccupants() {
+    public List<BuildingOccupant> getOccupants() {
         return occupants;
     }
 

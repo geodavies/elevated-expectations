@@ -6,6 +6,7 @@ import uk.ac.aston.dc2300.model.status.DeveloperCompany;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by dan on 28/05/2017.
@@ -60,7 +61,7 @@ public class SimulationCanvas extends JPanel {
             }
 
             // Draw elevators
-            Set<Elevator> elevators = building.getElevators();
+            List<Elevator> elevators = building.getElevators();
             drawElevators(elevators, g, numFloors);
 
         }
@@ -111,7 +112,7 @@ public class SimulationCanvas extends JPanel {
         g.drawString("On-Floor", BORDER + (SECTION_WIDTH * 2), BORDER_Y);
     }
 
-    private void drawElevators(Set<Elevator> elevators, Graphics g, int numFloors) {
+    private void drawElevators(List<Elevator> elevators, Graphics g, int numFloors) {
 
         int elevatorCount = elevators.size();
         int elevatorId = 0;
@@ -121,7 +122,7 @@ public class SimulationCanvas extends JPanel {
 
         for (Elevator elevator: elevators) {
 
-            Set<BuildingOccupant> passengers = new HashSet<>();
+            List<BuildingOccupant> passengers = new ArrayList<>();
             passengers.addAll(elevator.getPassengers());
             int floorPosition = numFloors - elevator.getCurrentFloor().getFloorNumber() - 1;
 
@@ -157,7 +158,6 @@ public class SimulationCanvas extends JPanel {
         }
 
     }
-
 
     /**
      * Method populates a given floor on the UI both with the occupants
@@ -196,9 +196,11 @@ public class SimulationCanvas extends JPanel {
             g.fillOval( SECTION_WIDTH + offset + 2, (int) (offsetY + BORDER_Y + BORDER * 1.25 + (SECTION_HEIGHT * floorPos)), PERSON_RADIUS, PERSON_RADIUS);
         }
 
-        Set<BuildingOccupant> floorOccupants = new HashSet<>();
+        List<BuildingOccupant> floorOccupants = new ArrayList<>();
         // Get the floor occupants
-        floorOccupants.addAll(currentFloor.getOccupants());
+        for (BuildingOccupant occupant : currentFloor.getOccupants()) {
+            if (!currentFloor.getElevatorQueue().contains(occupant)) floorOccupants.add(occupant);
+        }
 
         // Draw each person on the floor
         int position = 0;

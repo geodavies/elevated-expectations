@@ -7,9 +7,7 @@ import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -32,7 +30,7 @@ public class BuildingTest {
 
     private List<Floor> floors;
 
-    private Set<Elevator> elevators;
+    private List<Elevator> elevators;
 
     /**
      * Setup before each test run for a basic building
@@ -43,7 +41,7 @@ public class BuildingTest {
         for(int i = 0; i <= TOP_FLOOR; i++){
             floors.add(new Floor(i));
         }
-        elevators = new HashSet<>();
+        elevators = new ArrayList<>();
         elevators.add(new Elevator(4, floors.get(0)));
         building = new Building(elevators, floors);
         developer = new Developer(0, DeveloperCompany.GOGGLES);
@@ -98,7 +96,7 @@ public class BuildingTest {
      */
     @Test
     public void getAllOccupants() {
-        Set<BuildingOccupant> allBuildingOccupants = building.getAllOccupants();
+        List<BuildingOccupant> allBuildingOccupants = building.getAllOccupants();
         assertEquals(2, allBuildingOccupants.size());
         assertTrue(allBuildingOccupants.contains(employee));
         assertTrue(allBuildingOccupants.contains(developer));
