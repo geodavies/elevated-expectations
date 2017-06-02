@@ -138,6 +138,8 @@ public class GuiController implements ApplicationController {
 
                 System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
 
+                canvas.drawStats(stats);
+
                 return currentStatus;
             }
         };

@@ -2,6 +2,7 @@ package uk.ac.aston.dc2300.gui.frames;
 
 import uk.ac.aston.dc2300.model.entity.*;
 import uk.ac.aston.dc2300.model.status.DeveloperCompany;
+import uk.ac.aston.dc2300.model.status.SimulationStatistics;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,10 +26,13 @@ public class SimulationCanvas extends JPanel {
 
     private Building building;
 
+    private SimulationStatistics statistics;
+
     public SimulationCanvas () {
         super();
         setOpaque ( true );
         building = null;
+        statistics = null;
     }
 
     @Override
@@ -41,6 +45,7 @@ public class SimulationCanvas extends JPanel {
         super.paintComponent ( g );
         drawTitles(g);
         paintKey(g);
+        paintStats(g);
 
         // Check we have a building
         if (building != null) {
@@ -67,6 +72,27 @@ public class SimulationCanvas extends JPanel {
         // Reset color
         g.setColor(Color.BLACK);
 
+    }
+
+    private void paintStats(Graphics context) {
+        if (statistics != null) {
+            int STATS_LEFT = 775;
+            int STATS_WIDTH = 150;
+            int STATS_TOP = BORDER_Y + ((BORDER + STATS_WIDTH) * 2);
+            int STATS_HEIGHT = STATS_WIDTH;
+            // Draw container
+            context.drawRect(STATS_LEFT, STATS_TOP, STATS_WIDTH, STATS_HEIGHT);
+            // Draw title
+            context.drawString("Statistics: ", STATS_LEFT + (BORDER / 2), STATS_TOP + BORDER);
+
+            // Draw Wait time
+            context.drawString("Avg Wait Time: ", STATS_LEFT + (BORDER / 2), STATS_TOP + BORDER * 3);
+            context.drawString(statistics.getAverageTime() + "s", STATS_LEFT + (BORDER), STATS_TOP + BORDER * 4);
+
+            // Draw Number of Complaints
+            context.drawString("# Of Complaints: ", STATS_LEFT + (BORDER / 2), STATS_TOP + BORDER * 6);
+            context.drawString(statistics.getNumberOfComplaints() + "", STATS_LEFT + (BORDER), STATS_TOP + BORDER * 7);
+        }
     }
 
     private void paintKey(Graphics context) {
@@ -250,6 +276,13 @@ public class SimulationCanvas extends JPanel {
 
     public void update(Building building) {
         this.building = building;
+        invalidate();
+        revalidate();
+        repaint();
+    }
+
+    public void drawStats(SimulationStatistics stats) {
+        this.statistics = stats;
         invalidate();
         revalidate();
         repaint();
