@@ -123,14 +123,14 @@ public class GuiController implements ApplicationController {
                     if (!simulationPaused) {
                         currentStatus = simulation.tick();
                         canvas.update(new Building(currentStatus.getBuilding()));
+                        canvas.drawStats(simulation.getStatistics());
                         simulationRunning = currentStatus.isSimulationRunning();
                     }
                     Thread.sleep(SIM_SPEED_DEFAULT / simSpeedMultiplier);
                 }
 
-                SimulationStatistics stats = simulation.getStatistics();
-
                 // Collect end of sim stats.
+                SimulationStatistics stats = simulation.getStatistics();
                 System.out.format("%15s      %15s\n",
                         "Average Wait Time", "Number of Complaints");
                 System.out.format ("%15s      %15d\n\n",

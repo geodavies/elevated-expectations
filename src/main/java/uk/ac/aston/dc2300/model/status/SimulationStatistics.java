@@ -28,9 +28,14 @@ public class SimulationStatistics {
      * @return average time as an integer
      */
     public int getAverageTime() {
-        return (this.waitTimes
-                .stream()
-                .reduce(0, (sum, time) -> sum + time)) / this.waitTimes.size();
+        int dataPoints = this.waitTimes.size();
+        if (dataPoints > 0) {
+            return (this.waitTimes
+                    .stream()
+                    .reduce(0, (sum, time) -> sum + time)) / this.waitTimes.size();
+        } else {
+            return 0;
+        }
     }
 
     public int getNumberOfComplaints() {

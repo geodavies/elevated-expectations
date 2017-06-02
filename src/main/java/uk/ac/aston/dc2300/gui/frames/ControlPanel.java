@@ -10,9 +10,7 @@ import java.awt.event.ActionListener;
  * Created by dan on 31/05/2017.
  */
 public class ControlPanel {
-    private ActionListener backHandler;
     private ActionListener speedHandler;
-    private ActionListener pauseHandler;
 
     private JPanel containerPanel;
     private JButton backButton;
@@ -55,7 +53,6 @@ public class ControlPanel {
     }
 
     public void setBackHandler(ActionListener backHandler) {
-        this.backHandler = backHandler;
         this.backButton.addActionListener(backHandler);
     }
 
@@ -79,7 +76,6 @@ public class ControlPanel {
     }
 
     public void setPauseHandler(ActionListener pauseHandler) {
-        this.pauseHandler = pauseHandler;
         this.pauseButton.addActionListener(pauseHandler);
     }
 
