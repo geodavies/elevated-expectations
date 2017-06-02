@@ -25,7 +25,7 @@ public class FileUtils {
         }
 
         FileWriter fileWriter = new FileWriter(file.getAbsoluteFile(),true);
-        BufferedWriter bufferedWriter = new BufferedWriter(fw);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         bufferedWriter.write(data);
         bufferedWriter.newLine();
 
