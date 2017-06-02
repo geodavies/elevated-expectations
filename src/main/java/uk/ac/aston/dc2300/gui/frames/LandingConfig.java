@@ -1,8 +1,10 @@
 package uk.ac.aston.dc2300.gui.frames;
 
 import aston.nabneyit.GUI.LabelledSliderFP;
-import uk.ac.aston.dc2300.component.Simulation;
-import uk.ac.aston.dc2300.gui.util.*;
+import uk.ac.aston.dc2300.gui.util.GUIChange;
+import uk.ac.aston.dc2300.gui.util.IntegerVerifier;
+import uk.ac.aston.dc2300.gui.util.InvalidInputException;
+import uk.ac.aston.dc2300.gui.util.LongVerifier;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 
 import javax.swing.*;
