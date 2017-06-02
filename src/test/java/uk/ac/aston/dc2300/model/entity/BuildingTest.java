@@ -110,9 +110,10 @@ public class BuildingTest {
     @Test
     public void numberOfElevatorsOnFloor() {
         elevators.add(new Elevator(10, floors.get(2)));
+        elevators.add(new Elevator(10, floors.get(2)));
         assertEquals(1, building.getElevatorsOnFloor(floors.get(0)).size());
         assertEquals(0, building.getElevatorsOnFloor(floors.get(1)).size());
-        assertEquals(1, building.getElevatorsOnFloor(floors.get(2)).size());
+        assertEquals(2, building.getElevatorsOnFloor(floors.get(2)).size());
     }
 
     /**
@@ -131,6 +132,8 @@ public class BuildingTest {
         client1.setNewDestination(building, new RandomUtils(420), BigDecimal.ONE,0);
         client2.setNewDestination(building, new RandomUtils(420), BigDecimal.ONE,0);
 
+        assertEquals(building.getClientComplaints(620), 2);
+        // Check for complaints again to ensure clients can't complain twice
         assertEquals(building.getClientComplaints(620), 2);
     }
 
