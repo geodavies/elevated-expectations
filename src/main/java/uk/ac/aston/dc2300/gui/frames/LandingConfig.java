@@ -123,7 +123,7 @@ public class LandingConfig {
         empFloorChangeProbabilityField = new LabelledSliderFP("FloorChangeProbability", 0.01, 0, 100, 100);
         landingConfigPanel.add(empFloorChangeProbabilityField);
 
-        clientArrivalProbabilityField = new LabelledSliderFP("ClientArrivalProbability", 0.005, 0, 100, 100);
+        clientArrivalProbabilityField = new LabelledSliderFP("ClientArrivalProbability", 0.005, 0, 1000, 1000);
         landingConfigPanel.add(clientArrivalProbabilityField);
 
         randomSeedField = new JTextField();
@@ -222,8 +222,8 @@ public class LandingConfig {
         System.out.println("[GUI] Collecting Values from Fields");
 
         // Collect and parse values from each field.
-        empFloorChangeProbability = new BigDecimal(empFloorChangeProbabilityField.getValue());
-        clientArrivalProbability = new BigDecimal(clientArrivalProbabilityField.getValue());
+        empFloorChangeProbability = new BigDecimal(empFloorChangeProbabilityField.getValue()).setScale(3, BigDecimal.ROUND_HALF_UP);
+        clientArrivalProbability = new BigDecimal(clientArrivalProbabilityField.getValue()).setScale(3, BigDecimal.ROUND_HALF_UP);
         seed = Long.parseLong(randomSeedField.getText());
         numEmployees = Integer.parseInt(numberEmployeesField.getText());
         numDevelopers = Integer.parseInt(numberDevelopersField.getText());

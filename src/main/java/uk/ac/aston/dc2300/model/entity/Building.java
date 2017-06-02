@@ -1,9 +1,7 @@
 package uk.ac.aston.dc2300.model.entity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * This class represents a building which contains multiple elevators and floors for the elevators to visit. The
@@ -14,7 +12,7 @@ import java.util.Set;
  */
 public class Building {
 
-    private final Set<Elevator> elevators;
+    private final List<Elevator> elevators;
     private final List<Floor> floors;
     private int numberComplaints;
 
@@ -22,7 +20,7 @@ public class Building {
      * @param elevators The set of elevators inside the building
      * @param floors The list of floors contained by the building
      */
-    public Building(Set<Elevator> elevators, List<Floor> floors) {
+    public Building(List<Elevator> elevators, List<Floor> floors) {
         this.elevators = elevators;
         this.floors = floors;
         numberComplaints = 0;
@@ -32,14 +30,14 @@ public class Building {
      * @param building The building to copy
      */
     public Building(Building building) {
-        this.elevators = new HashSet<>();
+        this.elevators = new ArrayList<>();
         this.elevators.addAll(building.getElevators());
         this.floors = new ArrayList<>();
         this.floors.addAll(building.getFloors());
         numberComplaints = 0;
     }
 
-    public Set<Elevator> getElevators() {
+    public List<Elevator> getElevators() {
         return elevators;
     }
 
@@ -97,8 +95,8 @@ public class Building {
      *
      * @return occupants from all floors
      */
-    public Set<BuildingOccupant> getAllOccupants() {
-        Set<BuildingOccupant> occupants = new HashSet<>();
+    public List<BuildingOccupant> getAllOccupants() {
+        List<BuildingOccupant> occupants = new ArrayList<>();
         for (Floor floor : floors) {
             occupants.addAll(floor.getOccupants());
         }
@@ -123,7 +121,7 @@ public class Building {
      *                    longer than 10 mins
      */
     public int getClientComplaints(int currentTime) {
-        Set<BuildingOccupant> occupants = getAllOccupants();
+        List<BuildingOccupant> occupants = getAllOccupants();
         for(BuildingOccupant occupant : occupants) {
             if (occupant instanceof Client) {
                 Client client = (Client) occupant;

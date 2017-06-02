@@ -8,9 +8,7 @@ import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Simulation class composes the main component of the application this class is responsible for managing the
@@ -55,7 +53,7 @@ public class Simulation {
 
         // Create elevator(s) and put in ground floor
         Elevator elevator = new Elevator(simulationConfiguration.getElevatorCapacity(), floors.get(0));
-        Set<Elevator> elevatorSet = new HashSet<>();
+        List<Elevator> elevatorSet = new ArrayList<>();
         elevatorSet.add(elevator);
 
         // Create employee(s) and put in ground floor
@@ -99,7 +97,7 @@ public class Simulation {
         System.out.println("Setting initial occupant destinations...");
         // Get all the occupants on the ground floor
         Floor groundFloor = BUILDING.getFloors().get(0);
-        Set<BuildingOccupant> initialOccupants = groundFloor.getOccupants();
+        List<BuildingOccupant> initialOccupants = groundFloor.getOccupants();
         for (BuildingOccupant buildingOccupant : initialOccupants) {
             // Give them new destination floors
             buildingOccupant.setNewDestination(BUILDING, RANDOM_UTILS, BigDecimal.ONE, currentTime);
@@ -166,7 +164,7 @@ public class Simulation {
      * individual setNewDestination method implementation requirements are met.
      */
     private void randomlyReassignDestinations() {
-        Set<BuildingOccupant> buildingOccupants = BUILDING.getAllOccupants();
+        List<BuildingOccupant> buildingOccupants = BUILDING.getAllOccupants();
         for (BuildingOccupant occupant : buildingOccupants) {
             Floor currentFloor = BUILDING.getFloorContainingOccupant(occupant);
             // If occupant current floor is also their destination

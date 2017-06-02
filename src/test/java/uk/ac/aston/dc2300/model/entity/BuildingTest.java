@@ -5,9 +5,7 @@ import org.junit.Test;
 import uk.ac.aston.dc2300.model.status.DeveloperCompany;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -39,7 +37,7 @@ public class BuildingTest {
         for(int i = 0; i <= TOP_FLOOR; i++){
             floors.add(new Floor(i));
         }
-        Set<Elevator> elevators = new HashSet<>();
+        List<Elevator> elevators = new ArrayList<>();
         elevators.add(new Elevator(4, floors.get(0)));
         building = new Building(elevators, floors);
         developer = new Developer(0, DeveloperCompany.GOGGLES);
@@ -94,7 +92,7 @@ public class BuildingTest {
      */
     @Test
     public void getAllOccupants() {
-        Set<BuildingOccupant> allBuildingOccupants = building.getAllOccupants();
+        List<BuildingOccupant> allBuildingOccupants = building.getAllOccupants();
         assertEquals(2, allBuildingOccupants.size());
         assertTrue(allBuildingOccupants.contains(employee));
         assertTrue(allBuildingOccupants.contains(developer));
