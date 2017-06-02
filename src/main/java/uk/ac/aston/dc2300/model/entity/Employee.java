@@ -20,12 +20,16 @@ public class Employee extends BuildingOccupant {
     }
 
     @Override
-    public void callElevator(Floor currentFloor) {
+    public void callElevator(Floor currentFloor, int currentTime) {
         currentFloor.addToBackOfQueue(this);
+        // Start the clock
+        startQueueTimer(currentTime);
     }
 
     @Override
-    public void getInElevator(Elevator elevator, Floor floor) {
+    public void getInElevator(Elevator elevator, Floor floor, int currentTime) {
+        // Stop the queue timer
+        resetQueueTimer(currentTime);
         // Leave the queue
         floor.removeFromQueue(this);
         // Leave the floor
@@ -48,7 +52,7 @@ public class Employee extends BuildingOccupant {
             Floor destination = building.getFloors().get(randomFloorIndex);
             setDestination(building.getFloors().get(randomFloorIndex));
             System.out.println(String.format("Employee on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
-            callElevator(currentFloor);
+            callElevator(currentFloor, currentTime);
         }
     }
 

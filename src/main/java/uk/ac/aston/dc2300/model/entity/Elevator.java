@@ -119,7 +119,7 @@ public class Elevator {
      * Gets any passengers from the current floor and puts them into the elevator if there's enough space and rules are
      * met.
      */
-    public void loadPassengers(int topFloorNumber) {
+    public void loadPassengers(int topFloorNumber, int currentTime) {
         if (doorStatus.equals(OPEN)) {
             // Create a copy of the occupants to allow for concurrent modification
             LinkedList<BuildingOccupant> elevatorQueue = new LinkedList<>(currentFloor.getElevatorQueue());
@@ -131,14 +131,14 @@ public class Elevator {
                 }
                 if (usedCapacity + buildingOccupant.getSize() <= MAX_CAPACITY &&
                         travellingInSameDirection(buildingOccupant, topFloorNumber)) {
-                    loadPassenger(buildingOccupant);
+                    loadPassenger(buildingOccupant, currentTime);
                 }
             }
         }
     }
 
-    private void loadPassenger(BuildingOccupant buildingOccupant) {
-        buildingOccupant.getInElevator(this, currentFloor);
+    private void loadPassenger(BuildingOccupant buildingOccupant, int currentTime) {
+        buildingOccupant.getInElevator(this, currentFloor, currentTime);
         System.out.println(String.format("Picked up new passenger going to floor %s", buildingOccupant.getDestination().getFloorNumber()));
     }
 

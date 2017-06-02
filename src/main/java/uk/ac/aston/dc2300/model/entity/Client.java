@@ -14,7 +14,6 @@ import java.util.List;
 public class Client extends BuildingOccupant {
 
     private int leaveAfterArrivalTime;
-    private int queueEnterTime;
 
     /**
      * @param timeEntered the time in seconds the Client entered the building following simulation start
@@ -23,11 +22,10 @@ public class Client extends BuildingOccupant {
     public Client(int timeEntered, int leaveAfterArrivalTime) {
         super(1, timeEntered);
         this.leaveAfterArrivalTime = leaveAfterArrivalTime;
-        this.queueEnterTime = -1;
     }
 
     public boolean wouldLikeToComplain(int currentTime) {
-        if (queueEnterTime > -1 && (currentTime - queueEnterTime) >= 600) {
+        if (getQueueEntryTime() > -1 && (currentTime - getQueueEntryTime()) >= 600) {
             return true;
         } else {
             return false;
@@ -35,25 +33,28 @@ public class Client extends BuildingOccupant {
     }
 
     @Override
-    public void callElevator(Floor currentFloor) {
+    public void callElevator(Floor currentFloor, int currentTime) {
         currentFloor.addToFrontOfQueue(this);
+        // start the clock
+        startQueueTimer(currentTime);
     }
 
     @Override
-    public void getInElevator(Elevator elevator, Floor floor) {
+    public void getInElevator(Elevator elevator, Floor floor, int currentTime) {
+        // Stop the queue timer
+        resetQueueTimer(currentTime);
         // Leave the queue
         floor.removeFromQueue(this);
         // Leave the floor
         floor.removeOccupant(this);
         // Get in the elevator
         elevator.addOccupant(this);
-        // Leaving queue
-        queueEnterTime = -1;
     }
 
-    public void getReadyToLeave(Floor ground) {
+    public void getReadyToLeave(Floor ground, int currentTime) {
         setDestination(ground);
-        queueEnterTime = -1;
+        // Stop the queue timer
+        resetQueueTimer(currentTime);
     }
 
     @Override
@@ -72,9 +73,7 @@ public class Client extends BuildingOccupant {
             Floor destination = bottomHalfFloors.get(randomFloorIndex);
             setDestination(destination);
             System.out.println(String.format("Client arrived on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
-            callElevator(currentFloor);
-            // Entered queue, start the clock
-            queueEnterTime = currentTime;
+            callElevator(currentFloor, currentTime);
         } else if (currentFloor.equals(groundFloor) && destination.equals(groundFloor)) {
             leaveBuilding(currentFloor);
             System.out.println("Client has left the building");
@@ -82,9 +81,7 @@ public class Client extends BuildingOccupant {
             // Set destination to ground floor to leave
             setDestination(groundFloor);
             System.out.println(String.format("Client on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
-            callElevator(currentFloor);
-            // Entered queue, start the clock
-            queueEnterTime = currentTime;
+            callElevator(currentFloor, currentTime);
         }
     }
 

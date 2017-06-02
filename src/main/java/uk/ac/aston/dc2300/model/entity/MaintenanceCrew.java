@@ -26,12 +26,16 @@ public class MaintenanceCrew extends BuildingOccupant {
     }
 
     @Override
-    public void callElevator(Floor currentFloor) {
+    public void callElevator(Floor currentFloor, int currentTime) {
         currentFloor.addToBackOfQueue(this);
+        // Start the clock
+        startQueueTimer(currentTime);
     }
 
     @Override
-    public void getInElevator(Elevator elevator, Floor floor) {
+    public void getInElevator(Elevator elevator, Floor floor, int currentTime) {
+        // Stop the queue timer
+        resetQueueTimer(currentTime);
         // Leave the queue
         floor.removeFromQueue(this);
         // Leave the floor
@@ -50,7 +54,7 @@ public class MaintenanceCrew extends BuildingOccupant {
             List<Floor> floors = building.getFloors();
             this.setDestination(floors.get(floors.size() - 1));
             System.out.println(String.format("Maintenance Crew arrived on floor %s set destination floor %s", currentFloor.getFloorNumber(), floors.size() - 1));
-            callElevator(currentFloor);
+            callElevator(currentFloor, currentTime);
         } else if (currentFloor.equals(groundFloor) && destination.equals(groundFloor)) {
             leaveBuilding(currentFloor);
             System.out.println("Maintenance Crew has left the building");
@@ -58,7 +62,7 @@ public class MaintenanceCrew extends BuildingOccupant {
             // Set destination to ground floor to leave
             setDestination(groundFloor);
             System.out.println(String.format("Maintenance Crew on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
-            callElevator(currentFloor);
+            callElevator(currentFloor, currentTime);
         }
     }
 
