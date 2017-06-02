@@ -80,19 +80,19 @@ public class MaintenanceCrewTest {
     }
 
     /**
-     * Test to ensure on arrival the maintenance crew get's a destination of the top floor
+     * Test to ensure on arrival the maintenance crew always get's a destination of the top floor
      */
     @Test
-    public void maintenanceCrewMovesToTopFloorOnArrival() {
+    public void maintenanceCrewAlwaysMovesToTopFloorOnArrival() {
         // Add maintenance crew to the ground floor
         groundFloor.addOccupant(maintenanceCrew);
 
-        // Maintenance crew sets a destination
-        maintenanceCrew.setNewDestination(building, randomUtils, BigDecimal.ONE, 0);
+        // Maintenance crew sets a destination with a random seed every time of current time in milliseconds
+        maintenanceCrew.setNewDestination(building, new RandomUtils((System.currentTimeMillis() % 1000)), BigDecimal.ONE, 0);
 
-        // Maintenance crew's new destination is floor 2
-        assertEquals(maintenanceCrew.getDestination().floorNumber, 5);
-        assertEquals(maintenanceCrew.getDestination(), floors.get(5));
+        // Maintenance crew's new destination is top floor
+        assertEquals(maintenanceCrew.getDestination().floorNumber, floors.size() -1);
+        assertEquals(maintenanceCrew.getDestination(), floors.get(floors.size() -1));
     }
 
     /**
