@@ -1,16 +1,20 @@
 package uk.ac.aston.dc2300.gui.frames;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 /**
  * Created by dan on 31/05/2017.
  */
 public class ControlPanel {
     private ActionListener speedHandler;
+    private ActionListener fileSaveHandler;
 
     private JPanel containerPanel;
     private JButton backButton;
@@ -19,6 +23,9 @@ public class ControlPanel {
     private JButton twoXSpeedButton;
     private JButton fiveXSpeedButton;
     private JButton twentyFiveXSpeedButton;
+    private JButton saveStatsButton;
+
+    private JFileChooser fileChooser;
 
     public ControlPanel() {
         setupUI();
@@ -37,6 +44,10 @@ public class ControlPanel {
         twoXSpeedButton = new JButton("2x");
         fiveXSpeedButton = new JButton("5x");
         twentyFiveXSpeedButton = new JButton("25x");
+        saveStatsButton = new JButton("Save Stats");
+
+        // File chooser
+        fileChooser = new JFileChooser();
 
         // Add to container
         containerPanel.add(backButton);
@@ -45,6 +56,17 @@ public class ControlPanel {
         containerPanel.add(twoXSpeedButton);
         containerPanel.add(fiveXSpeedButton);
         containerPanel.add(twentyFiveXSpeedButton);
+        containerPanel.add(saveStatsButton);
+
+        saveStatsButton.addActionListener(e -> {
+            int returnVal = fileChooser.showSaveDialog(containerPanel);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                if (fileSaveHandler != null) {
+                    fileSaveHandler.actionPerformed(new ActionEvent(file, 0, ""));
+                }
+            }
+        });
     }
 
     public void setSpeedHandler(ActionListener speedHandler) {
@@ -79,8 +101,15 @@ public class ControlPanel {
         this.pauseButton.addActionListener(pauseHandler);
     }
 
+    public void setFileSaveHandler(ActionListener fileSaveHandler) {
+        this.fileSaveHandler = fileSaveHandler;
+    }
+
     public JPanel getPanel() {
         return containerPanel;
     }
 
+    public void setError(String errorString) {
+        JOptionPane.showMessageDialog(getPanel(), errorString);
+    }
 }

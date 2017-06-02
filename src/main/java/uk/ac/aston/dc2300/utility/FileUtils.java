@@ -10,14 +10,17 @@ import java.io.IOException;
  */
 public class FileUtils {
 
-    private String filePath;
+    private File file;
 
     public FileUtils(String filePath) {
-        this.filePath = filePath;
+        file = new File(filePath);
+    }
+
+    public FileUtils(File source) {
+        file = source;
     }
 
     public void writeToFile(String data) throws IOException {
-        File file = new File(filePath);
 
         // if file doesnt exists, then create it
         if (!file.exists()) {

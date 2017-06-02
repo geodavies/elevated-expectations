@@ -41,4 +41,8 @@ public class SimulationStatistics {
     public int getNumberOfComplaints() {
         return this.numberOfComplaints;
     }
+
+    public String toCSV() {
+        return getAverageTime() + "," + getNumberOfComplaints();
+    }
 }

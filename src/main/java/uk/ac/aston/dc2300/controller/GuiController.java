@@ -8,6 +8,7 @@ import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 import uk.ac.aston.dc2300.model.entity.Building;
 import uk.ac.aston.dc2300.model.status.SimulationStatistics;
 import uk.ac.aston.dc2300.model.status.SimulationStatus;
+import uk.ac.aston.dc2300.utility.FileUtils;
 
 import javax.naming.ldap.Control;
 import javax.swing.JFrame;
@@ -17,6 +18,8 @@ import javax.swing.SwingWorker;
 import javax.swing.BoxLayout;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * An implementation of ApplicationController which displays a graphical user interface.
@@ -112,6 +115,16 @@ public class GuiController implements ApplicationController {
             protected SimulationStatus doInBackground() throws Exception {
                 // Construct new simulation from GUI config
                 Simulation simulation = new Simulation(configuration);
+
+                // Add stats listener
+                controlPanel.setFileSaveHandler(file -> {
+                    FileUtils fileUtils = new FileUtils((File) file.getSource());
+                    try {
+                        fileUtils.writeToFile(simulation.getStatistics().toCSV());
+                    } catch (IOException e) {
+                        controlPanel.setError("File writing failed. Please try again.");
+                    }
+                });
 
                 // Set initial running status
                 simulationRunning = true;
