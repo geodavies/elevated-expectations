@@ -44,10 +44,11 @@ public class ControlPanel {
         twoXSpeedButton = new JButton("2x");
         fiveXSpeedButton = new JButton("5x");
         twentyFiveXSpeedButton = new JButton("25x");
-        saveStatsButton = new JButton("Save Stats");
+        saveStatsButton = new JButton("Save Stats CSV");
 
         // File chooser
         fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save Statistics CSV");
 
         // Add to container
         containerPanel.add(backButton);
