@@ -63,7 +63,7 @@ public class EmployeeTest {
     @Test
     public void employeeCanCallElevator() {
         // Employee calls elevator on ground floor
-        employee.callElevator(groundFloor);
+        employee.callElevator(groundFloor, 10);
         // Employee is in elevator queue for the ground floor
         assertTrue(groundFloor.getElevatorQueue().contains(employee));
     }
@@ -74,7 +74,7 @@ public class EmployeeTest {
     @Test
     public void employeeCanEnterElevator() {
         // Employee enters elevator on ground floor
-        employee.getInElevator(elevator, groundFloor);
+        employee.getInElevator(elevator, groundFloor, 10);
         // Employee is in elevator
         assertTrue(elevator.getOccupants().contains(employee));
     }

@@ -187,10 +187,10 @@ public class FloorTest {
         Floor groundFloor = floors.get(0);
 
         // All occupants call elevator
-        employee.callElevator(groundFloor);
-        developer.callElevator(groundFloor);
-        maintenanceCrew.callElevator(groundFloor);
-        client.callElevator(groundFloor);
+        employee.callElevator(groundFloor, 10);
+        developer.callElevator(groundFloor, 10);
+        maintenanceCrew.callElevator(groundFloor, 10);
+        client.callElevator(groundFloor, 10);
 
         LinkedList<BuildingOccupant> elevatorQueue = floors.get(0).getElevatorQueue();
         assertTrue(elevatorQueue.get(0) instanceof Client);

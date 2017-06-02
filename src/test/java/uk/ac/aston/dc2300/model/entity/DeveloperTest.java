@@ -61,7 +61,7 @@ public class DeveloperTest {
     @Test
     public void developerCanCallElevator() {
         // Developer calls elevator on ground floor
-        developer.callElevator(groundFloor);
+        developer.callElevator(groundFloor, 10);
         // Developer is in elevator queue for the ground floor
         assertTrue(groundFloor.getElevatorQueue().contains(developer));
     }
@@ -75,7 +75,7 @@ public class DeveloperTest {
         groundFloor.addOccupant(developer);
         groundFloor.addToBackOfQueue(developer);
         // Developer enters elevator on ground floor
-        developer.getInElevator(elevator, groundFloor);
+        developer.getInElevator(elevator, groundFloor, 10);
         // Client is in elevator
         assertTrue(elevator.getOccupants().contains(developer));
         assertEquals(groundFloor.getOccupants().size(), 0);
@@ -99,7 +99,7 @@ public class DeveloperTest {
         Developer rivalDeveloper = new Developer(0, DeveloperCompany.MUGTOME);
         elevator.addOccupant(rivalDeveloper);
         // Developer enters elevator on ground floor
-        developer.getInElevator(elevator, groundFloor);
+        developer.getInElevator(elevator, groundFloor, 10);
         // Developer isn't in elevator
         assertFalse(elevator.getOccupants().contains(developer));
         //Rival developer is in elevator

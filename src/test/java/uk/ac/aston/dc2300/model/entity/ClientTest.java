@@ -89,7 +89,7 @@ public class ClientTest {
     @Test
     public void clientCanCallElevator() {
         // Client calls elevator on ground floor
-        client.callElevator(groundFloor);
+        client.callElevator(groundFloor, 10);
         // Client is in elevator queue for the ground floor
         assertTrue(groundFloor.getElevatorQueue().contains(client));
     }
@@ -103,7 +103,7 @@ public class ClientTest {
         groundFloor.addOccupant(client);
         groundFloor.addToBackOfQueue(client);
         // Client enters elevator on ground floor
-        client.getInElevator(elevator, groundFloor);
+        client.getInElevator(elevator, groundFloor, 10);
         // Client is in elevator
         assertTrue(elevator.getOccupants().contains(client));
         assertEquals(groundFloor.getOccupants().size(), 0);
@@ -116,7 +116,7 @@ public class ClientTest {
     @Test
     public void clientIsReadyToLeave() {
         // Client is ready to leave the building
-        client.getReadyToLeave(groundFloor);
+        client.getReadyToLeave(groundFloor, 1200);
         // Client's destination is the ground floor
         assertEquals(client.getDestination(), groundFloor);
     }
