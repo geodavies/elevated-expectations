@@ -60,14 +60,18 @@ public class ControlPanel {
         containerPanel.add(saveStatsButton);
 
         saveStatsButton.addActionListener(e -> {
-            int returnVal = fileChooser.showSaveDialog(containerPanel);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fileChooser.getSelectedFile();
-                if (fileSaveHandler != null) {
-                    fileSaveHandler.actionPerformed(new ActionEvent(file, 0, ""));
-                }
-            }
+            saveStatsFile();
         });
+    }
+
+    public void saveStatsFile() {
+        int returnVal = fileChooser.showSaveDialog(containerPanel);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            if (fileSaveHandler != null) {
+                fileSaveHandler.actionPerformed(new ActionEvent(file, 0, ""));
+            }
+        }
     }
 
     public void setSpeedHandler(ActionListener speedHandler) {

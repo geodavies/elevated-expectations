@@ -144,15 +144,14 @@ public class GuiController implements ApplicationController {
 
                 // Collect end of sim stats.
                 SimulationStatistics stats = simulation.getStatistics();
-                System.out.format("%15s      %15s\n",
-                        "Average Wait Time", "Number of Complaints");
-                System.out.format ("%15s      %15d\n\n",
-                        stats.getAverageTime() + " seconds", stats.getNumberOfComplaints());
 
-                System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
-
+                // Render end of sim stats
                 canvas.drawStats(stats);
 
+                // Trigger stats file save process
+                controlPanel.saveStatsFile();
+
+                System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
                 return currentStatus;
             }
         };
