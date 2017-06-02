@@ -88,8 +88,6 @@ public class Simulation {
         // Initialise simulation state
         initialise();
 
-        System.out.println("Finished creating simulation");
-
     }
 
     /**
@@ -104,7 +102,6 @@ public class Simulation {
             // Give them new destination floors
             buildingOccupant.setNewDestination(BUILDING, RANDOM_UTILS, BigDecimal.ONE, currentTime);
         }
-        System.out.println("Finished setting destinations");
     }
 
     public SimulationStatus tick() {
@@ -119,7 +116,7 @@ public class Simulation {
 
         BUILDING.getClientComplaints(currentTime);
 
-        SimulationStatus currentStatus = new SimulationStatus(BUILDING, currentTime, currentTime <= SIMULATION_RUN_TIME);
+        SimulationStatus currentStatus = new SimulationStatus(BUILDING, currentTime, currentTime < SIMULATION_RUN_TIME);
         currentTime += 10;
 
         return currentStatus;
@@ -182,7 +179,7 @@ public class Simulation {
      */
     private void updateElevatorStatuses() {
         for (Elevator elevator : BUILDING.getElevators()) {
-            elevator.updateElevatorStatus();
+            elevator.updateDoorStatus(BUILDING.getFloors().size() - 1);
         }
     }
 
@@ -200,7 +197,7 @@ public class Simulation {
      */
     private void loadElevators() {
         for (Elevator elevator : BUILDING.getElevators()) {
-            elevator.loadPassengers();
+            elevator.loadPassengers(BUILDING.getFloors().size() - 1);
         }
     }
 

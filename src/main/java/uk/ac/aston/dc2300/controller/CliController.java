@@ -8,6 +8,9 @@ import uk.ac.aston.dc2300.utility.CliUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * An implementation of ApplicationController which allows command line interaction.
@@ -19,7 +22,7 @@ public class CliController implements ApplicationController {
 
     private final Simulation simulation;
 
-    private boolean simulationRunning;
+    private SimulationStatus currentStatus;
 
     public CliController() {
         System.out.println("Initializing application in 'cli' mode");
@@ -34,7 +37,7 @@ public class CliController implements ApplicationController {
      * @return a SimulationConfiguration from the input of the user
      */
     private SimulationConfiguration getConfigurationInput() {
-        System.out.println("\nPlease select simulation configuration settings");
+        System.out.println("\n=== Please select simulation configuration settings ===\n");
 
         CliUtils cliMediator = new CliUtils();
 
@@ -63,19 +66,6 @@ public class CliController implements ApplicationController {
         // Get simulation time
         int simulationTime = cliMediator.readIntegerViaCli("Time to run simulation (s)", 28800);
 
-        /*
-            Log collected values.
-        */
-        System.out.println("[CLI] Collected following values from input");
-        System.out.println("[CLI] EmpChange: " + empFloorChangeProbability);
-        System.out.println("[CLI] ClientArrive: " + clientArrivalProbability);
-        System.out.println("[CLI] RandSeed: " + seed);
-        System.out.println("[CLI] NumEmp: " + numEmployees);
-        System.out.println("[CLI] NumDev: " + numDevelopers);
-        System.out.println("[CLI] NumFloors: " + numFloors);
-        System.out.println("[CLI] ElevatorCapacity: " + elevatorCapacity);
-        System.out.println("[CLI] SimulationTime: " + simulationTime);
-
         // Create some space to improve legibility
         System.out.print("\n");
 
@@ -85,24 +75,102 @@ public class CliController implements ApplicationController {
 
     @Override
     public void start() {
-        simulationRunning = true;
-        SimulationStatus currentStatus = null;
-        while (simulationRunning) {
-            currentStatus = simulation.tick();
+        currentStatus = new SimulationStatus(null, 0, true);
 
-            displayBuilding(currentStatus.getBuilding());
+        System.out.println("Simulation configuration complete\n");
 
-            simulationRunning = currentStatus.isSimulationRunning();
+        printUsageInstructions();
+
+        while (currentStatus.isSimulationRunning()) {
+            String userInput = getUserInput();
+
+            if (userInput.equalsIgnoreCase("/quit")) {
+                System.out.println("Goodbye!");
+                break;
+            } else {
+                handleCommand(userInput);
+            }
         }
+
         System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
+    }
+
+    private String getUserInput() {
+        Scanner reader = new Scanner(System.in);
+        System.out.print(">");
+        return reader.nextLine();
+    }
+
+    private void handleCommand(String userInput) {
+        System.out.println(); // Print some space
+        Pattern commandPattern = Pattern.compile("(?i)^/(step|goto|end|stats)( ([0-9]+))?$");
+        Matcher commandMatcher = commandPattern.matcher(userInput);
+
+        if (commandMatcher.matches()) {
+            String command = commandMatcher.group(1).toLowerCase();
+            String parameter = commandMatcher.group(3);
+            switch (command) {
+                case "step":
+                    if (parameter != null) {
+                        int steps = Integer.parseInt(parameter);
+                        for (int i = 0; i<steps; i++) {
+                            currentStatus = simulation.tick();
+                        }
+                        displayBuilding(currentStatus.getBuilding());
+                    } else {
+                        System.out.println("Please provide a valid number parameter");
+                    }
+                    break;
+                case "goto":
+                    if (parameter != null) {
+                        int tick = Integer.parseInt(parameter);
+                        if (currentStatus.getTime() / 10 < tick) {
+                            while (true) {
+                                currentStatus = simulation.tick();
+                                if (currentStatus.getTime() / 10 == tick) {
+                                    break;
+                                } else if (!currentStatus.isSimulationRunning()) {
+                                    break;
+                                }
+                            }
+                            displayBuilding(currentStatus.getBuilding());
+                        } else {
+                            System.out.println("Please choose a tick in the future");
+                        }
+                    } else {
+                        System.out.println("Please provide a valid number parameter");
+                    }
+                    break;
+                case "end":
+                    while (currentStatus.isSimulationRunning()) {
+                        currentStatus = simulation.tick();
+                    }
+                    break;
+                case "stats":
+                    // TODO: Implement me
+                    break;
+            }
+        } else {
+            System.out.println("Invalid command!");
+        }
+    }
+
+    private void printUsageInstructions() {
+        System.out.println("Commands:");
+        System.out.println("/step [ticks] : Steps through the simulation the specified amount of ticks eg. /step 5");
+        System.out.println("/goto [ticks] : Goes to the given future tick of the simulation eg. /goto 78");
+        System.out.println("/end          : Runs the simulation to the end");
+        System.out.println("/stats        : Gives statistics about the current simulation state");
+
+        System.out.println();
     }
 
     private void displayBuilding(Building building) {
         StringBuilder stringBuilder = new StringBuilder();
 
         // Roof
-        stringBuilder.append("\n    Lift Queue           Floor\n");
-        stringBuilder.append("   +====+===============+==========+\n");
+        stringBuilder.append("\n    Lift Queue                     Floor\n");
+        stringBuilder.append("   +====+=========================+====================+\n");
 
         List<Floor> buildingFloors = building.getFloors();
         for (int i = buildingFloors.size() - 1; i >= 0; i--) {
@@ -132,9 +200,9 @@ public class CliController implements ApplicationController {
             if (elevatorsOnFloor.size() > 0) {
                 elevatorPointer = ">";
             }
-            stringBuilder.append(String.format("%1s %1s|%-4s|%-15s|%10s|\n", i, elevatorPointer, elevatorStringBuilder.toString(), queueStringBuilder.toString(), floorStringBuilder.toString()));
+            stringBuilder.append(String.format("%1s %1s|%-4s|%-25s|%20s|\n", i, elevatorPointer, elevatorStringBuilder.toString(), queueStringBuilder.toString(), floorStringBuilder.toString()));
         }
-        stringBuilder.append("   +====+===============+==========+\n");
+        stringBuilder.append("   +====+=========================+====================+\n");
         System.out.println(stringBuilder.toString());
     }
 
@@ -151,5 +219,6 @@ public class CliController implements ApplicationController {
             return "?";
         }
     }
+
 
 }
