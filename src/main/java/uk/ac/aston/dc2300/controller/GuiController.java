@@ -121,7 +121,7 @@ public class GuiController implements ApplicationController {
                     FileUtils fileUtils = new FileUtils((File) file.getSource());
                     SimulationStatistics stats = simulation.getStatistics();
                     try {
-                        fileUtils.writeToFile(stats.toCSV(), stats.getCSVHeaders());
+                        fileUtils.writeToFile(configuration.toCSV() + "," + stats.toCSV(),configuration.getCSVHeaders() + "," +  stats.getCSVHeaders());
                     } catch (IOException e) {
                         controlPanel.setError("File writing failed. Please try again.");
                     }
