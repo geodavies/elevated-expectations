@@ -189,4 +189,16 @@ public class DeveloperTest {
         assertFalse(floors.get(2).getOccupants().contains(developer));
         assertFalse(floors.get(2).getElevatorQueue().contains(developer));
     }
+
+    /**
+     * Test to ensure the developer has the correct time on entering the elevator queue
+     */
+    @Test
+    public void developerSetQueueEntryTime() {
+        // Developer calls elevator on ground floor at time 1234
+        developer.callElevator(groundFloor, 1234);
+
+        // Developer entered elevator queue at time 1234
+        assertEquals(developer.getQueueEntryTime(), 1234);
+    }
 }

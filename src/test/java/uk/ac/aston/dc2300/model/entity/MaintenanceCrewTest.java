@@ -161,4 +161,16 @@ public class MaintenanceCrewTest {
         assertFalse(floors.get(2).getOccupants().contains(maintenanceCrew));
         assertFalse(floors.get(2).getElevatorQueue().contains(maintenanceCrew));
     }
+
+    /**
+     * Test to ensure the maintenanceCrew has the correct time on entering the elevator queue
+     */
+    @Test
+    public void maintenanceCrewSetQueueEntryTime() {
+        // Maintenance crew calls elevator on ground floor at time 1234
+        maintenanceCrew.callElevator(groundFloor, 1234);
+
+        // Maintenance crew entered elevator queue at time 1234
+        assertEquals(maintenanceCrew.getQueueEntryTime(), 1234);
+    }
 }
