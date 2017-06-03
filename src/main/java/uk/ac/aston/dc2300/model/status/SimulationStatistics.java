@@ -42,6 +42,10 @@ public class SimulationStatistics {
         return this.numberOfComplaints;
     }
 
+    public String getCSVHeaders() {
+        return "Average Time (s),Number of complaints";
+    }
+
     public String toCSV() {
         return getAverageTime() + "," + getNumberOfComplaints();
     }

@@ -20,15 +20,22 @@ public class FileUtils {
         file = source;
     }
 
-    public void writeToFile(String data) throws IOException {
+    public void writeToFile(String data, String headers) throws IOException {
+
+        boolean writeHeaders = false;
 
         // if file doesnt exists, then create it
         if (!file.exists()) {
             file.createNewFile();
+            writeHeaders = true;
         }
 
         FileWriter fileWriter = new FileWriter(file.getAbsoluteFile(),true);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        if (writeHeaders) {
+            bufferedWriter.write(headers);
+            bufferedWriter.newLine();
+        }
         bufferedWriter.write(data);
         bufferedWriter.newLine();
 

@@ -23,7 +23,6 @@ public class ControlPanel {
     private JButton twoXSpeedButton;
     private JButton fiveXSpeedButton;
     private JButton twentyFiveXSpeedButton;
-    private JButton saveStatsButton;
 
     private JFileChooser fileChooser;
 
@@ -44,7 +43,6 @@ public class ControlPanel {
         twoXSpeedButton = new JButton("2x");
         fiveXSpeedButton = new JButton("5x");
         twentyFiveXSpeedButton = new JButton("25x");
-        saveStatsButton = new JButton("Save Stats CSV");
 
         // File chooser
         fileChooser = new JFileChooser();
@@ -57,11 +55,7 @@ public class ControlPanel {
         containerPanel.add(twoXSpeedButton);
         containerPanel.add(fiveXSpeedButton);
         containerPanel.add(twentyFiveXSpeedButton);
-        containerPanel.add(saveStatsButton);
 
-        saveStatsButton.addActionListener(e -> {
-            saveStatsFile();
-        });
     }
 
     public void saveStatsFile() {
