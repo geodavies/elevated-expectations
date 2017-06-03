@@ -219,4 +219,16 @@ public class ClientTest {
         assertFalse(floors.get(2).getOccupants().contains(client));
         assertFalse(floors.get(2).getElevatorQueue().contains(client));
     }
+
+    /**
+     * Test to ensure the client has the correct time on entering the elevator queue
+     */
+    @Test
+    public void clientSetQueueEntryTime() {
+        // Client calls elevator on ground floor at time 1234
+        client.callElevator(groundFloor, 1234);
+
+        // Client entered elevator queue at time 1234
+        assertEquals(client.getQueueEntryTime(), 1234);
+    }
 }

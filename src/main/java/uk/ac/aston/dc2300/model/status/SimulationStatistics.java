@@ -8,8 +8,8 @@ import java.util.ArrayList;
 public class SimulationStatistics {
 
     private ArrayList<Integer> waitTimes;
-    private int numberOfComplaints;
 
+    private int numberOfComplaints;
     public SimulationStatistics(int numberOfComplaints) {
         this.numberOfComplaints = numberOfComplaints;
         waitTimes = new ArrayList<>();
@@ -48,5 +48,9 @@ public class SimulationStatistics {
 
     public String toCSV() {
         return getAverageTime() + "," + getNumberOfComplaints();
+    }
+
+    public ArrayList<Integer> getWaitTimes() {
+        return waitTimes;
     }
 }

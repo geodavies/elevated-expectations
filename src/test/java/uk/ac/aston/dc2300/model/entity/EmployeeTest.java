@@ -158,4 +158,16 @@ public class EmployeeTest {
         assertFalse(floors.get(2).getOccupants().contains(employee));
         assertFalse(floors.get(2).getElevatorQueue().contains(employee));
     }
+
+    /**
+     * Test to ensure the employee has the correct time on entering the elevator queue
+     */
+    @Test
+    public void employeeSetQueueEntryTime() {
+        // Employee calls elevator on ground floor at time 1234
+        employee.callElevator(groundFloor, 1234);
+
+        // Employee entered elevator queue at time 1234
+        assertEquals(employee.getQueueEntryTime(), 1234);
+    }
 }
