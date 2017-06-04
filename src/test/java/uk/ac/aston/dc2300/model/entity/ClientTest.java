@@ -123,17 +123,17 @@ public class ClientTest {
     }
 
     /**
-     * Test to ensure on arrival the client get's a destination of floor 2
+     * Test to ensure on arrival the client get's a destination of ground floor
      */
     @Test
-    public void clientMovesToFloorOnArrivalFloorTwo() {
+    public void clientStaysOnGroundFloorOnArrival() {
         // Add client to the ground floor
         groundFloor.addOccupant(client);
 
         // Client sets a destination
         client.setNewDestination(building, randomUtils, BigDecimal.ONE, 0);
 
-        // Client's new destination is floor 2
+        // Client stays on ground floor
         assertEquals(0, client.getDestination().getFloorNumber());
         assertEquals(floors.get(0), client.getDestination());
     }

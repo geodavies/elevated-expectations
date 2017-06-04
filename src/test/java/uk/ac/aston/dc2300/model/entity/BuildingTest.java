@@ -122,8 +122,8 @@ public class BuildingTest {
         Client client2 = new Client(0, 1200);
         floors.get(0).addOccupant(client1);
         floors.get(0).addOccupant(client2);
-        client1.setNewDestination(building, new RandomUtils(420), BigDecimal.ONE,0);
-        client2.setNewDestination(building, new RandomUtils(420), BigDecimal.ONE,0);
+        client1.setNewDestination(building, new RandomUtils(421), BigDecimal.ONE,0);
+        client2.setNewDestination(building, new RandomUtils(421), BigDecimal.ONE,0);
 
         assertEquals(building.getClientComplaints(620), 2);
         // Check for complaints again to ensure clients can't complain twice
