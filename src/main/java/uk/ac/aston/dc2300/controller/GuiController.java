@@ -32,11 +32,13 @@ public class GuiController implements ApplicationController {
     private boolean simulationRunning;
     private boolean simulationPaused;
     private static final int SIM_SPEED_DEFAULT = 200;
+    private boolean stats;
 
     public GuiController() {
         System.out.println("Initializing application in 'GUI' mode");
         simSpeedMultiplier = 1;
         simulationRunning = false;
+        stats = true;
     }
 
     @Override
@@ -88,9 +90,9 @@ public class GuiController implements ApplicationController {
         ControlPanel controlPanel = new ControlPanel();
         // Back button
         controlPanel.setBackHandler(e -> {
+            stopSim();
             uiFrame.setVisible(false);
             uiFrame.revalidate();
-            stopSim();
             startLandingConfigUI();
         });
         // Simulation speed controls
@@ -141,7 +143,7 @@ public class GuiController implements ApplicationController {
                     FileUtils fileUtils = new FileUtils((File) file.getSource());
                     SimulationStatistics stats = simulation.getStatistics();
                     try {
-                        fileUtils.writeToFile(simulationConfiguration.toCSV() + "," + stats.toCSV(),simulationConfiguration.getCSVHeaders() + "," +  stats.getCSVHeaders());
+                        fileUtils.writeToFile(simulationConfiguration.toCSV() + "," + stats.toCSV(), simulationConfiguration.getCSVHeaders() + "," + stats.getCSVHeaders());
                     } catch (IOException e) {
                         controlPanel.showError("File writing failed. Please try again.");
                     }
@@ -163,16 +165,19 @@ public class GuiController implements ApplicationController {
                     Thread.sleep(SIM_SPEED_DEFAULT / simSpeedMultiplier);
                 }
 
-                // Collect end of sim stats.
-                SimulationStatistics stats = simulation.getStatistics();
+                if (stats) {
+                    // Collect end of sim stats.
+                    SimulationStatistics stats = simulation.getStatistics();
 
-                // Render end of sim stats
-                simulationCanvas.drawStats(stats);
+                    // Render end of sim stats
+                    simulationCanvas.drawStats(stats);
 
-                // Trigger stats file save process
-                controlPanel.saveStatsFile();
+                    // Trigger stats file save process
+                    controlPanel.saveStatsFile();
 
-                System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
+                    System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
+                }
+                stats = true;
                 return currentStatus;
             }
         };
@@ -182,6 +187,7 @@ public class GuiController implements ApplicationController {
      * Stops the simulation running
      */
     private void stopSim() {
+        this.stats = false;
         this.simulationRunning = false;
     }
 }
