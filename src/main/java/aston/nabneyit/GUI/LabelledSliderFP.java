@@ -4,7 +4,6 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
-import java.text.*;
 
 
 /**
@@ -29,7 +28,6 @@ public class LabelledSliderFP extends JComponent {
     private JTextField textField;
     private int scale;
 
-    private NumberFormat nf;
     private boolean updatingValue;
 
     /**
@@ -50,8 +48,6 @@ public class LabelledSliderFP extends JComponent {
         labelString = new String(text);
         this.scale = scale;
         slider = new JSlider(min, max, (int)(value*scale));
-        nf = NumberFormat.getInstance();
-        nf.setMaximumFractionDigits(2);
 
         // Construct Text Field
         textField = new JTextField();

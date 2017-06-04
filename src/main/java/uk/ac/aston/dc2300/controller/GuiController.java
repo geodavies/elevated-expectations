@@ -10,9 +10,7 @@ import uk.ac.aston.dc2300.model.status.SimulationStatistics;
 import uk.ac.aston.dc2300.model.status.SimulationStatus;
 import uk.ac.aston.dc2300.utility.FileUtils;
 
-import javax.naming.ldap.Control;
 import javax.swing.JFrame;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 import javax.swing.BoxLayout;
