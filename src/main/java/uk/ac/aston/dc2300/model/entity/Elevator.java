@@ -1,5 +1,6 @@
 package uk.ac.aston.dc2300.model.entity;
 
+import uk.ac.aston.dc2300.model.status.ElevatorDirection;
 import uk.ac.aston.dc2300.model.status.ElevatorDoorStatus;
 import uk.ac.aston.dc2300.model.status.ElevatorMovementStatus;
 
@@ -53,44 +54,57 @@ public class Elevator {
         if (movementStatus.equals(MOVING)) {
             movementStatus = STATIONARY;
         } else {
-            if (currentFloor.getFloorNumber() != 0 && !shouldElevatorTravelToFloors(floors)) { // There's nobody waiting return to ground floor
+            if (whichDirectionNext(floors) == ElevatorDirection.UP
+                    && shouldElevatorTravelToFloors(getFloorsAbove(floors))) { // Have to check in-case on ground floor
+                moveUp(floors);
+            } else if (whichDirectionNext(floors) == ElevatorDirection.DOWN) {
                 moveDown(floors);
-            } else if (currentFloor.getFloorNumber() == 0) { // The elevator is currently on the ground floor
-                // If there's anyone waiting above current floor move up
-                if (shouldElevatorTravelToFloors(getFloorsAbove(floors))) {
-                    moveUp(floors);
-                }
-            } else if(currentFloor.getFloorNumber() > previousFloor.getFloorNumber()){ // If the elevator last moved up
-                // If there's anyone waiting above then continue moving up
-                if (shouldElevatorTravelToFloors(getFloorsAbove(floors))) {
-                    moveUp(floors);
-                } else {
-                    // Otherwise move down if there's people below
-                    if (shouldElevatorTravelToFloors(getFloorsBelow(floors))) {
-                        moveDown(floors);
-                    }
-                }
-            } else if (currentFloor.getFloorNumber() < previousFloor.getFloorNumber()) { // If the elevator last moved down
-                // If there's anyone waiting below then continue moving down
+            }
+        }
+    }
+
+    /**
+     * Determines where the elevator should move to next based on specification rules
+     *
+     * @param floors list of floors in the building
+     * @return ElevatorDirection UP or DOWN
+     */
+    private ElevatorDirection whichDirectionNext(List<Floor> floors) {
+        if (currentFloor.getFloorNumber() != 0 && !shouldElevatorTravelToFloors(floors)) { // There's nobody waiting return to ground floor
+            return ElevatorDirection.DOWN;
+        } else if (currentFloor.getFloorNumber() == 0) { // The elevator is currently on the ground floor
+            return ElevatorDirection.UP;
+        } else if(currentFloor.getFloorNumber() > previousFloor.getFloorNumber()){ // If the elevator last moved up
+            // If there's anyone waiting above then continue moving up
+            if (shouldElevatorTravelToFloors(getFloorsAbove(floors))) {
+                return ElevatorDirection.UP;
+            } else {
+                // Otherwise move down if there's people below
                 if (shouldElevatorTravelToFloors(getFloorsBelow(floors))) {
-                    moveDown(floors);
-                } else {
-                    // Otherwise move up if there's people above
-                    if (shouldElevatorTravelToFloors(getFloorsAbove(floors))) {
-                        moveUp(floors);
-                    }
+                    return ElevatorDirection.DOWN;
+                }
+            }
+        } else if (currentFloor.getFloorNumber() < previousFloor.getFloorNumber()) { // If the elevator last moved down
+            // If there's anyone waiting below then continue moving down
+            if (shouldElevatorTravelToFloors(getFloorsBelow(floors))) {
+                return ElevatorDirection.DOWN;
+            } else {
+                // Otherwise move up if there's people above
+                if (shouldElevatorTravelToFloors(getFloorsAbove(floors))) {
+                    return ElevatorDirection.UP;
                 }
             }
         }
+        return null;
     }
 
     /**
      * This method looks at destinations of passengers and queue on current floor and determine whether the doors need
      * to be opened or closed.
      *
-     * @param topFloorNumber the top floor number in the building
+     * @param floors list of floors in the building
      */
-    public void updateDoorStatus(int topFloorNumber) {
+    public void updateDoorStatus(List<Floor> floors) {
         switch (doorStatus) {
             case OPENING:
                 // If the doors are opening, finish opening them
@@ -110,7 +124,7 @@ public class Elevator {
                 // Check if anyone is waiting outside elevator
                 boolean occupantsWaitingToEnter = false;
                 for (BuildingOccupant buildingOccupant : currentFloor.getElevatorQueue()) {
-                    if (travellingInSameDirection(buildingOccupant, topFloorNumber)) {
+                    if (travellingInSameDirection(buildingOccupant, floors)) {
                         occupantsWaitingToEnter = true;
                         break;
                     }
@@ -129,10 +143,10 @@ public class Elevator {
      * Gets any passengers from the current floor and puts them into the elevator if there's enough space and rules are
      * met.
      *
-     * @param topFloorNumber the top floor number in the building
+     * @param floors list of floors in the building
      * @param currentTime the current simulation time
      */
-    public void loadPassengers(int topFloorNumber, int currentTime) {
+    public void loadPassengers(List<Floor> floors, int currentTime) {
         if (doorStatus.equals(OPEN)) { // Only load if the doors are open
             // Create a copy of the occupants to allow for concurrent modification
             List<BuildingOccupant> elevatorQueue = new ArrayList<>(currentFloor.getElevatorQueue());
@@ -143,7 +157,7 @@ public class Elevator {
                     break;
                 }
                 if (usedCapacity + buildingOccupant.getSize() <= MAX_CAPACITY &&
-                        travellingInSameDirection(buildingOccupant, topFloorNumber)) {
+                        travellingInSameDirection(buildingOccupant, floors)) {
                     loadPassenger(buildingOccupant, currentTime);
                 }
             }
@@ -181,29 +195,17 @@ public class Elevator {
      * Checks whether the elevator is travelling in the same direction the occupant wants to go to
      *
      * @param buildingOccupant the occupant to check
-     * @param topFloorNumber the top floor number in the building
      * @return same direction or not
      */
-    private boolean travellingInSameDirection(BuildingOccupant buildingOccupant, int topFloorNumber) {
-        if (currentFloor.getFloorNumber() != 0 && currentFloor.getFloorNumber() != topFloorNumber) {
-            // Check direction of travel
-            if (previousFloor.getFloorNumber() < currentFloor.getFloorNumber()) {
-                // Elevator going up
-                if (buildingOccupant.getDestination().getFloorNumber() > currentFloor.getFloorNumber()) {
-                    // Elevator going in same direction as destination
-                    return true;
-                }
-            } else if (previousFloor.getFloorNumber() > currentFloor.getFloorNumber()) {
-                // Elevator going down
-                if (buildingOccupant.getDestination().getFloorNumber() < currentFloor.getFloorNumber()) {
-                    // Elevator going in same direction as destination
-                    return true;
-                }
-            }
-        } else {
-            // Occupant is on top or bottom floor so must be going in same direction
-            return true;
+    private boolean travellingInSameDirection(BuildingOccupant buildingOccupant, List<Floor> floors) {
+        ElevatorDirection elevatorDirection = whichDirectionNext(floors);
+
+        if (elevatorDirection == ElevatorDirection.UP) {
+            if (buildingOccupant.getDestination().getFloorNumber() > currentFloor.getFloorNumber()) return true;
+        } else if (elevatorDirection == ElevatorDirection.DOWN) {
+            if (buildingOccupant.getDestination().getFloorNumber() < currentFloor.getFloorNumber()) return true;
         }
+
         return false;
     }
 

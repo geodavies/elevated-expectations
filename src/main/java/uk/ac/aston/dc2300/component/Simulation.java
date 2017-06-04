@@ -128,7 +128,7 @@ public class Simulation {
         randomlyReassignDestinations();
         checkForArrivingClients(currentTime);
         checkForArrivingMaintenanceCrew(currentTime);
-        updateElevatorStatuses();
+        updateElevatorDoorStatuses();
         unloadElevators();
         loadElevators(currentTime);
         moveElevators();
@@ -199,9 +199,9 @@ public class Simulation {
      * Commands all elevators to look at their current occupants and those waiting outside and will open/close the doors
      * where needed.
      */
-    private void updateElevatorStatuses() {
+    private void updateElevatorDoorStatuses() {
         for (Elevator elevator : BUILDING.getElevators()) {
-            elevator.updateDoorStatus(BUILDING.getFloors().size() - 1);
+            elevator.updateDoorStatus(BUILDING.getFloors());
         }
     }
 
@@ -219,7 +219,7 @@ public class Simulation {
      */
     private void loadElevators(int currentTime) {
         for (Elevator elevator : BUILDING.getElevators()) {
-            elevator.loadPassengers(BUILDING.getFloors().size() - 1, currentTime);
+            elevator.loadPassengers(BUILDING.getFloors(), currentTime);
         }
     }
 
