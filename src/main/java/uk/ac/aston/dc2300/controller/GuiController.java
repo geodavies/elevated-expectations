@@ -10,12 +10,7 @@ import uk.ac.aston.dc2300.model.status.SimulationStatistics;
 import uk.ac.aston.dc2300.model.status.SimulationStatus;
 import uk.ac.aston.dc2300.utility.FileUtils;
 
-import javax.naming.ldap.Control;
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.SwingWorker;
-import javax.swing.BoxLayout;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
@@ -44,16 +39,21 @@ public class GuiController implements ApplicationController {
     @Override
     public void start() {
         System.out.println("Starting GUI from controller to allow configuration.");
-        startConfigUI();
+        startLandingConfigUI();
     }
 
-    private void startConfigUI() {
+    /**
+     * Configures and displays the LandingConfig window
+     */
+    private void startLandingConfigUI() {
 
+        // Create LandingConfig and listener to set up the simulation
         LandingConfig landingConfig = new LandingConfig((SimulationConfiguration configuration) -> {
             System.out.println("[GUI] Config completed - initialising simulation");
             setupSimulation(configuration);
         });
 
+        // Set JFrame properties
         uiFrame = new JFrame("Elevator Simulation");
         uiFrame.setContentPane(landingConfig.getConfigPanel());
         uiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,7 +61,7 @@ public class GuiController implements ApplicationController {
         uiFrame.pack();
         uiFrame.setVisible(true);
 
-        // Calc and set location
+        // Calculate and set location
         final Dimension screenDimensions = Toolkit.getDefaultToolkit().getScreenSize();
         final Dimension frameDimensions = uiFrame.getSize();
 
@@ -75,69 +75,86 @@ public class GuiController implements ApplicationController {
         uiFrame.setLocation(xPosition, yPosition);
     }
 
-    public void setupSimulation(SimulationConfiguration configuration) {
+    private void setupSimulation(SimulationConfiguration simulationConfiguration) {
 
         uiFrame.setVisible(false);
         uiFrame.revalidate();
 
-        SimulationCanvas canvas = new SimulationCanvas();
+        SimulationCanvas simulationCanvas = new SimulationCanvas();
 
         ControlPanel controlPanel = new ControlPanel();
+        // Back button
         controlPanel.setBackHandler(e -> {
             uiFrame.setVisible(false);
             uiFrame.revalidate();
             stopSim();
-            startConfigUI();
+            startLandingConfigUI();
         });
+        // Simulation speed controls
         controlPanel.setSpeedHandler(e -> {
             // Get new speed and assign to multiplier
             this.simulationPaused = false;
             this.simSpeedMultiplier = e.getID();
         });
-        controlPanel.setPauseHandler(e -> {
-            this.simulationPaused = true;
-        });
+        // Pause button
+        controlPanel.setPauseHandler(e -> this.simulationPaused = true);
 
+        // Create container and add canvas + control panel
         JPanel containerPanel = new JPanel();
         containerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.Y_AXIS));
-        containerPanel.add(canvas);
+        containerPanel.add(simulationCanvas);
         containerPanel.add(controlPanel.getPanel());
-
 
         uiFrame.setContentPane(containerPanel);
         uiFrame.pack();
         uiFrame.setVisible(true);
 
-        SwingWorker<SimulationStatus, Object> worker = new SwingWorker<SimulationStatus, Object>() {
+        // Create and start an asynchronous SwingWorker
+        SwingWorker<SimulationStatus, Object> simulationWorker = getSimulationWorker(simulationConfiguration, controlPanel, simulationCanvas);
+        simulationWorker.execute();
+    }
 
+    /**
+     * Creates a SwingWorker which controls the simulation
+     *
+     * @param simulationConfiguration configuration of the simulation
+     * @param controlPanel control panel to draw
+     * @param simulationCanvas canvas to draw
+     * @return the SwingWorker
+     */
+    private SwingWorker<SimulationStatus, Object> getSimulationWorker(SimulationConfiguration simulationConfiguration,
+                                                                      ControlPanel controlPanel,
+                                                                      SimulationCanvas simulationCanvas) {
+
+        return new SwingWorker<SimulationStatus, Object>() {
             @Override
             protected SimulationStatus doInBackground() throws Exception {
                 // Construct new simulation from GUI config
-                Simulation simulation = new Simulation(configuration);
+                Simulation simulation = new Simulation(simulationConfiguration);
 
                 // Add stats listener
                 controlPanel.setFileSaveHandler(file -> {
                     FileUtils fileUtils = new FileUtils((File) file.getSource());
                     SimulationStatistics stats = simulation.getStatistics();
                     try {
-                        fileUtils.writeToFile(configuration.toCSV() + "," + stats.toCSV(),configuration.getCSVHeaders() + "," +  stats.getCSVHeaders());
+                        fileUtils.writeToFile(simulationConfiguration.toCSV() + "," + stats.toCSV(),simulationConfiguration.getCSVHeaders() + "," +  stats.getCSVHeaders());
                     } catch (IOException e) {
-                        controlPanel.setError("File writing failed. Please try again.");
+                        controlPanel.showError("File writing failed. Please try again.");
                     }
                 });
 
                 // Set initial running status
                 simulationRunning = true;
-                SimulationStatus currentStatus = null;
+                SimulationStatus currentStatus = new SimulationStatus(null, 0, true);
 
                 // Loop until simulation isn't running
 
                 while (simulationRunning) {
                     if (!simulationPaused) {
                         currentStatus = simulation.tick();
-                        canvas.update(new Building(currentStatus.getBuilding()));
-                        canvas.drawStats(simulation.getStatistics());
+                        simulationCanvas.update(currentStatus.getBuilding());
+                        simulationCanvas.drawStats(simulation.getStatistics());
                         simulationRunning = currentStatus.isSimulationRunning();
                     }
                     Thread.sleep(SIM_SPEED_DEFAULT / simSpeedMultiplier);
@@ -147,7 +164,7 @@ public class GuiController implements ApplicationController {
                 SimulationStatistics stats = simulation.getStatistics();
 
                 // Render end of sim stats
-                canvas.drawStats(stats);
+                simulationCanvas.drawStats(stats);
 
                 // Trigger stats file save process
                 controlPanel.saveStatsFile();
@@ -156,9 +173,11 @@ public class GuiController implements ApplicationController {
                 return currentStatus;
             }
         };
-        worker.execute();
     }
 
+    /**
+     * Stops the simulation running
+     */
     private void stopSim() {
         this.simulationRunning = false;
     }

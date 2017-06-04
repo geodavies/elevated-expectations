@@ -21,15 +21,10 @@ import static org.junit.Assert.assertTrue;
 public class BuildingTest {
 
     private Building building;
-
     private Developer developer;
-
     private Employee employee;
-
     private static int TOP_FLOOR = 5;
-
     private List<Floor> floors;
-
     private List<Elevator> elevators;
 
     /**
@@ -57,9 +52,9 @@ public class BuildingTest {
     public void getTopHalfFloors() throws Exception {
         List<Floor> topHalfFloors = building.getTopHalfFloors();
         assertEquals(topHalfFloors.size(), 3);
-        assertEquals(topHalfFloors.get(0).floorNumber, 3);
-        assertEquals(topHalfFloors.get(1).floorNumber, 4);
-        assertEquals(topHalfFloors.get(2).floorNumber, 5);
+        assertEquals(topHalfFloors.get(0).getFloorNumber(), 3);
+        assertEquals(topHalfFloors.get(1).getFloorNumber(), 4);
+        assertEquals(topHalfFloors.get(2).getFloorNumber(), 5);
     }
 
     /**
@@ -69,9 +64,9 @@ public class BuildingTest {
     public void getBottomHalfFloors() throws Exception {
         List<Floor> bottomHalfFloors = building.getBottomHalfFloors();
         assertEquals(bottomHalfFloors.size(), 3);
-        assertEquals(bottomHalfFloors.get(0).floorNumber, 0);
-        assertEquals(bottomHalfFloors.get(1).floorNumber, 1);
-        assertEquals(bottomHalfFloors.get(2).floorNumber, 2);
+        assertEquals(bottomHalfFloors.get(0).getFloorNumber(), 0);
+        assertEquals(bottomHalfFloors.get(1).getFloorNumber(), 1);
+        assertEquals(bottomHalfFloors.get(2).getFloorNumber(), 2);
     }
 
     /**

@@ -7,7 +7,7 @@ import java.util.Scanner;
  * A utility class to perform repetitive CLI operations.
  *
  * @author Dan Cotton
- * @since 08/04/17.
+ * @since 08/04/17
  */
 public class CliUtils {
 
@@ -17,16 +17,14 @@ public class CliUtils {
         cliScanner = new Scanner(System.in);
     }
 
-
     /**
-     * Uses CLI to gain integer input from user. Will prompt, verify
-     * and return result or defaultValue where appropriate.
+     * Uses CLI to gain integer input from user. Will prompt, verify and return result or defaultValue where appropriate.
      *
      * @param prompt a brief description of the field (used as prompt)
      * @param defaultValue the default integer to be used if input not provided
      * @return the integer result as decided by the user
      */
-    public int readIntegerViaCli(String prompt, int defaultValue){
+    public int readIntegerViaCli(String prompt, int defaultValue) {
         int result = -1;
         while (result == -1) {
             System.out.printf(prompt + " [" + defaultValue + "]: ");
@@ -61,7 +59,7 @@ public class CliUtils {
      * @param defaultValue the default long to be used if input not provided
      * @return the long result as decided by the user
      */
-    public long readLongViaCli(String prompt, long defaultValue){
+    public long readLongViaCli(String prompt, long defaultValue) {
         long result = -1;
         while (result == -1) {
             System.out.printf(prompt + " [" + defaultValue + "]: ");
@@ -91,7 +89,7 @@ public class CliUtils {
      * @param defaultValue the default BigDecimal to be used if input not provided
      * @return the BigDecimal result as decided by the user
      */
-    public BigDecimal readBigDecimalViaCli(String prompt, BigDecimal defaultValue){
+    public BigDecimal readBigDecimalViaCli(String prompt, BigDecimal defaultValue) {
         BigDecimal result = null;
         while (result == null) {
             System.out.printf(prompt + " [" + defaultValue + "]: ");

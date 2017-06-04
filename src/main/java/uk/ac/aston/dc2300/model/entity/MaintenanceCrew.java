@@ -28,20 +28,7 @@ public class MaintenanceCrew extends BuildingOccupant {
     @Override
     public void callElevator(Floor currentFloor, int currentTime) {
         currentFloor.addToBackOfQueue(this);
-        // Start the clock
         startQueueTimer(currentTime);
-    }
-
-    @Override
-    public void getInElevator(Elevator elevator, Floor floor, int currentTime) {
-        // Stop the queue timer
-        resetQueueTimer(currentTime);
-        // Leave the queue
-        floor.removeFromQueue(this);
-        // Leave the floor
-        floor.removeOccupant(this);
-        // Get in the elevator
-        elevator.addOccupant(this);
     }
 
     @Override
@@ -64,6 +51,18 @@ public class MaintenanceCrew extends BuildingOccupant {
             System.out.println(String.format("Maintenance Crew on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
             callElevator(currentFloor, currentTime);
         }
+    }
+
+    @Override
+    public void getInElevator(Elevator elevator, Floor floor, int currentTime) {
+        // Reset the queue timer
+        resetQueueTimer(currentTime);
+        // Leave the queue
+        floor.removeFromQueue(this);
+        // Leave the floor
+        floor.removeOccupant(this);
+        // Get in the elevator
+        elevator.addOccupant(this);
     }
 
 }

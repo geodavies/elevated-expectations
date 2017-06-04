@@ -48,4 +48,5 @@ public class RandomUtils {
     public BigDecimal getBigDecimal() {
         return BigDecimal.valueOf(getDouble());
     }
+
 }

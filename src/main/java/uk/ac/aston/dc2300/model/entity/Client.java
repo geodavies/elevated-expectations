@@ -24,37 +24,10 @@ public class Client extends BuildingOccupant {
         this.leaveAfterArrivalTime = leaveAfterArrivalTime;
     }
 
-    public boolean wouldLikeToComplain(int currentTime) {
-        if (getQueueEntryTime() > -1 && (currentTime - getQueueEntryTime()) >= 600) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     @Override
     public void callElevator(Floor currentFloor, int currentTime) {
         currentFloor.addToFrontOfQueue(this);
-        // start the clock
         startQueueTimer(currentTime);
-    }
-
-    @Override
-    public void getInElevator(Elevator elevator, Floor floor, int currentTime) {
-        // Stop the queue timer
-        resetQueueTimer(currentTime);
-        // Leave the queue
-        floor.removeFromQueue(this);
-        // Leave the floor
-        floor.removeOccupant(this);
-        // Get in the elevator
-        elevator.addOccupant(this);
-    }
-
-    public void getReadyToLeave(Floor ground, int currentTime) {
-        setDestination(ground);
-        // Stop the queue timer
-        resetQueueTimer(currentTime);
     }
 
     @Override
@@ -75,14 +48,48 @@ public class Client extends BuildingOccupant {
             System.out.println(String.format("Client arrived on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
             callElevator(currentFloor, currentTime);
         } else if (currentFloor.equals(groundFloor) && destination.equals(groundFloor)) {
+            // If they're on the ground floor and their destination is ground. Leave the building.
             leaveBuilding(currentFloor);
             System.out.println("Client has left the building");
-        } else if (destination.equals(currentFloor) && currentTime >= destinationArrivalTime + leaveAfterArrivalTime) {
+        } else if (destination.equals(currentFloor) && currentTime >= destinationArrivalTime + leaveAfterArrivalTime) { // If they're at their destination and they want to leave
             // Set destination to ground floor to leave
             setDestination(groundFloor);
             System.out.println(String.format("Client on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
             callElevator(currentFloor, currentTime);
         }
+    }
+
+    @Override
+    public void getInElevator(Elevator elevator, Floor floor, int currentTime) {
+        // Reset the queue timer
+        resetQueueTimer(currentTime);
+        // Leave the queue
+        floor.removeFromQueue(this);
+        // Leave the floor
+        floor.removeOccupant(this);
+        // Get in the elevator
+        elevator.addOccupant(this);
+    }
+
+    /**
+     * Returns whether or not the Client is currently wanting to complain
+     *
+     * @param currentTime the current simulation time
+     * @return to complain or not to complain (that is the question)
+     */
+    public boolean wouldLikeToComplain(int currentTime) {
+        return getQueueEntryTime() > -1 && (currentTime - getQueueEntryTime()) >= 600;
+    }
+
+    /**
+     * Sets the Client destination to ground floor and resets queue timer
+     *
+     * @param ground the ground floor of the building
+     * @param currentTime the current simulation time
+     */
+    public void getReadyToLeave(Floor ground, int currentTime) {
+        setDestination(ground);
+        resetQueueTimer(currentTime);
     }
 
 }

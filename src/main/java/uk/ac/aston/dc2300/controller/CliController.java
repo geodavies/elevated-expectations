@@ -42,6 +42,7 @@ public class CliController implements ApplicationController {
         CliUtils cliMediator = new CliUtils();
 
         // Initialize variables
+
         // Get floor change probability
         BigDecimal empFloorChangeProbability = cliMediator.readBigDecimalViaCli("Floor Change probability (p)", new BigDecimal("0.01"));
 
@@ -67,7 +68,7 @@ public class CliController implements ApplicationController {
         int simulationTime = cliMediator.readIntegerViaCli("Time to run simulation (s)", 28800);
 
         // Create some space to improve legibility
-        System.out.print("\n");
+        System.out.println();
 
         return new SimulationConfiguration(empFloorChangeProbability, clientArrivalProbability, seed, numEmployees,
                 numDevelopers, numFloors, elevatorCapacity, simulationTime);
@@ -95,66 +96,9 @@ public class CliController implements ApplicationController {
         System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
     }
 
-    private String getUserInput() {
-        Scanner reader = new Scanner(System.in);
-        System.out.print(">");
-        return reader.nextLine();
-    }
-
-    private void handleCommand(String userInput) {
-        System.out.println(); // Print some space
-        Pattern commandPattern = Pattern.compile("(?i)^/(step|goto|end|stats)( ([0-9]+))?$");
-        Matcher commandMatcher = commandPattern.matcher(userInput);
-
-        if (commandMatcher.matches()) {
-            String command = commandMatcher.group(1).toLowerCase();
-            String parameter = commandMatcher.group(3);
-            switch (command) {
-                case "step":
-                    if (parameter != null) {
-                        int steps = Integer.parseInt(parameter);
-                        for (int i = 0; i<steps; i++) {
-                            currentStatus = simulation.tick();
-                        }
-                        displayBuilding(currentStatus.getBuilding());
-                    } else {
-                        System.out.println("Please provide a valid number parameter");
-                    }
-                    break;
-                case "goto":
-                    if (parameter != null) {
-                        int tick = Integer.parseInt(parameter);
-                        if (currentStatus.getTime() / 10 < tick) {
-                            while (true) {
-                                currentStatus = simulation.tick();
-                                if (currentStatus.getTime() / 10 == tick) {
-                                    break;
-                                } else if (!currentStatus.isSimulationRunning()) {
-                                    break;
-                                }
-                            }
-                            displayBuilding(currentStatus.getBuilding());
-                        } else {
-                            System.out.println("Please choose a tick in the future");
-                        }
-                    } else {
-                        System.out.println("Please provide a valid number parameter");
-                    }
-                    break;
-                case "end":
-                    while (currentStatus.isSimulationRunning()) {
-                        currentStatus = simulation.tick();
-                    }
-                    break;
-                case "stats":
-                    // TODO: Implement me
-                    break;
-            }
-        } else {
-            System.out.println("Invalid command!");
-        }
-    }
-
+    /**
+     * Prints the usage instructions for the CLI to STDOUT
+     */
     private void printUsageInstructions() {
         System.out.println("Commands:");
         System.out.println("/step [ticks] : Steps through the simulation the specified amount of ticks eg. /step 5");
@@ -165,47 +109,145 @@ public class CliController implements ApplicationController {
         System.out.println();
     }
 
-    private void displayBuilding(Building building) {
-        StringBuilder stringBuilder = new StringBuilder();
+    /**
+     * Prompts the user for CLI input with '>' mark
+     *
+     * @return the input of the user
+     */
+    private String getUserInput() {
+        Scanner reader = new Scanner(System.in);
+        System.out.print(">");
+        return reader.nextLine();
+    }
 
-        // Roof
-        stringBuilder.append("\n    Lift Queue                     Floor\n");
-        stringBuilder.append("   +====+=========================+====================+\n");
+    /**
+     * Reads the input provided by the user, matches to a command and actions that command if found.
+     *
+     * @param userInput the input of the user
+     */
+    private void handleCommand(String userInput) {
+        System.out.println(); // Print some space to improve legibility
+
+        Pattern commandPattern = Pattern.compile("(?i)^/(step|goto|end|stats)( ([0-9]+))?$"); // "/[command] [optional integer]"
+        Matcher commandMatcher = commandPattern.matcher(userInput);
+
+        if (commandMatcher.matches()) { // If command is valid
+            // Make the command lower case for switch
+            String command = commandMatcher.group(1).toLowerCase();
+            String parameter = commandMatcher.group(3);
+            switch (command) {
+                case "step":
+                    if (parameter != null) {
+                        int steps = Integer.parseInt(parameter);
+                        for (int i = 0; i<steps; i++) {  // Tick for the number of steps provided by the user
+                            currentStatus = simulation.tick();
+                        }
+                        displayBuilding(currentStatus.getBuilding()); // Output building diagram on target tick
+                    } else {
+                        System.out.println("Please provide a valid number parameter");
+                    }
+                    break;
+                case "goto":
+                    if (parameter != null) {
+                        int tick = Integer.parseInt(parameter);
+                        if (currentStatus.getTime() / 10 < tick) { // Assert the target tick is in the future
+                            while (true) { // Keep ticking until tick reached or end of simulation
+                                currentStatus = simulation.tick();
+                                if (currentStatus.getTime() / 10 == tick) {
+                                    break;
+                                } else if (!currentStatus.isSimulationRunning()) {
+                                    break;
+                                }
+                            }
+                            displayBuilding(currentStatus.getBuilding()); // Output building diagram on target tick
+                        } else {
+                            System.out.println("Please choose a tick in the future");
+                        }
+                    } else {
+                        System.out.println("Please provide a valid number parameter");
+                    }
+                    break;
+                case "end":
+                    while (currentStatus.isSimulationRunning()) { // Keep ticking until the end of simulation
+                        currentStatus = simulation.tick();
+                    }
+                    displayBuilding(currentStatus.getBuilding()); // Output building diagram on target tick
+                    break;
+                case "stats":
+                    // TODO: Implement me
+                    break;
+            }
+        } else { // Command not matched
+            System.out.println("Invalid command!");
+        }
+    }
+
+    /**
+     * Creates a graphical text representation of the provided building and prints to STDOUT
+     *
+     * @param building the building to draw
+     */
+    private void displayBuilding(Building building) {
+        StringBuilder buildingStringBuilder = new StringBuilder();
+
+        // Draw top
+        buildingStringBuilder.append("\n    Lift Queue                     Floor\n");
+        buildingStringBuilder.append("   +====+=========================+====================+\n");
 
         List<Floor> buildingFloors = building.getFloors();
-        for (int i = buildingFloors.size() - 1; i >= 0; i--) {
+        for (int i = buildingFloors.size() - 1; i >= 0; i--) { // Draw each floor one by one from top to bottom
             Floor currentFloor = buildingFloors.get(i);
 
+            // Draw the queue occupants
             StringBuilder queueStringBuilder = new StringBuilder();
             for (BuildingOccupant occupant : currentFloor.getElevatorQueue()) {
                 queueStringBuilder.append(getLetterForBuildingOccupant(occupant));
             }
 
+            // Draw the floor occupants
             StringBuilder floorStringBuilder = new StringBuilder();
             for (BuildingOccupant occupant : currentFloor.getOccupants()) {
-                if (!currentFloor.getElevatorQueue().contains(occupant)) {
+                if (!currentFloor.getElevatorQueue().contains(occupant)) { // Only draw occupants that aren't in the queue
                     floorStringBuilder.append(getLetterForBuildingOccupant(occupant));
                 }
             }
 
+            // Draw the elevator occupants
             StringBuilder elevatorStringBuilder = new StringBuilder();
             List<Elevator> elevatorsOnFloor = building.getElevatorsOnFloor(currentFloor);
-            if (elevatorsOnFloor.size() > 0) {
-                for (BuildingOccupant occupant : elevatorsOnFloor.get(0).getPassengers()) {
+            if (elevatorsOnFloor.size() > 0) { // If there is one or more elevators on that floor
+                // Draw each elevator occupant in the first elevator (multiple elevators not supported in CLI)
+                for (BuildingOccupant occupant : elevatorsOnFloor.get(0).getOccupants()) {
                     elevatorStringBuilder.append(getLetterForBuildingOccupant(occupant));
                 }
             }
 
-            String elevatorPointer = "";
-            if (elevatorsOnFloor.size() > 0) {
-                elevatorPointer = ">";
-            }
-            stringBuilder.append(String.format("%1s %1s|%-4s|%-25s|%20s|\n", i, elevatorPointer, elevatorStringBuilder.toString(), queueStringBuilder.toString(), floorStringBuilder.toString()));
+            // Add a mark next to floor if there's an elevator at it
+            String elevatorPointer = (elevatorsOnFloor.size() > 0) ? ">" : "";
+
+            // Format and add the floor to the building
+            buildingStringBuilder.append(String.format("%1s %1s|%-4s|%-25s|%20s|\n", i, elevatorPointer,
+                    elevatorStringBuilder.toString(), queueStringBuilder.toString(), floorStringBuilder.toString()));
         }
-        stringBuilder.append("   +====+=========================+====================+\n");
-        System.out.println(stringBuilder.toString());
+
+        // Draw bottom
+        buildingStringBuilder.append("   +====+=========================+====================+\n");
+
+        // Print out the constructed building
+        System.out.println(buildingStringBuilder.toString());
     }
 
+    /**
+     * Gets the letter associated with the occupant type
+     * C = Client
+     * D = Developer
+     * E = Employee
+     * M = MaintenanceCrew
+     * ? = Unknown
+     *
+     * @param buildingOccupant the occupant to represent
+     * @return the representation of the occupant
+     */
     private String getLetterForBuildingOccupant(BuildingOccupant buildingOccupant) {
         if (buildingOccupant instanceof Client) {
             return "C";

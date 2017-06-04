@@ -14,35 +14,17 @@ public class Building {
 
     private final List<Elevator> elevators;
     private final List<Floor> floors;
+
     private int numberComplaints;
 
     /**
-     * @param elevators The set of elevators inside the building
+     * @param elevators The list of elevators inside the building
      * @param floors The list of floors contained by the building
      */
     public Building(List<Elevator> elevators, List<Floor> floors) {
         this.elevators = elevators;
         this.floors = floors;
         numberComplaints = 0;
-    }
-
-    /**
-     * @param building The building to copy
-     */
-    public Building(Building building) {
-        this.elevators = new ArrayList<>();
-        this.elevators.addAll(building.getElevators());
-        this.floors = new ArrayList<>();
-        this.floors.addAll(building.getFloors());
-        numberComplaints = 0;
-    }
-
-    public List<Elevator> getElevators() {
-        return elevators;
-    }
-
-    public List<Floor> getFloors() {
-        return floors;
     }
 
     /**
@@ -63,6 +45,8 @@ public class Building {
 
     /**
      * Gets all of the floors within the bottom section of the building
+     *
+     * If number of floors is odd, the middle floor will be prioritised to bottom half
      *
      * @return the list of floors in the bottom half of the building
      */
@@ -91,18 +75,11 @@ public class Building {
     }
 
     /**
-     * Collects all of the occupants from each of the floors and returns them
+     * Returns a list of elevators on the specified floor
      *
-     * @return occupants from all floors
+     * @param floor the floor to search on
+     * @return list of elevators on that floor
      */
-    public List<BuildingOccupant> getAllOccupants() {
-        List<BuildingOccupant> occupants = new ArrayList<>();
-        for (Floor floor : floors) {
-            occupants.addAll(floor.getOccupants());
-        }
-        return occupants;
-    }
-
     public List<Elevator> getElevatorsOnFloor(Floor floor) {
         List<Elevator> elevatorsOnFloor = new ArrayList<>();
         for (Elevator elevator : elevators) {
@@ -113,16 +90,53 @@ public class Building {
         return elevatorsOnFloor;
     }
 
+    /**
+     * Collects all of the occupants from each of the floors and returns them
+     *
+     * @return occupants from all floors
+     */
+    public List<BuildingOccupant> getAllOccupants() {
+        List<BuildingOccupant> occupants = new ArrayList<>();
+        occupants.addAll(getAllOccupantsOnFloors());
+        occupants.addAll(getAllOccupantsInElevators());
+        return occupants;
+    }
 
     /**
-     * Check for client complaints.
+     * Gets all occupants that are currently on a floor
      *
-     * @param currentTime the current time - to check for clients waiting
-     *                    longer than 10 mins
+     * @return list of BuildingOccupants
+     */
+    public List<BuildingOccupant> getAllOccupantsOnFloors() {
+        List<BuildingOccupant> occupants = new ArrayList<>();
+        for (Floor floor : floors) {
+            occupants.addAll(floor.getOccupants());
+        }
+        return occupants;
+    }
+
+    /**
+     * Gets all the occupants that are currently in elevators
+     *
+     * @return list of BuildingOccupants
+     */
+    private List<BuildingOccupant> getAllOccupantsInElevators() {
+        List<BuildingOccupant> occupants = new ArrayList<>();
+        for (Elevator elevator : elevators) {
+            occupants.addAll(elevator.getOccupants());
+        }
+        return occupants;
+    }
+
+
+    /**
+     * Check if any of the clients would like to complain
+     *
+     * @param currentTime the current simulation time
+     * @return the current number of complaints
      */
     public int getClientComplaints(int currentTime) {
-        List<BuildingOccupant> occupants = getAllOccupants();
-        for(BuildingOccupant occupant : occupants) {
+        for(BuildingOccupant occupant : getAllOccupants()) {
             if (occupant instanceof Client) {
                 Client client = (Client) occupant;
                 if (client.wouldLikeToComplain(currentTime)) {
@@ -135,6 +149,14 @@ public class Building {
             }
         }
         return numberComplaints;
+    }
+
+    public List<Elevator> getElevators() {
+        return elevators;
+    }
+
+    public List<Floor> getFloors() {
+        return floors;
     }
 
     public int getNumberComplaints() {

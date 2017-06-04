@@ -25,8 +25,6 @@ public class ElevatorTest {
     private List<Floor> floors;
     private int topFloor;
 
-
-
     /**
      * Setup before each test run for a basic elevator
      */
@@ -432,4 +430,5 @@ public class ElevatorTest {
         // Elevator doesn't contain maintenance crew
         assertFalse(smallElevator.getOccupants().contains(maintenanceCrew));
     }
+
 }

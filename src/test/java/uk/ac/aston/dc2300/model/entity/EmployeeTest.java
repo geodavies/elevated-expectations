@@ -6,9 +6,7 @@ import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -91,7 +89,7 @@ public class EmployeeTest {
         employee.setNewDestination(building, randomUtils, BigDecimal.ONE, 0);
 
         // Employee's new destination is floor 1
-        assertEquals(employee.getDestination().floorNumber, 1);
+        assertEquals(employee.getDestination().getFloorNumber(), 1);
         assertEquals(employee.getDestination(), floors.get(1));
     }
 
@@ -107,7 +105,7 @@ public class EmployeeTest {
         employee.setNewDestination(building, randomUtils, BigDecimal.ONE, 0);
 
         // Employee's new destination is floor 3
-        assertEquals(employee.getDestination().floorNumber, 3);
+        assertEquals(employee.getDestination().getFloorNumber(), 3);
         assertEquals(employee.getDestination(), floors.get(3));
     }
 
@@ -124,7 +122,7 @@ public class EmployeeTest {
         employee.setNewDestination(building, new RandomUtils(1), BigDecimal.ZERO, 0);
 
         // Employee's destination stays the same
-        assertEquals(employee.getDestination().floorNumber, 1);
+        assertEquals(employee.getDestination().getFloorNumber(), 1);
     }
 
     /**
@@ -170,4 +168,5 @@ public class EmployeeTest {
         // Employee entered elevator queue at time 1234
         assertEquals(employee.getQueueEntryTime(), 1234);
     }
+
 }
