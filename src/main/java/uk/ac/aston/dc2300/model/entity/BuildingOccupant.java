@@ -1,5 +1,6 @@
 package uk.ac.aston.dc2300.model.entity;
 
+import uk.ac.aston.dc2300.model.status.ElevatorDirection;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
@@ -93,6 +94,24 @@ public abstract class BuildingOccupant {
         // Update destination arrival time to now
         destinationArrivalTime = currentTime;
         System.out.println(String.format("Passenger got out of elevator at floor %s", floor.getFloorNumber()));
+    }
+
+    /**
+     * Checks whether the occupant is travelling in the same direction the elevator is going
+     *
+     * @param elevator the elevator to check
+     * @return same direction or not
+     */
+    public boolean travellingInSameDirection(Elevator elevator, List<Floor> floors) {
+        ElevatorDirection elevatorDirection = elevator.whichDirectionNext(floors);
+
+        if (elevatorDirection == ElevatorDirection.UP) {
+            if (destination.getFloorNumber() > elevator.getCurrentFloor().getFloorNumber()) return true;
+        } else if (elevatorDirection == ElevatorDirection.DOWN) {
+            if (destination.getFloorNumber() < elevator.getCurrentFloor().getFloorNumber()) return true;
+        }
+
+        return false;
     }
 
     /**

@@ -23,7 +23,6 @@ public class ElevatorTest {
 
     private Elevator elevator;
     private List<Floor> floors;
-    private int topFloor;
 
     /**
      * Setup before each test run for a basic elevator
@@ -35,7 +34,6 @@ public class ElevatorTest {
             floors.add(new Floor(i));
         }
         elevator = new Elevator(4, floors.get(0));
-        topFloor = floors.size() -1;
     }
 
     /**
@@ -59,14 +57,14 @@ public class ElevatorTest {
         floors.get(0).addToFrontOfQueue(employee);
 
         // Setup elevator for test
-        elevator.updateDoorStatus(topFloor);
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
+        elevator.updateDoorStatus(floors);
 
         // Elevator contains no occupants
         assertEquals(0, elevator.getOccupants().size());
 
         // Elevator loads occupant from elevator queue
-        elevator.loadPassengers(topFloor, 10);
+        elevator.loadPassengers(floors, 10);
         // Elevator contains one occupant
         assertEquals(1, elevator.getOccupants().size());
     }
@@ -82,8 +80,8 @@ public class ElevatorTest {
 
         // Setup elevator for test
         elevator.addOccupant(employee);
-        elevator.updateDoorStatus(topFloor);
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
+        elevator.updateDoorStatus(floors);
 
         // Elevator contains one occupant
         assertEquals(1, elevator.getOccupants().size());
@@ -110,17 +108,17 @@ public class ElevatorTest {
         // Ensure current floor is floor 0
         assertEquals(elevator.getCurrentFloor(), floors.get(0));
         // Elevator doors opening
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator doors opened
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator loads occupant from elevator queue
-        elevator.loadPassengers(topFloor, 10);
+        elevator.loadPassengers(floors, 10);
         // Occupant loaded onto elevator
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator doors closing
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator doors closed
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator moves up one floor
         elevator.moveIfRequested(floors);
         // Ensure current floor is floor 1
@@ -162,11 +160,11 @@ public class ElevatorTest {
         // Elevator queue occupant is employee
         assertEquals(employee, floors.get(0).getElevatorQueue().get(0));
         // Elevator doors opening
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator doors opened
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator loads occupant from elevator queue
-        elevator.loadPassengers(topFloor, 10);
+        elevator.loadPassengers(floors, 10);
         // Elevator contains one occupant
         assertEquals(1, elevator.getOccupants().size());
         // Elevator occupant is employee
@@ -195,11 +193,11 @@ public class ElevatorTest {
         // Elevator queue occupant is developer
         assertEquals(developer, floors.get(0).getElevatorQueue().get(0));
         // Elevator doors opening
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator doors opened
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator loads occupant from elevator queue
-        elevator.loadPassengers(topFloor, 10);
+        elevator.loadPassengers(floors, 10);
         // Elevator contains one occupants
         assertEquals(1, elevator.getOccupants().size());
         // Elevator occupant is developer
@@ -228,11 +226,11 @@ public class ElevatorTest {
         // Elevator queue occupant is client
         assertEquals(client, floors.get(0).getElevatorQueue().get(0));
         // Elevator doors opening
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator doors opened
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator loads occupant from elevator queue
-        elevator.loadPassengers(topFloor, 10);
+        elevator.loadPassengers(floors, 10);
         // Elevator contains one occupant
         assertEquals(1, elevator.getOccupants().size());
         // Elevator occupant is client
@@ -261,11 +259,11 @@ public class ElevatorTest {
         // Elevator queue occupant is maintenance crew
         assertEquals(maintenanceCrew, floors.get(0).getElevatorQueue().get(0));
         // Elevator doors opening
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator doors opened
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator loads occupant from elevator queue
-        elevator.loadPassengers(topFloor, 10);
+        elevator.loadPassengers(floors, 10);
         // Elevator contains one occupant
         assertEquals(1, elevator.getOccupants().size());
         // Elevator occupant is maintenance crew
@@ -293,11 +291,11 @@ public class ElevatorTest {
         // Elevator queue contains two occupants
         assertEquals(2, floors.get(0).getElevatorQueue().size());
         // Elevator doors opening
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator doors opened
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator loads occupant from elevator queue
-        elevator.loadPassengers(topFloor, 10);
+        elevator.loadPassengers(floors, 10);
         // Elevator contains one occupant
         assertEquals(1, elevator.getOccupants().size());
         // Elevator occupant is maintenance crew
@@ -329,11 +327,11 @@ public class ElevatorTest {
         // Elevator queue contains two occupants
         assertEquals(2, floors.get(0).getElevatorQueue().size());
         // Elevator doors opening
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator doors opened
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator loads client from elevator queue due to priority
-        elevator.loadPassengers(topFloor, 10);
+        elevator.loadPassengers(floors, 10);
         // Elevator contains one occupant
         assertEquals(1, elevator.getOccupants().size());
         // Elevator occupant is client
@@ -362,11 +360,11 @@ public class ElevatorTest {
         // Elevator queue contains two occupants
         assertEquals(2, floors.get(0).getElevatorQueue().size());
         // Elevator doors opening
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator doors opened
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         // Elevator loads gogglesDeveloper from elevator queue
-        elevator.loadPassengers(topFloor, 10);
+        elevator.loadPassengers(floors, 10);
         // Elevator contains one occupant
         assertEquals(1, elevator.getOccupants().size());
         // Elevator occupant is gogglesDeveloper
@@ -390,21 +388,21 @@ public class ElevatorTest {
         // Elevator doors are closed
         assertEquals(elevator.getDoorStatus(), ElevatorDoorStatus.CLOSED);
         // Elevator doors opening
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         assertEquals(elevator.getDoorStatus(), ElevatorDoorStatus.OPENING);
         // Elevator doors opened
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         assertEquals(elevator.getDoorStatus(), ElevatorDoorStatus.OPEN);
         // Elevator loads occupant from elevator queue
-        elevator.loadPassengers(topFloor, 10);
+        elevator.loadPassengers(floors, 10);
         // Occupant loaded onto elevator
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         assertEquals(elevator.getDoorStatus(), ElevatorDoorStatus.OPEN);
         // Elevator doors closing
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         assertEquals(elevator.getDoorStatus(), ElevatorDoorStatus.CLOSING);
         // Elevator doors closed
-        elevator.updateDoorStatus(topFloor);
+        elevator.updateDoorStatus(floors);
         assertEquals(elevator.getDoorStatus(), ElevatorDoorStatus.CLOSED);
     }
 
@@ -415,6 +413,7 @@ public class ElevatorTest {
     public void maintenanceCrewCantEnterElevatorIfCapacityToSmall() {
         // Setup maintenance crew for test
         MaintenanceCrew maintenanceCrew = new MaintenanceCrew(0, 1200);
+        maintenanceCrew.setDestination(floors.get(5));
         // Create elevator that is too small for maintenance crew
         Elevator smallElevator = new Elevator(3, floors.get(0));
 
@@ -422,11 +421,11 @@ public class ElevatorTest {
         floors.get(0).addToFrontOfQueue(maintenanceCrew);
 
         // Setup elevator for test
-        smallElevator.updateDoorStatus(5);
-        smallElevator.updateDoorStatus(5);
+        smallElevator.updateDoorStatus(floors);
+        smallElevator.updateDoorStatus(floors);
 
         // Elevator tries to load maintenance crew from elevator queue
-        elevator.loadPassengers(5, 10);
+        elevator.loadPassengers(floors, 10);
         // Elevator doesn't contain maintenance crew
         assertFalse(smallElevator.getOccupants().contains(maintenanceCrew));
     }
