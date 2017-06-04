@@ -14,7 +14,7 @@ import java.util.List;
 public class Client extends BuildingOccupant {
 
     private int leaveAfterArrivalTime;
-    private boolean hasLeaveIntent;
+    private boolean isLeaving;
 
     /**
      * @param timeEntered the time in seconds the Client entered the building following simulation start
@@ -23,7 +23,7 @@ public class Client extends BuildingOccupant {
     public Client(int timeEntered, int leaveAfterArrivalTime) {
         super(1, timeEntered);
         this.leaveAfterArrivalTime = leaveAfterArrivalTime;
-        this.hasLeaveIntent = false;
+        this.isLeaving = false;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class Client extends BuildingOccupant {
             if (currentFloor != destination) {
                 callElevator(currentFloor, currentTime);
             }
-        } else if (currentFloor.equals(groundFloor) && hasLeaveIntent) {
+        } else if (currentFloor.equals(groundFloor) && isLeaving) {
             // If they're on the ground floor and they have the intent to leave. Leave the building.
             leaveBuilding(currentFloor);
             System.out.println("Client has left the building");
@@ -96,7 +96,7 @@ public class Client extends BuildingOccupant {
     public void getReadyToLeave(Floor ground, int currentTime) {
         setDestination(ground);
         resetQueueTimer(currentTime);
-        hasLeaveIntent = true;
+        isLeaving = true;
     }
 
 }
