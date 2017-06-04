@@ -3,9 +3,13 @@ package uk.ac.aston.dc2300.controller;
 import uk.ac.aston.dc2300.component.Simulation;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 import uk.ac.aston.dc2300.model.entity.*;
+import uk.ac.aston.dc2300.model.status.SimulationStatistics;
 import uk.ac.aston.dc2300.model.status.SimulationStatus;
 import uk.ac.aston.dc2300.utility.CliUtils;
+import uk.ac.aston.dc2300.utility.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
@@ -21,12 +25,13 @@ import java.util.regex.Pattern;
 public class CliController implements ApplicationController {
 
     private final Simulation simulation;
+    private final SimulationConfiguration simulationConfiguration;
 
     private SimulationStatus currentStatus;
 
     public CliController() {
         System.out.println("Initializing application in 'cli' mode");
-        SimulationConfiguration simulationConfiguration = getConfigurationInput();
+        simulationConfiguration = getConfigurationInput();
         simulation = new Simulation(simulationConfiguration);
     }
 
@@ -82,18 +87,16 @@ public class CliController implements ApplicationController {
 
         printUsageInstructions();
 
-        while (currentStatus.isSimulationRunning()) {
+        while (true) {
             String userInput = getUserInput();
 
             if (userInput.equalsIgnoreCase("/quit")) {
                 System.out.println("Goodbye!");
-                break;
+                System.exit(0);
             } else {
                 handleCommand(userInput);
             }
         }
-
-        System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
     }
 
     /**
@@ -104,7 +107,7 @@ public class CliController implements ApplicationController {
         System.out.println("/step [ticks] : Steps through the simulation the specified amount of ticks eg. /step 5");
         System.out.println("/goto [ticks] : Goes to the given future tick of the simulation eg. /goto 78");
         System.out.println("/end          : Runs the simulation to the end");
-        System.out.println("/stats        : Gives statistics about the current simulation state");
+        System.out.println("/stats [file] : Saves statistics in CSV format to the specified file");
 
         System.out.println();
     }
@@ -128,7 +131,7 @@ public class CliController implements ApplicationController {
     private void handleCommand(String userInput) {
         System.out.println(); // Print some space to improve legibility
 
-        Pattern commandPattern = Pattern.compile("(?i)^/(step|goto|end|stats)( ([0-9]+))?$"); // "/[command] [optional integer]"
+        Pattern commandPattern = Pattern.compile("(?i)^/(step|goto|end|stats)( (.+))?$"); // "/[command] [optional string]"
         Matcher commandMatcher = commandPattern.matcher(userInput);
 
         if (commandMatcher.matches()) { // If command is valid
@@ -138,47 +141,83 @@ public class CliController implements ApplicationController {
             switch (command) {
                 case "step":
                     if (parameter != null) {
-                        int steps = Integer.parseInt(parameter);
-                        for (int i = 0; i<steps; i++) {  // Tick for the number of steps provided by the user
-                            currentStatus = simulation.tick();
+                        try {
+                            int steps = Integer.parseInt(parameter);
+                            performStepCommand(steps);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid step parameter, please provide a valid number");
                         }
-                        displayBuilding(currentStatus.getBuilding()); // Output building diagram on target tick
                     } else {
                         System.out.println("Please provide a valid number parameter");
                     }
                     break;
                 case "goto":
                     if (parameter != null) {
-                        int tick = Integer.parseInt(parameter);
-                        if (currentStatus.getTime() / 10 < tick) { // Assert the target tick is in the future
-                            while (true) { // Keep ticking until tick reached or end of simulation
-                                currentStatus = simulation.tick();
-                                if (currentStatus.getTime() / 10 == tick) {
-                                    break;
-                                } else if (!currentStatus.isSimulationRunning()) {
-                                    break;
-                                }
-                            }
-                            displayBuilding(currentStatus.getBuilding()); // Output building diagram on target tick
-                        } else {
-                            System.out.println("Please choose a tick in the future");
+                        try {
+                            int tick = Integer.parseInt(parameter);
+                            performGotoCommand(tick);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid tick parameter, please provide a valid number");
+                            break;
                         }
                     } else {
                         System.out.println("Please provide a valid number parameter");
                     }
                     break;
                 case "end":
-                    while (currentStatus.isSimulationRunning()) { // Keep ticking until the end of simulation
-                        currentStatus = simulation.tick();
-                    }
-                    displayBuilding(currentStatus.getBuilding()); // Output building diagram on target tick
+                    performEndCommand();
                     break;
                 case "stats":
-                    // TODO: Implement me
+                    if (parameter != null) {
+                        performStatsCommand(parameter);
+                    } else {
+                        System.out.println("Please provide a filename to save to");
+                    }
                     break;
             }
         } else { // Command not matched
             System.out.println("Invalid command!");
+        }
+    }
+
+    private void performStepCommand(int steps) {
+        for (int i = 0; i<steps; i++) {  // Tick for the number of steps provided by the user
+            currentStatus = simulation.tick();
+        }
+        displayBuilding(currentStatus.getBuilding()); // Output building diagram on target tick
+    }
+
+    private void performGotoCommand(int tick) {
+        if (currentStatus.getTime() / 10 < tick) { // Assert the target tick is in the future
+            while (true) { // Keep ticking until tick reached or end of simulation
+                currentStatus = simulation.tick();
+                if (currentStatus.getTime() / 10 == tick) {
+                    break;
+                } else if (!currentStatus.isSimulationRunning()) {
+                    break;
+                }
+            }
+            displayBuilding(currentStatus.getBuilding()); // Output building diagram on target tick
+        } else {
+            System.out.println("Please choose a tick in the future");
+        }
+    }
+
+    private void performEndCommand() {
+        while (currentStatus.isSimulationRunning()) { // Keep ticking until the end of simulation
+            currentStatus = simulation.tick();
+        }
+        displayBuilding(currentStatus.getBuilding()); // Output building diagram on target tick
+    }
+
+    private void performStatsCommand(String filename) {
+        FileUtils fileUtils = new FileUtils(new File(filename));
+        SimulationStatistics stats = simulation.getStatistics();
+        try {
+            fileUtils.writeToFile(simulationConfiguration.toCSV() + "," + stats.toCSV(),simulationConfiguration.getCSVHeaders() + "," +  stats.getCSVHeaders());
+            System.out.println("File saved to: " + filename);
+        } catch (IOException e) {
+            System.out.println("File writing failed, please try again");
         }
     }
 
