@@ -77,8 +77,11 @@ public class ClientTest {
         groundFloor.addOccupant(client);
         // Client entered queue at 10 seconds
         client.setNewDestination(building, randomUtils, BigDecimal.ONE,0);
+        while (client.getDestination().getFloorNumber() == 0) {
+            client.setNewDestination(building, randomUtils, BigDecimal.ONE,0);
+        }
         // Client complains at 600 (10 minutes after entering queue)
-        assertTrue(client.wouldLikeToComplain(600));
+        assertTrue(client.wouldLikeToComplain(610));
     }
 
     /**
@@ -131,8 +134,8 @@ public class ClientTest {
         client.setNewDestination(building, randomUtils, BigDecimal.ONE, 0);
 
         // Client's new destination is floor 2
-        assertEquals(client.getDestination().getFloorNumber(), 2);
-        assertEquals(client.getDestination(), floors.get(2));
+        assertEquals(0, client.getDestination().getFloorNumber());
+        assertEquals(floors.get(0), client.getDestination());
     }
 
     /**
