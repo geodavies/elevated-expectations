@@ -143,7 +143,7 @@ public class Simulation {
 
     /**
      * Randomly (against given probability) creates a Client, sets their destination, adds them to the ground floor and
-     * makes them call the elevator for the floor they're on.
+     * sets their destination
      *
      * @param currentTime the current simulation time
      */
@@ -163,7 +163,7 @@ public class Simulation {
 
     /**
      * Randomly (against given probability) creates a MaintenanceCrew, sets their destination, adds them to the ground
-     * floor and makes them call the elevator for the floor they're on.
+     * floor and sets their destination
      *
      * @param currentTime the current simulation time
      */
@@ -183,7 +183,7 @@ public class Simulation {
 
     /**
      * Will call all occupants that are on their destination floors to set new destinations providing each of their
-     * individual setNewDestination method implementation requirements are met.
+     * individual setNewDestination method implementation requirements are met
      */
     private void randomlyReassignDestinations() {
         for (BuildingOccupant occupant : BUILDING.getAllOccupantsOnFloors()) {
@@ -197,7 +197,7 @@ public class Simulation {
 
     /**
      * Commands all elevators to look at their current occupants and those waiting outside and will open/close the doors
-     * where needed.
+     * where needed
      */
     private void updateElevatorStatuses() {
         for (Elevator elevator : BUILDING.getElevators()) {

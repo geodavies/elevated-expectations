@@ -76,52 +76,50 @@ public class SimulationCanvas extends JPanel {
         g.setColor(Color.BLACK);
     }
 
-    private void drawStats(Graphics context) {
+    private void drawStats(Graphics g) {
         if (statistics != null) {
             int STATS_LEFT = 775;
             int STATS_WIDTH = 150;
             int STATS_TOP = BORDER_Y + ((BORDER + STATS_WIDTH) * 2);
             int STATS_HEIGHT = STATS_WIDTH;
             // Draw container
-            context.drawRect(STATS_LEFT, STATS_TOP, STATS_WIDTH, STATS_HEIGHT);
+            g.drawRect(STATS_LEFT, STATS_TOP, STATS_WIDTH, STATS_HEIGHT);
             // Draw title
-            context.drawString("Statistics: ", STATS_LEFT + (BORDER / 2), STATS_TOP + BORDER);
+            g.drawString("Statistics: ", STATS_LEFT + (BORDER / 2), STATS_TOP + BORDER);
 
             // Draw Wait time
-            context.drawString("Avg Wait Time: ", STATS_LEFT + (BORDER / 2), STATS_TOP + BORDER * 3);
-            context.drawString(statistics.getAverageTime() + "s", STATS_LEFT + (BORDER), STATS_TOP + BORDER * 4);
+            g.drawString("Avg Wait Time: ", STATS_LEFT + (BORDER / 2), STATS_TOP + BORDER * 3);
+            g.drawString(statistics.getAverageTime() + "s", STATS_LEFT + (BORDER), STATS_TOP + BORDER * 4);
 
             // Draw Number of Complaints
-            context.drawString("# Of Complaints: ", STATS_LEFT + (BORDER / 2), STATS_TOP + BORDER * 6);
-            context.drawString(statistics.getNumberOfComplaints() + "", STATS_LEFT + (BORDER), STATS_TOP + BORDER * 7);
+            g.drawString("# Of Complaints: ", STATS_LEFT + (BORDER / 2), STATS_TOP + BORDER * 6);
+            g.drawString(statistics.getNumberOfComplaints() + "", STATS_LEFT + (BORDER), STATS_TOP + BORDER * 7);
         }
     }
 
-    private void drawKey(Graphics context) {
+    private void drawKey(Graphics g) {
         int KEY_LEFT = 775;
         int KEY_WIDTH = 150;
         int KEY_TOP = BORDER_Y + BORDER;
         int KEY_HEIGHT = KEY_WIDTH * 2;
         // Draw container
-        context.drawRect(KEY_LEFT, KEY_TOP, KEY_WIDTH, KEY_HEIGHT);
+        g.drawRect(KEY_LEFT, KEY_TOP, KEY_WIDTH, KEY_HEIGHT);
         // Draw title
-        context.drawString("Key: ", KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER);
+        g.drawString("Key: ", KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER);
 
         // Draw client
-        drawLabel("Client", Color.BLUE, context, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 2);
-        drawLabel("Maintenance Crew", Color.YELLOW, context, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 3);
-        drawLabel("Mugtome Dev", Color.MAGENTA, context, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 4);
-        drawLabel("Goggles Dev", Color.GREEN, context, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 5);
-        drawLabel("Employee", Color.BLACK, context, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 6);
-
+        drawLabel("Client", Color.BLUE, g, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 2);
+        drawLabel("Maintenance Crew", Color.YELLOW, g, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 3);
+        drawLabel("Mugtome Dev", Color.MAGENTA, g, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 4);
+        drawLabel("Goggles Dev", Color.GREEN, g, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 5);
+        drawLabel("Employee", Color.BLACK, g, KEY_LEFT + (BORDER / 2), KEY_TOP + BORDER * 6);
     }
 
-    private void drawLabel(String label, Color color, Graphics context, int x, int y) {
-        context.setColor(color);
-        context.fillOval(x, y, PERSON_RADIUS, PERSON_RADIUS);
-        context.setColor(Color.BLACK);
-        context.drawString(label, x + (PERSON_RADIUS * 2), y + PERSON_RADIUS);
-
+    private void drawLabel(String label, Color color, Graphics g, int x, int y) {
+        g.setColor(color);
+        g.fillOval(x, y, PERSON_RADIUS, PERSON_RADIUS);
+        g.setColor(Color.BLACK);
+        g.drawString(label, x + (PERSON_RADIUS * 2), y + PERSON_RADIUS);
     }
 
     private void drawFloorSkeleton(Floor currentFloor, Graphics g, int numFloors) {
@@ -183,8 +181,7 @@ public class SimulationCanvas extends JPanel {
     }
 
     /**
-     * Method populates a given floor on the UI both with the occupants in the elevator queue and generally on the given
-     * floor.
+     * Populates a given floor on the UI both with the occupants in the elevator queue and on the floor
      *
      * @param currentFloor The floor to populate
      * @param g the graphics context to use to draw the occupants
@@ -246,7 +243,7 @@ public class SimulationCanvas extends JPanel {
     }
 
     /**
-     * Method returns an appropriate fill color for the BuildingOccupant provided.
+     * Returns an appropriate fill color for the BuildingOccupant provided.
      *
      * @param buildingOccupant The occupant to find a color for
      * @return The fill color for the building occupant provided

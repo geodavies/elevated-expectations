@@ -130,9 +130,9 @@ public class Building {
 
 
     /**
-     * Check for client complaints.
+     * Check if any of the clients would like to complain
      *
-     * @param currentTime the current time - to check for clients waiting longer than 10 mins
+     * @param currentTime the current simulation time
      * @return the current number of complaints
      */
     public int getClientComplaints(int currentTime) {
