@@ -151,6 +151,7 @@ public abstract class BuildingOccupant {
     public void enterBuilding(Building building) {
         building.signIn(this);
     }
+
     public int getSize() {
         return occupantSize;
     }
