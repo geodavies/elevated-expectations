@@ -55,18 +55,6 @@ public class Simulation {
         List<Elevator> elevators = new ArrayList<>();
         elevators.add(elevator);
 
-        // Create employee(s) and put in ground floor
-        for (int i = 0; i < simulationConfiguration.getNumEmployees(); i++) {
-            Employee employee = new Employee(currentTime);
-            floors.get(0).addOccupant(employee);
-        }
-
-        // Create developer(s) and put in ground floor
-        for (int i = 0; i < simulationConfiguration.getNumDevelopers(); i++) {
-            Developer developer = new Developer(currentTime, COMPANIES[i % 2]);
-            floors.get(0).addOccupant(developer);
-        }
-
         // Set floor change probability
         FLOOR_CHANGE_PROBABILITY = simulationConfiguration.getEmpFloorChangeProbability();
 
@@ -81,6 +69,20 @@ public class Simulation {
 
         // Set time to run simulation for
         SIMULATION_RUN_TIME = simulationConfiguration.getSimulationTime();
+
+        // Create employee(s) and put in ground floor
+        for (int i = 0; i < simulationConfiguration.getNumEmployees(); i++) {
+            Employee employee = new Employee(currentTime);
+            employee.enterBuilding(BUILDING);
+            floors.get(0).addOccupant(employee);
+        }
+
+        // Create developer(s) and put in ground floor
+        for (int i = 0; i < simulationConfiguration.getNumDevelopers(); i++) {
+            Developer developer = new Developer(currentTime, COMPANIES[i % 2]);
+            developer.enterBuilding(BUILDING);
+            floors.get(0).addOccupant(developer);
+        }
 
         // Initialise simulation state
         initialise();
@@ -109,7 +111,7 @@ public class Simulation {
         SimulationStatistics statistics = new SimulationStatistics(BUILDING.getNumberComplaints());
       
         // Add all wait times
-        List<BuildingOccupant> occupants  = BUILDING.getAllOccupants();
+        List<BuildingOccupant> occupants  = BUILDING.getAllVisitors();
         for(BuildingOccupant occupant : occupants) {
             statistics.addWaitTimes(occupant.getWaitTimes());
         }
@@ -154,6 +156,7 @@ public class Simulation {
             int leaveAfterArrivalTime = RANDOM_UTILS.getIntInRange(10, 30) * 60;
             Client arrivingClient = new Client(currentTime, leaveAfterArrivalTime);
             // Put client into building (ground floor)
+            arrivingClient.enterBuilding(BUILDING);
             Floor groundFloor = BUILDING.getFloors().get(0);
             groundFloor.addOccupant(arrivingClient);
             // Assign initial destination floor
@@ -173,6 +176,7 @@ public class Simulation {
             // Generate random leaving time between 20 and 40 minutes, change to seconds.
             int leaveAfterArrivalTime = RANDOM_UTILS.getIntInRange(20, 40) * 60;
             MaintenanceCrew arrivingMaintenanceCrew = new MaintenanceCrew(currentTime, leaveAfterArrivalTime);
+            arrivingMaintenanceCrew.enterBuilding(BUILDING);
             // Put crew into building (ground floor)
             Floor groundFloor = BUILDING.getFloors().get(0);
             groundFloor.addOccupant(arrivingMaintenanceCrew);

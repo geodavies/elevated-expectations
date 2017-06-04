@@ -144,6 +144,13 @@ public abstract class BuildingOccupant {
         currentFloor.removeOccupant(this);
     }
 
+    /**
+     * Enter the building specified and sign in
+     * @param building the building to enter
+     */
+    public void enterBuilding(Building building) {
+        building.signIn(this);
+    }
     public int getSize() {
         return occupantSize;
     }

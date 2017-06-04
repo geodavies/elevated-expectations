@@ -16,6 +16,7 @@ public class Building {
     private final List<Floor> floors;
 
     private int numberComplaints;
+    private List<BuildingOccupant> visitorList;
 
     /**
      * @param elevators The list of elevators inside the building
@@ -25,6 +26,15 @@ public class Building {
         this.elevators = elevators;
         this.floors = floors;
         numberComplaints = 0;
+    }
+
+    /**
+     * Sign onto the visitor list
+     *
+     * @param buildingOccupant the building occupant who wishes to sign in
+     */
+    public void signIn(BuildingOccupant buildingOccupant) {
+        visitorList.add(buildingOccupant);
     }
 
     /**
@@ -100,6 +110,16 @@ public class Building {
         occupants.addAll(getAllOccupantsOnFloors());
         occupants.addAll(getAllOccupantsInElevators());
         return occupants;
+    }
+
+    /**
+     * Collects all of the building visitors
+     *
+     * @return all occupants to have entered the building based on the
+     * visitor log
+     */
+    public List<BuildingOccupant> getAllVisitors() {
+        return visitorList;
     }
 
     /**
