@@ -106,7 +106,7 @@ public class Simulation {
     public SimulationStatistics getStatistics() {
         SimulationStatistics statistics = new SimulationStatistics(BUILDING.getNumberComplaints());
 
-        Set<BuildingOccupant> occupants  = BUILDING.getAllOccupants();
+        List<BuildingOccupant> occupants  = BUILDING.getAllOccupants();
 
         // Add all wait times
         for(BuildingOccupant occupant : occupants) {
