@@ -32,12 +32,14 @@ public class GuiController implements ApplicationController {
     private boolean simulationRunning;
     private boolean simulationPaused;
     private static final int SIM_SPEED_DEFAULT = 200;
+    private boolean goToEnd;
     private boolean stats;
 
     public GuiController() {
         System.out.println("Initializing application in 'GUI' mode");
         simSpeedMultiplier = 1;
         simulationRunning = false;
+        goToEnd = false;
         stats = true;
     }
 
@@ -99,7 +101,13 @@ public class GuiController implements ApplicationController {
         controlPanel.setSpeedHandler(e -> {
             // Get new speed and assign to multiplier
             this.simulationPaused = false;
-            this.simSpeedMultiplier = e.getID();
+            int speed =  e.getID();
+            if (speed >= 0) {
+                this.simSpeedMultiplier = speed;
+                this.goToEnd = false;
+            } else {
+                this.goToEnd = true;
+            }
         });
         // Pause button
         controlPanel.setPauseHandler(e -> this.simulationPaused = true);
@@ -162,7 +170,9 @@ public class GuiController implements ApplicationController {
                         simulationCanvas.drawStats(simulation.getStatistics());
                         simulationRunning = currentStatus.isSimulationRunning();
                     }
-                    Thread.sleep(SIM_SPEED_DEFAULT / simSpeedMultiplier);
+                    if (!goToEnd) {
+                        Thread.sleep(SIM_SPEED_DEFAULT / simSpeedMultiplier);
+                    }
                 }
 
                 if (stats) {
