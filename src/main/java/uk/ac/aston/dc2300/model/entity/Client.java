@@ -56,7 +56,12 @@ public class Client extends BuildingOccupant {
             // Set destination to ground floor to leave
             setDestination(groundFloor);
             System.out.println(String.format("Client on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
-            callElevator(currentFloor, currentTime);
+            if (currentFloor != destination) {
+                callElevator(currentFloor, currentTime);
+            } else {
+                leaveBuilding(currentFloor);
+                System.out.println("Client has left the building");
+            }
         }
     }
 
