@@ -1,7 +1,5 @@
 package uk.ac.aston.dc2300.gui.util;
 
-import javax.swing.*;
-
 /**
  * An exception to be thrown if a field is invalid upon submission.
  *
@@ -10,15 +8,21 @@ import javax.swing.*;
  */
 public class InvalidInputException extends Exception {
 
-    private JTextField offenderField;
+    private String offenderValue;
 
-    public InvalidInputException(JTextField offenderField) {
+    /**
+     * An exception to be thrown if a field is invalid
+     * upon submission.
+     *
+     * @param offenderValue the String value.
+     */
+    public InvalidInputException(String offenderValue) {
         super();
-        this.offenderField = offenderField;
+        this.offenderValue = offenderValue;
     }
 
     @Override
     public String toString() {
-        return "Field Invalid with value: " + offenderField.getText();
+        return "Field Invalid with value: " + offenderValue;
     }
 }

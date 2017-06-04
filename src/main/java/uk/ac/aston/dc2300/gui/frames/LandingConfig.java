@@ -1,10 +1,7 @@
 package uk.ac.aston.dc2300.gui.frames;
 
 import aston.nabneyit.GUI.LabelledSliderFP;
-import uk.ac.aston.dc2300.gui.util.GUIChange;
-import uk.ac.aston.dc2300.gui.util.IntegerVerifier;
-import uk.ac.aston.dc2300.gui.util.InvalidInputException;
-import uk.ac.aston.dc2300.gui.util.LongVerifier;
+import uk.ac.aston.dc2300.gui.util.*;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 
 import javax.swing.*;
@@ -81,6 +78,8 @@ public class LandingConfig {
      * Method performs initial UI setup, registering input verifiers on each of the fields.
      */
     private void setupInputVerifiers() {
+        empFloorChangeProbabilityField.setTextFieldValidator(new BigDecimalVerifier());
+        clientArrivalProbabilityField.setTextFieldValidator(new BigDecimalVerifier());
         randomSeedField.setInputVerifier(new LongVerifier());
         numberEmployeesField.setInputVerifier(new IntegerVerifier());
         numberDevelopersField.setInputVerifier(new IntegerVerifier());
@@ -108,7 +107,7 @@ public class LandingConfig {
 
         // Add all fields
 
-        empFloorChangeProbabilityField = new LabelledSliderFP("FloorChangeProbability", 0.01, 0, 100, 100);
+        empFloorChangeProbabilityField = new LabelledSliderFP("FloorChangeProbability", 0.01, 0, 1000, 1000);
         landingConfigPanel.add(empFloorChangeProbabilityField);
 
         clientArrivalProbabilityField = new LabelledSliderFP("ClientArrivalProbability", 0.005, 0, 1000, 1000);
@@ -144,12 +143,14 @@ public class LandingConfig {
 
         // Setup array
         inputFields = new JTextField[]{
-                randomSeedField,
-                numberEmployeesField,
-                numberDevelopersField,
-                numberFloorsField,
-                elevatorCapacityField,
-                simulationTimeField};
+            randomSeedField,
+            numberEmployeesField,
+            numberDevelopersField,
+            numberFloorsField,
+            elevatorCapacityField,
+            simulationTimeField,
+            clientArrivalProbabilityField.getTextField(),
+            empFloorChangeProbabilityField.getTextField()};
     }
 
     /**
@@ -175,6 +176,8 @@ public class LandingConfig {
      * @throws InvalidInputException if any input field doesn't validate
      */
     private void validateFields() throws InvalidInputException {
+
+        // Validate all of the text fields
         for (JTextField currentField: inputFields) {
 
             System.out.println("[GUI] Current field is valid: "
@@ -183,10 +186,9 @@ public class LandingConfig {
             // Get input verifier and validate fields with it.
             if (!currentField.getInputVerifier().verify(currentField)) {
                 // If invalid throw exception
-                throw new InvalidInputException(currentField);
+                throw new InvalidInputException(currentField.getText());
             }
         }
-
     }
 
     /**
