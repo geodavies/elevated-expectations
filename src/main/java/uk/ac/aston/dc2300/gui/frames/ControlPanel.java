@@ -24,6 +24,7 @@ public class ControlPanel {
     private JButton twoXSpeedButton;
     private JButton fiveXSpeedButton;
     private JButton twentyFiveXSpeedButton;
+    private JButton goToEndButton;
 
     private JFileChooser fileChooser;
 
@@ -47,6 +48,7 @@ public class ControlPanel {
         twoXSpeedButton = new JButton("2x");
         fiveXSpeedButton = new JButton("5x");
         twentyFiveXSpeedButton = new JButton("25x");
+        goToEndButton = new JButton("Go to End");
 
         // File chooser
         fileChooser = new JFileChooser();
@@ -59,7 +61,7 @@ public class ControlPanel {
         containerPanel.add(twoXSpeedButton);
         containerPanel.add(fiveXSpeedButton);
         containerPanel.add(twentyFiveXSpeedButton);
-
+        containerPanel.add(goToEndButton);
     }
 
     /**
@@ -99,6 +101,10 @@ public class ControlPanel {
         });
         this.twentyFiveXSpeedButton.addActionListener(e -> {
             ActionEvent speedEvent = new ActionEvent(twentyFiveXSpeedButton, 25, null);
+            this.speedHandler.actionPerformed(speedEvent);
+        });
+        this.goToEndButton.addActionListener(e -> {
+            ActionEvent speedEvent = new ActionEvent(goToEndButton, -1, null);
             this.speedHandler.actionPerformed(speedEvent);
         });
     }
