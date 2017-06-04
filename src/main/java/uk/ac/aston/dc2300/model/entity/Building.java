@@ -25,7 +25,8 @@ public class Building {
     public Building(List<Elevator> elevators, List<Floor> floors) {
         this.elevators = elevators;
         this.floors = floors;
-        numberComplaints = 0;
+        this.visitorList = new ArrayList<>();
+        this.numberComplaints = 0;
     }
 
     /**
