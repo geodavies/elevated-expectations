@@ -122,7 +122,7 @@ public class LandingConfig {
         landingConfigPanel.add(titleBox);
 
 
-        empFloorChangeProbabilityField = new LabelledSliderFP("FloorChangeProbability", 0.01, 0, 100, 100);
+        empFloorChangeProbabilityField = new LabelledSliderFP("FloorChangeProbability", 0.01, 0, 1000, 1000);
         landingConfigPanel.add(empFloorChangeProbabilityField);
 
         clientArrivalProbabilityField = new LabelledSliderFP("ClientArrivalProbability", 0.005, 0, 1000, 1000);

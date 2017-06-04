@@ -10,6 +10,8 @@ import java.text.*;
 /**
  * Enhanced version of standard Swing JSlider widget
  *
+ * (M0D1FIED BY Daniel Cotton)
+ *
  * @author Ian T. Nabney
  * @version 20/04/2006
  */
@@ -24,9 +26,11 @@ public class LabelledSliderFP extends JComponent {
     private String labelString;
     private JLabel label;
     private JSlider slider;
+    private JTextField textField;
     private int scale;
 
     private NumberFormat nf;
+    private boolean updatingValue;
 
     /**
      * Creates a <code>LabelledSlider</code>.
@@ -42,12 +46,17 @@ public class LabelledSliderFP extends JComponent {
         if (value*scale < min || value*scale > max)
             throw new IllegalArgumentException("Value not in range for LabelledSlider.");
         this.setDoubleBuffered(true);
-        label = new JLabel(text + value);
+        label = new JLabel(text);
         labelString = new String(text);
         this.scale = scale;
         slider = new JSlider(min, max, (int)(value*scale));
         nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(2);
+
+        // Construct Text Field
+        textField = new JTextField();
+        textField.setText(value + "");
+        textField.getDocument().addDocumentListener(new TextListener());
 
         // Set slider properties
         slider.setPaintTicks(true);
@@ -55,9 +64,16 @@ public class LabelledSliderFP extends JComponent {
         // Put in 5 ticks
         slider.setMajorTickSpacing((max-min)/5);
 
+        // Top Container
+        JPanel labelContainer = new JPanel();
+        labelContainer.setLayout(new BorderLayout());
+        labelContainer.add(label, BorderLayout.NORTH);
+        labelContainer.add(textField, BorderLayout.SOUTH);
+
         this.setLayout(new BorderLayout());
-        this.add(label, BorderLayout.NORTH);
+        this.add(labelContainer, BorderLayout.NORTH);
         this.add(slider, BorderLayout.SOUTH);
+
         int margin = 10;
         this.setBorder(new CompoundBorder(
                 new EmptyBorder(margin, margin, margin, margin),
@@ -90,10 +106,43 @@ public class LabelledSliderFP extends JComponent {
     private class SliderListener implements ChangeListener {
 
         public void stateChanged(ChangeEvent e) {
-            if (!slider.getValueIsAdjusting()) {
-                int number = slider.getValue();
-                label.setText(labelString + nf.format(((double)number/scale)));
+            if (!slider.getValueIsAdjusting() && !updatingValue) {
+                label.setText(labelString);
+                textField.setText(((double)slider.getValue())/scale + "");
             }
+            updatingValue = false;
+        }
+    }
+
+    /**
+     * Inner class to update the slider location and the text label
+     */
+    private class TextListener implements DocumentListener {
+
+        public void stateChanged(DocumentEvent e) {
+            String text = textField.getText();
+            if (text.length() > 0 && !updatingValue) {
+                double value = Double.parseDouble(text);
+                int sliderValue = (int) (value * scale);
+                updatingValue = true;
+                slider.setValue(sliderValue);
+            }
+            updatingValue = false;
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            stateChanged(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            stateChanged(e);
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            stateChanged(e);
         }
     }
 }
