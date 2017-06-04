@@ -92,7 +92,7 @@ public class DeveloperTest {
         // Add employee to back of queue
         floors.get(0).addToBackOfQueue(new Employee(0));
         // Developer is at front of queue
-        LinkedList<BuildingOccupant> elevatorQueue = floors.get(0).getElevatorQueue();
+        List<BuildingOccupant> elevatorQueue = floors.get(0).getElevatorQueue();
         assertTrue(elevatorQueue.get(0) instanceof Developer);
 
         // Add developer from rival company to elevator
@@ -122,7 +122,7 @@ public class DeveloperTest {
         developer.setNewDestination(building, randomUtils, BigDecimal.ONE, 0);
 
         // Developer's new destination is floor 4
-        assertEquals(developer.getDestination().floorNumber, 4);
+        assertEquals(developer.getDestination().getFloorNumber(), 4);
         assertEquals(developer.getDestination(), floors.get(4));
     }
 
@@ -138,7 +138,7 @@ public class DeveloperTest {
         developer.setNewDestination(building, randomUtils, BigDecimal.ONE, 0);
 
         // Developer's new destination is floor 3
-        assertEquals(developer.getDestination().floorNumber, 3);
+        assertEquals(developer.getDestination().getFloorNumber(), 3);
         assertEquals(developer.getDestination(), floors.get(3));
     }
 
@@ -155,7 +155,7 @@ public class DeveloperTest {
         developer.setNewDestination(building, new RandomUtils(1), BigDecimal.ZERO, 0);
 
         // Developer's destination stays the same
-        assertEquals(developer.getDestination().floorNumber, 1);
+        assertEquals(developer.getDestination().getFloorNumber(), 1);
     }
 
     /**
@@ -201,4 +201,5 @@ public class DeveloperTest {
         // Developer entered elevator queue at time 1234
         assertEquals(developer.getQueueEntryTime(), 1234);
     }
+
 }

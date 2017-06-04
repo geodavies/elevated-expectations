@@ -28,8 +28,7 @@ public class SimulationConfiguration {
     private final int SIMULATION_TIME;
 
     /**
-     * @param empFloorChangeProbability the probability each tick that an employee or developer will change their
-     *                                  current floor
+     * @param empFloorChangeProbability the probability each tick that an employee or developer will change their current floor
      * @param clientArrivalProbability the probability each tick that a client will arrive at the building
      * @param seed the seed used to generate the randomness
      * @param numEmployees number of employees to begin simulation with
@@ -83,6 +82,11 @@ public class SimulationConfiguration {
         return SIMULATION_TIME;
     }
 
+    /**
+     * Gets the field titles as a comma separated String
+     *
+     * @return the field titles
+     */
     public String getCSVHeaders() {
         String[] headers = new String[]{
             "Floor Change Probability",
@@ -97,6 +101,11 @@ public class SimulationConfiguration {
         return String.join(",", headers);
     }
 
+    /**
+     * Converts the current field values into a comma separated String
+     *
+     * @return the field values
+     */
     public String toCSV() {
         String[] headers = new String[]{
             getEmpFloorChangeProbability() + "",

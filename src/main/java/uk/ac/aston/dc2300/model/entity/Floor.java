@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class Floor {
 
-    int floorNumber;
+    private int floorNumber;
 
     private List<BuildingOccupant> occupants;
 
@@ -24,18 +24,6 @@ public class Floor {
         this.floorNumber = floorNumber;
         elevatorQueue = new LinkedList<>();
         occupants = new ArrayList<>();
-    }
-
-    public int getFloorNumber() {
-        return floorNumber;
-    }
-
-    public List<BuildingOccupant> getOccupants() {
-        return occupants;
-    }
-
-    public LinkedList<BuildingOccupant> getElevatorQueue() {
-        return elevatorQueue;
     }
 
     /**
@@ -90,6 +78,18 @@ public class Floor {
      */
     public boolean isAnyoneWaiting() {
         return !elevatorQueue.isEmpty();
+    }
+
+    public int getFloorNumber() {
+        return floorNumber;
+    }
+
+    public List<BuildingOccupant> getOccupants() {
+        return occupants;
+    }
+
+    public List<BuildingOccupant> getElevatorQueue() {
+        return elevatorQueue;
     }
 
 }

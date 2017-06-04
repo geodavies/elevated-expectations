@@ -3,7 +3,10 @@ package uk.ac.aston.dc2300.model.status;
 import uk.ac.aston.dc2300.model.entity.Building;
 
 /**
- * Created by dan on 20/05/2017.
+ * Contains information about a single simulation tick
+ *
+ * @author Dan Cotton
+ * @since 20/05/17
  */
 public class SimulationStatus {
 
@@ -19,12 +22,12 @@ public class SimulationStatus {
         this.simulationRunning = simulationRunning;
     }
 
-    public int getTime() {
-        return time;
-    }
-
     public Building getBuilding() {
         return building;
+    }
+
+    public int getTime() {
+        return time;
     }
 
     public boolean isSimulationRunning() {

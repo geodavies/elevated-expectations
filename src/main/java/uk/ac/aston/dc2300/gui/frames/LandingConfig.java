@@ -10,9 +10,7 @@ import java.awt.*;
 import java.math.BigDecimal;
 
 /**
- * <p>
- *     A JFrame/Swing UI for configuring the parameters of the simulation.
- * </p>
+ * A JFrame/Swing UI for configuring the parameters of the simulation.
  *
  * @author Dan Cotton
  * @since 06/04/17
@@ -30,10 +28,8 @@ public class LandingConfig {
     private JTextField elevatorCapacityField;
     private JTextField simulationTimeField;
 
-    // Define array of input fields
     private JTextField[] inputFields;
 
-    // Defining Required Simulation Config Data
     private BigDecimal empFloorChangeProbability;
     private BigDecimal clientArrivalProbability;
     private long seed;
@@ -52,28 +48,20 @@ public class LandingConfig {
 
         // Setup save button listener
         saveButton.addActionListener(e -> {
-            /*
-                Run Validation
-             */
+            // Run Validation
             try {
                 // Try validating fields.
                 validateFields();
 
-                /*
-                    Button Pressed - Populate Values
-                 */
+                // Button Pressed - Populate Values
                 System.out.println("[GUI] Button Pressed - Initiating Simulation");
                 collectInputData();
 
-                /*
-                    Values Retrieved - Pass to Config Object
-                */
+                // Values Retrieved - Pass to Config Object
                 SimulationConfiguration configObject = getSimulationConfiguration();
                 System.out.println("[GUI] Constructed config obj: " + configObject.toString());
 
-               /*
-                    Call GUI Change listener
-                */
+                // Call GUI Change listener
                 if (changeNotifier != null) {
                     System.out.println("[GUI] Passing changes to controller");
                     changeNotifier.guiChange(configObject);
@@ -87,8 +75,7 @@ public class LandingConfig {
     }
 
     /**
-     * Method performs initial UI setup -
-     * registering input verifiers on each of the 8 fields.
+     * Method performs initial UI setup, registering input verifiers on each of the fields.
      */
     private void setupInputVerifiers() {
         empFloorChangeProbabilityField.setTextFieldValidator(new BigDecimalVerifier());
@@ -102,14 +89,12 @@ public class LandingConfig {
     }
 
     /**
-     * Method performs initial UI construction of the 8 form fields,
-     * title, labels and 'run' button.
+     * Method performs initial UI construction of the form fields, title, labels and 'run' button.
      */
     private void constructUI() {
-
+        // Create panel
         landingConfigPanel = new JPanel();
         landingConfigPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-
         landingConfigPanel.setLayout(new BoxLayout(landingConfigPanel, BoxLayout.Y_AXIS));
 
         // Add title
@@ -120,6 +105,7 @@ public class LandingConfig {
         titleBox.add(Box.createHorizontalGlue());
         landingConfigPanel.add(titleBox);
 
+        // Add all fields
 
         empFloorChangeProbabilityField = new LabelledSliderFP("FloorChangeProbability", 0.01, 0, 1000, 1000);
         landingConfigPanel.add(empFloorChangeProbabilityField);
@@ -154,7 +140,6 @@ public class LandingConfig {
         saveButton = new JButton();
         saveButton.setText("Run Simulation");
         landingConfigPanel.add(saveButton);
-
 
         // Setup array
         inputFields = new JTextField[]{
@@ -207,11 +192,9 @@ public class LandingConfig {
     }
 
     /**
-     * Method returns the current simulation configuration object
-     * - based on the currently 'saved' UI values.
+     * Method returns the current simulation configuration object based on the currently 'saved' UI values.
      *
-     * @return a SimulationConfiguration from the GUI user input
-     * fields
+     * @return a SimulationConfiguration from the GUI user input fields
      */
     private SimulationConfiguration getSimulationConfiguration(){
         return new SimulationConfiguration(empFloorChangeProbability, clientArrivalProbability, seed, numEmployees,
@@ -219,15 +202,14 @@ public class LandingConfig {
     }
 
     /**
-     * Method collects values from GUI input fields and stores
-     * the type-parsed results in appropriate class fields.
+     * Method collects values from GUI input fields and stores the type-parsed results in appropriate class fields.
      */
     private void collectInputData() {
         System.out.println("[GUI] Collecting Values from Fields");
 
         // Collect and parse values from each field.
-        empFloorChangeProbability = new BigDecimal(empFloorChangeProbabilityField.getValue()).setScale(3, BigDecimal.ROUND_HALF_UP);
-        clientArrivalProbability = new BigDecimal(clientArrivalProbabilityField.getValue()).setScale(3, BigDecimal.ROUND_HALF_UP);
+        empFloorChangeProbability = new BigDecimal(empFloorChangeProbabilityField.getValue()).setScale(3, BigDecimal.ROUND_HALF_UP); // Round to 3 DP
+        clientArrivalProbability = new BigDecimal(clientArrivalProbabilityField.getValue()).setScale(3, BigDecimal.ROUND_HALF_UP); // Round to 3 DP
         seed = Long.parseLong(randomSeedField.getText());
         numEmployees = Integer.parseInt(numberEmployeesField.getText());
         numDevelopers = Integer.parseInt(numberDevelopersField.getText());
