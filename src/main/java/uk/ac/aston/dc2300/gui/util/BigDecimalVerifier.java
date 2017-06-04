@@ -3,17 +3,15 @@ package uk.ac.aston.dc2300.gui.util;
 import javax.swing.*;
 import java.math.BigDecimal;
 
+
 /**
- * Created by dan on 12/04/2017.
+ * Adds validation rules to JTextFields - ensuring only valid BigDecimal values (and in the range zero to one) may be used.
+ *
+ * @author Dan Cotton
+ * @since 12/04/17
+ *
  */
 public class BigDecimalVerifier extends InputVerifier {
-    /**
-     * Adds validation rules to JTextFields - ensuring only valid
-     * BigDecimal values (and in the range zero to one) may be used.
-     *
-     * @param input the JComponent to be validated.
-     * @return the validity as a boolean
-     */
     @Override
     public boolean verify(JComponent input) {
         try {

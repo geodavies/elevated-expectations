@@ -10,7 +10,6 @@ import uk.ac.aston.dc2300.utility.RandomUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Simulation class composes the main component of the application this class is responsible for managing the
