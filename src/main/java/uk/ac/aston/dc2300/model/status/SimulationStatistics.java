@@ -1,35 +1,43 @@
 package uk.ac.aston.dc2300.model.status;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by dan on 02/06/2017.
+ * Holds and processes wait times and number of complaints
+ *
+ * @author Dan Cotton
+ * @since 02/06/17
  */
 public class SimulationStatistics {
 
-    private ArrayList<Integer> waitTimes;
+    private List<Integer> waitTimes;
 
     private int numberOfComplaints;
+
     public SimulationStatistics(int numberOfComplaints) {
         this.numberOfComplaints = numberOfComplaints;
         waitTimes = new ArrayList<>();
     }
 
-    public void addWaitTimes(ArrayList<Integer> waitTimes) {
+    /**
+     * Adds the given list of wait times to this
+     *
+     * @param waitTimes the wait times to add
+     */
+    public void addWaitTimes(List<Integer> waitTimes) {
         this.waitTimes.addAll(waitTimes);
     }
 
     /**
-     * Stream the collection containing the wait times through
-     * a reduce in order to reduce to a sum.
+     * Gets the average waiting time
      *
-     * Once we've got the sum, divide it by the number of
-     * entries to return the mean
      * @return average time as an integer
      */
     public int getAverageTime() {
-        int dataPoints = this.waitTimes.size();
-        if (dataPoints > 0) {
+        if (waitTimes.size() > 0) {
+            // Stream the collection containing the wait times through a reduce in order to reduce to a sum
+            // Once we've got the sum, divide it by the number of entries to return the mean
             return (this.waitTimes
                     .stream()
                     .reduce(0, (sum, time) -> sum + time)) / this.waitTimes.size();
@@ -38,19 +46,29 @@ public class SimulationStatistics {
         }
     }
 
-    public int getNumberOfComplaints() {
-        return this.numberOfComplaints;
-    }
-
+    /**
+     * Gets the field titles as a comma separated String
+     *
+     * @return the field titles
+     */
     public String getCSVHeaders() {
         return "Average Time (s),Number of complaints";
     }
 
+    /**
+     * Converts the current field values into a comma separated String
+     *
+     * @return the field values
+     */
     public String toCSV() {
         return getAverageTime() + "," + getNumberOfComplaints();
     }
 
-    public ArrayList<Integer> getWaitTimes() {
+    public List<Integer> getWaitTimes() {
         return waitTimes;
+    }
+
+    public int getNumberOfComplaints() {
+        return this.numberOfComplaints;
     }
 }

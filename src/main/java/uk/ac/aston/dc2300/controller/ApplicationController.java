@@ -8,6 +8,9 @@ package uk.ac.aston.dc2300.controller;
  */
 public interface ApplicationController {
 
+    /**
+     * Starts the controller
+     */
     void start();
 
 }

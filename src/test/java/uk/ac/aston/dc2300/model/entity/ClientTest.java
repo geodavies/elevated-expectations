@@ -6,9 +6,7 @@ import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -133,7 +131,7 @@ public class ClientTest {
         client.setNewDestination(building, randomUtils, BigDecimal.ONE, 0);
 
         // Client's new destination is floor 2
-        assertEquals(client.getDestination().floorNumber, 2);
+        assertEquals(client.getDestination().getFloorNumber(), 2);
         assertEquals(client.getDestination(), floors.get(2));
     }
 
@@ -149,7 +147,7 @@ public class ClientTest {
         client.setNewDestination(building, new RandomUtils(421), BigDecimal.ONE, 0);
 
         // Client's new destination is floor 2
-        assertEquals(client.getDestination().floorNumber, 1);
+        assertEquals(client.getDestination().getFloorNumber(), 1);
         assertEquals(client.getDestination(), floors.get(1));
     }
 
@@ -231,4 +229,5 @@ public class ClientTest {
         // Client entered elevator queue at time 1234
         assertEquals(client.getQueueEntryTime(), 1234);
     }
+
 }

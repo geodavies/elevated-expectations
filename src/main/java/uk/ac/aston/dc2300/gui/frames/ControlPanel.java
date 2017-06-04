@@ -1,18 +1,19 @@
 package uk.ac.aston.dc2300.gui.frames;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
 /**
- * Created by dan on 31/05/2017.
+ * A control panel used to select speed, pause and save stats
+ *
+ * @author Dan Cotton
+ * @since 31/05/17
  */
 public class ControlPanel {
+
     private ActionListener speedHandler;
     private ActionListener fileSaveHandler;
 
@@ -30,6 +31,9 @@ public class ControlPanel {
         setupUI();
     }
 
+    /**
+     * Creates elements and populates container
+     */
     private void setupUI() {
         // Container
         containerPanel = new JPanel();
@@ -58,6 +62,9 @@ public class ControlPanel {
 
     }
 
+    /**
+     * Prompts user to save the file to disk
+     */
     public void saveStatsFile() {
         int returnVal = fileChooser.showSaveDialog(containerPanel);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -108,7 +115,12 @@ public class ControlPanel {
         return containerPanel;
     }
 
-    public void setError(String errorString) {
+    /**
+     * Displays an error prompt to the user
+     *
+     * @param errorString the content of the error prompt
+     */
+    public void showError(String errorString) {
         JOptionPane.showMessageDialog(getPanel(), errorString);
     }
 }

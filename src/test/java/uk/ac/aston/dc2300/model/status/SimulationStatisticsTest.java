@@ -65,7 +65,7 @@ public class SimulationStatisticsTest {
         // Add wait time for employee
         simulationStatistics.addWaitTimes(employee.getWaitTimes());
         //Get list of wait times from statistics
-        ArrayList<Integer> waitTimes = simulationStatistics.getWaitTimes();
+        List<Integer> waitTimes = simulationStatistics.getWaitTimes();
         int firstWaitTime = waitTimes.get(0);
         int secondWaitTime = waitTimes.get(1);
         // First wait time is for employee which is 100
@@ -96,7 +96,7 @@ public class SimulationStatisticsTest {
         simulationStatistics.addWaitTimes(employee.getWaitTimes());
         simulationStatistics.addWaitTimes(developer.getWaitTimes());
         //Get list of wait times from statistics
-        ArrayList<Integer> waitTimes = simulationStatistics.getWaitTimes();
+        List<Integer> waitTimes = simulationStatistics.getWaitTimes();
         int firstWaitTime = waitTimes.get(0);
         int secondWaitTime = waitTimes.get(1);
         // First wait time is for employee which is 100

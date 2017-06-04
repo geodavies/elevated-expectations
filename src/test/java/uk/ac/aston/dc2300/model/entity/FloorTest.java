@@ -5,7 +5,6 @@ import org.junit.Test;
 import uk.ac.aston.dc2300.model.status.DeveloperCompany;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -21,7 +20,6 @@ import static org.junit.Assert.assertTrue;
 public class FloorTest {
 
     private List<Floor> floors;
-
 
     /**
      * Setup before each test run for a basic elevator
@@ -90,7 +88,7 @@ public class FloorTest {
         // Add developer to back of queue behind employee
         groundFloor.addToBackOfQueue(developer);
 
-        LinkedList<BuildingOccupant> elevatorQueue = groundFloor.getElevatorQueue();
+        List<BuildingOccupant> elevatorQueue = groundFloor.getElevatorQueue();
         // Employee is first in elevator queue
         assertEquals(elevatorQueue.get(0), employee);
         // Developer is last in elevator queue
@@ -117,7 +115,7 @@ public class FloorTest {
         // Add developer to front of queue before employee
         groundFloor.addToFrontOfQueue(developer);
 
-        LinkedList<BuildingOccupant> elevatorQueue = groundFloor.getElevatorQueue();
+        List<BuildingOccupant> elevatorQueue = groundFloor.getElevatorQueue();
         // Developer is first in elevator queue
         assertEquals(elevatorQueue.get(0), developer);
         // Employee is last in elevator queue
@@ -192,7 +190,7 @@ public class FloorTest {
         maintenanceCrew.callElevator(groundFloor, 10);
         client.callElevator(groundFloor, 10);
 
-        LinkedList<BuildingOccupant> elevatorQueue = floors.get(0).getElevatorQueue();
+        List<BuildingOccupant> elevatorQueue = floors.get(0).getElevatorQueue();
         assertTrue(elevatorQueue.get(0) instanceof Client);
         assertTrue(elevatorQueue.get(1) instanceof Employee);
         assertTrue(elevatorQueue.get(2) instanceof Developer);
