@@ -3,6 +3,7 @@ package uk.ac.aston.dc2300.model.entity;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 /**
  * This class represents an entity that moves around within the building such as a person or a maintenance crew.
@@ -19,7 +20,12 @@ public abstract class BuildingOccupant {
     protected final int timeEntered;
 
     protected Floor destination;
+
     protected int destinationArrivalTime;
+
+    private ArrayList<Integer> waitTimes;
+
+    private int queueEntryTime;
 
     /**
      * @param occupantSize the number of spaces the occupant takes in the elevator
@@ -28,6 +34,8 @@ public abstract class BuildingOccupant {
     public BuildingOccupant(int occupantSize, int timeEntered) {
         this.occupantSize = occupantSize;
         this.timeEntered = timeEntered;
+        this.waitTimes = new ArrayList<>();
+        this.queueEntryTime = -1;
     }
 
     public int getSize() {
@@ -42,12 +50,44 @@ public abstract class BuildingOccupant {
         this.destination = destination;
     }
 
+    public int getQueueEntryTime() { return queueEntryTime; }
+
+    /**
+     * Retrieve the wait times an occupant has experienced
+     *
+     * @return the arraylist of waittimes
+     */
+    public ArrayList<Integer> getWaitTimes() {
+        return this.waitTimes;
+    }
+
+    /**
+     * Resets the queue timer and adds the total wait time to the list
+     *
+     * @param currentTime the current time
+     */
+    protected void resetQueueTimer(int currentTime) {
+        if (this.queueEntryTime >= 0) {
+            this.waitTimes.add(currentTime - this.queueEntryTime);
+        }
+        this.queueEntryTime = -1;
+    }
+
+    /**
+     * Records the queue entry time.
+     *
+     * @param currentTime the current time
+     */
+    protected void startQueueTimer(int currentTime) {
+        this.queueEntryTime = currentTime;
+    }
+
     /**
      * Notifies the building that this occupant is waiting to ride the elevator
      *
      * @param currentFloor the floor the occupant is calling from
      */
-    public abstract void callElevator(Floor currentFloor);
+    public abstract void callElevator(Floor currentFloor, int currentTime);
 
     /**
      * Moves the occupant from their current floor into the elevator
@@ -55,7 +95,7 @@ public abstract class BuildingOccupant {
      * @param elevator the elevator to move the occupant to
      * @param floor the floor to move from
      */
-    public abstract void getInElevator(Elevator elevator, Floor floor);
+    public abstract void getInElevator(Elevator elevator, Floor floor, int currentTime);
 
     /**
      * Sets a new destination for the occupant providing all of the conditions to change floor are met first, this could

@@ -89,7 +89,7 @@ public class ClientTest {
     @Test
     public void clientCanCallElevator() {
         // Client calls elevator on ground floor
-        client.callElevator(groundFloor);
+        client.callElevator(groundFloor, 10);
         // Client is in elevator queue for the ground floor
         assertTrue(groundFloor.getElevatorQueue().contains(client));
     }
@@ -103,7 +103,7 @@ public class ClientTest {
         groundFloor.addOccupant(client);
         groundFloor.addToBackOfQueue(client);
         // Client enters elevator on ground floor
-        client.getInElevator(elevator, groundFloor);
+        client.getInElevator(elevator, groundFloor, 10);
         // Client is in elevator
         assertTrue(elevator.getOccupants().contains(client));
         assertEquals(groundFloor.getOccupants().size(), 0);
@@ -116,7 +116,7 @@ public class ClientTest {
     @Test
     public void clientIsReadyToLeave() {
         // Client is ready to leave the building
-        client.getReadyToLeave(groundFloor);
+        client.getReadyToLeave(groundFloor, 1200);
         // Client's destination is the ground floor
         assertEquals(client.getDestination(), groundFloor);
     }
@@ -218,5 +218,17 @@ public class ClientTest {
         assertTrue(elevator.getOccupants().contains(client));
         assertFalse(floors.get(2).getOccupants().contains(client));
         assertFalse(floors.get(2).getElevatorQueue().contains(client));
+    }
+
+    /**
+     * Test to ensure the client has the correct time on entering the elevator queue
+     */
+    @Test
+    public void clientSetQueueEntryTime() {
+        // Client calls elevator on ground floor at time 1234
+        client.callElevator(groundFloor, 1234);
+
+        // Client entered elevator queue at time 1234
+        assertEquals(client.getQueueEntryTime(), 1234);
     }
 }

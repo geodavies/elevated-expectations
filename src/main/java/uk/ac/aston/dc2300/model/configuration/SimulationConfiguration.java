@@ -82,4 +82,32 @@ public class SimulationConfiguration {
     public int getSimulationTime() {
         return SIMULATION_TIME;
     }
+
+    public String getCSVHeaders() {
+        String[] headers = new String[]{
+            "Floor Change Probability",
+            "Client Arrival Probability",
+            "Random Seed",
+            "Num Employees",
+            "Num Developers",
+            "Num Floors",
+            "Elevator Capacity",
+            "Simulation Runtime"
+        };
+        return String.join(",", headers);
+    }
+
+    public String toCSV() {
+        String[] headers = new String[]{
+            getEmpFloorChangeProbability() + "",
+            getClientArrivalProbability() + "",
+            getSeed() + "",
+            getNumEmployees() + "",
+            getNumDevelopers() + "",
+            getNumFloors() + "",
+            getElevatorCapacity() + "",
+            getSimulationTime() + ""
+        };
+        return String.join(",", headers);
+    }
 }

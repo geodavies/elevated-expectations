@@ -61,7 +61,7 @@ public class DeveloperTest {
     @Test
     public void developerCanCallElevator() {
         // Developer calls elevator on ground floor
-        developer.callElevator(groundFloor);
+        developer.callElevator(groundFloor, 10);
         // Developer is in elevator queue for the ground floor
         assertTrue(groundFloor.getElevatorQueue().contains(developer));
     }
@@ -75,7 +75,7 @@ public class DeveloperTest {
         groundFloor.addOccupant(developer);
         groundFloor.addToBackOfQueue(developer);
         // Developer enters elevator on ground floor
-        developer.getInElevator(elevator, groundFloor);
+        developer.getInElevator(elevator, groundFloor, 10);
         // Client is in elevator
         assertTrue(elevator.getOccupants().contains(developer));
         assertEquals(groundFloor.getOccupants().size(), 0);
@@ -99,7 +99,7 @@ public class DeveloperTest {
         Developer rivalDeveloper = new Developer(0, DeveloperCompany.MUGTOME);
         elevator.addOccupant(rivalDeveloper);
         // Developer enters elevator on ground floor
-        developer.getInElevator(elevator, groundFloor);
+        developer.getInElevator(elevator, groundFloor, 10);
         // Developer isn't in elevator
         assertFalse(elevator.getOccupants().contains(developer));
         //Rival developer is in elevator
@@ -188,5 +188,17 @@ public class DeveloperTest {
         assertTrue(elevator.getOccupants().contains(developer));
         assertFalse(floors.get(2).getOccupants().contains(developer));
         assertFalse(floors.get(2).getElevatorQueue().contains(developer));
+    }
+
+    /**
+     * Test to ensure the developer has the correct time on entering the elevator queue
+     */
+    @Test
+    public void developerSetQueueEntryTime() {
+        // Developer calls elevator on ground floor at time 1234
+        developer.callElevator(groundFloor, 1234);
+
+        // Developer entered elevator queue at time 1234
+        assertEquals(developer.getQueueEntryTime(), 1234);
     }
 }

@@ -3,6 +3,7 @@ package uk.ac.aston.dc2300.component;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 import uk.ac.aston.dc2300.model.entity.*;
 import uk.ac.aston.dc2300.model.status.DeveloperCompany;
+import uk.ac.aston.dc2300.model.status.SimulationStatistics;
 import uk.ac.aston.dc2300.model.status.SimulationStatus;
 import uk.ac.aston.dc2300.utility.RandomUtils;
 
@@ -102,6 +103,19 @@ public class Simulation {
         }
     }
 
+    public SimulationStatistics getStatistics() {
+        SimulationStatistics statistics = new SimulationStatistics(BUILDING.getNumberComplaints());
+
+        Set<BuildingOccupant> occupants  = BUILDING.getAllOccupants();
+
+        // Add all wait times
+        for(BuildingOccupant occupant : occupants) {
+            statistics.addWaitTimes(occupant.getWaitTimes());
+        }
+
+        return statistics;
+    }
+
     public SimulationStatus tick() {
         System.out.println(String.format("Time: %s", currentTime));
         randomlyReassignDestinations();
@@ -109,7 +123,7 @@ public class Simulation {
         checkForArrivingMaintenanceCrew(currentTime);
         updateElevatorStatuses();
         unloadElevators();
-        loadElevators();
+        loadElevators(currentTime);
         moveElevators();
 
         BUILDING.getClientComplaints(currentTime);
@@ -193,9 +207,9 @@ public class Simulation {
     /**
      * Moves any queuing BuildingOccupants into the elevators
      */
-    private void loadElevators() {
+    private void loadElevators(int currentTime) {
         for (Elevator elevator : BUILDING.getElevators()) {
-            elevator.loadPassengers(BUILDING.getFloors().size() - 1);
+            elevator.loadPassengers(BUILDING.getFloors().size() - 1, currentTime);
         }
     }
 

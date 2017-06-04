@@ -130,7 +130,7 @@ public class Building {
                     numberComplaints++;
                     System.out.println("Client complaining and leaving, total complaints: " + numberComplaints);
                     // Leave
-                    client.getReadyToLeave(getFloors().get(0));
+                    client.getReadyToLeave(getFloors().get(0), currentTime);
                 }
             }
         }

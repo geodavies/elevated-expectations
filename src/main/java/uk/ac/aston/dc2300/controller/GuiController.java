@@ -6,7 +6,9 @@ import uk.ac.aston.dc2300.gui.frames.LandingConfig;
 import uk.ac.aston.dc2300.gui.frames.SimulationCanvas;
 import uk.ac.aston.dc2300.model.configuration.SimulationConfiguration;
 import uk.ac.aston.dc2300.model.entity.Building;
+import uk.ac.aston.dc2300.model.status.SimulationStatistics;
 import uk.ac.aston.dc2300.model.status.SimulationStatus;
+import uk.ac.aston.dc2300.utility.FileUtils;
 
 import javax.naming.ldap.Control;
 import javax.swing.JFrame;
@@ -16,6 +18,8 @@ import javax.swing.SwingWorker;
 import javax.swing.BoxLayout;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * An implementation of ApplicationController which displays a graphical user interface.
@@ -112,6 +116,17 @@ public class GuiController implements ApplicationController {
                 // Construct new simulation from GUI config
                 Simulation simulation = new Simulation(configuration);
 
+                // Add stats listener
+                controlPanel.setFileSaveHandler(file -> {
+                    FileUtils fileUtils = new FileUtils((File) file.getSource());
+                    SimulationStatistics stats = simulation.getStatistics();
+                    try {
+                        fileUtils.writeToFile(configuration.toCSV() + "," + stats.toCSV(),configuration.getCSVHeaders() + "," +  stats.getCSVHeaders());
+                    } catch (IOException e) {
+                        controlPanel.setError("File writing failed. Please try again.");
+                    }
+                });
+
                 // Set initial running status
                 simulationRunning = true;
                 SimulationStatus currentStatus = null;
@@ -122,13 +137,22 @@ public class GuiController implements ApplicationController {
                     if (!simulationPaused) {
                         currentStatus = simulation.tick();
                         canvas.update(new Building(currentStatus.getBuilding()));
+                        canvas.drawStats(simulation.getStatistics());
                         simulationRunning = currentStatus.isSimulationRunning();
                     }
                     Thread.sleep(SIM_SPEED_DEFAULT / simSpeedMultiplier);
                 }
 
-                System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
+                // Collect end of sim stats.
+                SimulationStatistics stats = simulation.getStatistics();
 
+                // Render end of sim stats
+                canvas.drawStats(stats);
+
+                // Trigger stats file save process
+                controlPanel.saveStatsFile();
+
+                System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
                 return currentStatus;
             }
         };

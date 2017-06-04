@@ -42,12 +42,14 @@ public class Developer extends BuildingOccupant {
     }
 
     @Override
-    public void callElevator(Floor currentFloor) {
+    public void callElevator(Floor currentFloor, int currentTime) {
         currentFloor.addToBackOfQueue(this);
+        // Start the clock
+        startQueueTimer(currentTime);
     }
 
     @Override
-    public void getInElevator(Elevator elevator, Floor floor) {
+    public void getInElevator(Elevator elevator, Floor floor, int currentTime) {
         // Leave the queue
         floor.removeFromQueue(this);
         // If we have rivals in the elevator.
@@ -61,6 +63,8 @@ public class Developer extends BuildingOccupant {
             floor.removeOccupant(this);
             // Get in the elevator
             elevator.addOccupant(this);
+            // Stop the queue timer
+            resetQueueTimer(currentTime);
         }
     }
 
@@ -78,7 +82,7 @@ public class Developer extends BuildingOccupant {
             Floor destination = topHalfFloors.get(randomFloorIndex);
             setDestination(destination);
             System.out.println(String.format("Developer on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
-            callElevator(currentFloor);
+            callElevator(currentFloor, currentTime);
         }
     }
 
