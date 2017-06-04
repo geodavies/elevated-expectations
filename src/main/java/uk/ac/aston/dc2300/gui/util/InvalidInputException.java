@@ -7,21 +7,21 @@ import javax.swing.*;
  */
 public class InvalidInputException extends Exception {
 
-    private JTextField offenderField;
+    private String offenderValue;
 
     /**
      * An exception to be thrown if a field is invalid
      * upon submission.
      *
-     * @param offenderField the JComponent with invalid input.
-    */
-    public InvalidInputException(JTextField offenderField) {
+     * @param offenderValue the String value.
+     */
+    public InvalidInputException(String offenderValue) {
         super();
-        this.offenderField = offenderField;
+        this.offenderValue = offenderValue;
     }
 
     @Override
     public String toString() {
-        return "Field Invalid with value: " + offenderField.getText();
+        return "Field Invalid with value: " + offenderValue;
     }
 }

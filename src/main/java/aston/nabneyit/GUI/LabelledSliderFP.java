@@ -77,6 +77,10 @@ public class LabelledSliderFP extends JComponent {
 
     }
 
+    public void setTextFieldValidator(InputVerifier verifier) {
+        textField.setInputVerifier(verifier);
+    }
+
     /**
      * Sets the major tick spacing for the LabelledSlider
      *
@@ -97,7 +101,8 @@ public class LabelledSliderFP extends JComponent {
     }
 
     /**
-     * Inner class to update the slider location and the text label
+     * Inner class to listen to updates to the slider and reflect
+     * them on the text field.
      */
     private class SliderListener implements ChangeListener {
 
@@ -111,13 +116,34 @@ public class LabelledSliderFP extends JComponent {
     }
 
     /**
-     * Inner class to update the slider location and the text label
+     * Verifies the text field against the input verifier provided.
+     *
+     * @return the boolean result of the verification
+     */
+    private boolean verifyInput() {
+        return textField.getInputVerifier().verify(textField);
+    }
+
+
+    /**
+     * @return the text field that mirrors the slider's value.
+     */
+    public JTextField getTextField() {
+        return textField;
+    }
+
+    /**
+     * Inner class to listen to text field changes and reflect those
+     * against the slider.
      */
     private class TextListener implements DocumentListener {
 
         public void stateChanged(DocumentEvent e) {
             String text = textField.getText();
-            if (text.length() > 0 && !updatingValue) {
+
+            // If we have some text, it's valid and we're not already updating
+            // a value.... (E.g. don't update if responding to an update)
+            if (text.length() > 0 && verifyInput() && !updatingValue) {
                 double value = Double.parseDouble(text);
                 int sliderValue = (int) (value * scale);
                 updatingValue = true;
