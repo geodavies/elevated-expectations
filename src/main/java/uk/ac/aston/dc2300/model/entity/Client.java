@@ -14,6 +14,7 @@ import java.util.List;
 public class Client extends BuildingOccupant {
 
     private int leaveAfterArrivalTime;
+    private boolean isLeaving;
 
     /**
      * @param timeEntered the time in seconds the Client entered the building following simulation start
@@ -22,6 +23,7 @@ public class Client extends BuildingOccupant {
     public Client(int timeEntered, int leaveAfterArrivalTime) {
         super(1, timeEntered);
         this.leaveAfterArrivalTime = leaveAfterArrivalTime;
+        this.isLeaving = false;
     }
 
     @Override
@@ -39,23 +41,27 @@ public class Client extends BuildingOccupant {
             // Assign client a floor in the bottom half
             List<Floor> bottomHalfFloors = building.getBottomHalfFloors();
             int randomFloorIndex = randomUtils.getIntInRange(0, bottomHalfFloors.size() - 1);
-            while (randomFloorIndex == currentFloor.getFloorNumber()) {
-                // If random floor is current floor try again
-                randomFloorIndex = randomUtils.getIntInRange(0, bottomHalfFloors.size() - 1);
-            }
             Floor destination = bottomHalfFloors.get(randomFloorIndex);
             setDestination(destination);
             System.out.println(String.format("Client arrived on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
-            callElevator(currentFloor, currentTime);
-        } else if (currentFloor.equals(groundFloor) && destination.equals(groundFloor)) {
-            // If they're on the ground floor and their destination is ground. Leave the building.
+            // If we're already there - lets not join the queue!
+            if (currentFloor != destination) {
+                callElevator(currentFloor, currentTime);
+            }
+        } else if (currentFloor.equals(groundFloor) && isLeaving) {
+            // If they're on the ground floor and they have the intent to leave. Leave the building.
             leaveBuilding(currentFloor);
             System.out.println("Client has left the building");
         } else if (destination.equals(currentFloor) && currentTime >= destinationArrivalTime + leaveAfterArrivalTime) { // If they're at their destination and they want to leave
             // Set destination to ground floor to leave
             setDestination(groundFloor);
             System.out.println(String.format("Client on floor %s set destination floor %s", currentFloor.getFloorNumber(), destination.getFloorNumber()));
-            callElevator(currentFloor, currentTime);
+            if (currentFloor != destination) {
+                callElevator(currentFloor, currentTime);
+            } else {
+                leaveBuilding(currentFloor);
+                System.out.println("Client has left the building");
+            }
         }
     }
 
@@ -90,6 +96,7 @@ public class Client extends BuildingOccupant {
     public void getReadyToLeave(Floor ground, int currentTime) {
         setDestination(ground);
         resetQueueTimer(currentTime);
+        isLeaving = true;
     }
 
 }
