@@ -126,6 +126,7 @@ public class GuiController implements ApplicationController {
         containerPanel.add(simulationCanvas);
         containerPanel.add(controlPanel.getPanel());
 
+        uiFrame.setSize(SimulationCanvas.WIDTH, SimulationCanvas.HEIGHT + 75);
         uiFrame.setContentPane(containerPanel);
         uiFrame.pack();
         uiFrame.setVisible(true);
