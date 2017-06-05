@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>uk.ac.aston.dc2300</OriginalElement>
+  <nodes>
+    <node x="524.0" y="1852.0">uk.ac.aston.dc2300.model.entity.MaintenanceCrewTest</node>
+    <node x="913.0" y="708.0">uk.ac.aston.dc2300.gui.frames.SimulationCanvas</node>
+    <node x="732.0" y="2597.0">uk.ac.aston.dc2300.model.status.ElevatorDoorStatus</node>
+    <node x="1917.0" y="1357.0">uk.ac.aston.dc2300.model.entity.ElevatorTest</node>
+    <node x="2.8421709430404007E-14" y="455.0974824899106">uk.ac.aston.dc2300.model.entity.Employee</node>
+    <node x="945.0" y="2597.0">uk.ac.aston.dc2300.gui.util.InvalidInputException</node>
+    <node x="0.0" y="1357.0">uk.ac.aston.dc2300.component.Simulation</node>
+    <node x="1127.0" y="2279.0">uk.ac.aston.dc2300.model.status.SimulationStatisticsTest</node>
+    <node x="310.0" y="2597.0">uk.ac.aston.dc2300.model.status.SimulationStatus</node>
+    <node x="237.0" y="456.0">uk.ac.aston.dc2300.model.entity.Client</node>
+    <node x="0.0" y="2279.0">uk.ac.aston.dc2300.model.configuration.SimulationConfiguration</node>
+    <node x="0.0" y="2597.0">uk.ac.aston.dc2300.utility.CliUtils</node>
+    <node x="368.0" y="2783.0">uk.ac.aston.dc2300.gui.util.IntegerVerifier</node>
+    <node x="2063.0" y="2597.0">uk.ac.aston.dc2300.model.status.DeveloperCompany</node>
+    <node x="0.0" y="708.0">uk.ac.aston.dc2300.gui.frames.LandingConfig</node>
+    <node x="773.0" y="2279.0">uk.ac.aston.dc2300.model.entity.Floor</node>
+    <node x="1021.0" y="456.31018739273566">uk.ac.aston.dc2300.model.entity.MaintenanceCrew</node>
+    <node x="657.0" y="2783.0">uk.ac.aston.dc2300.gui.util.BigDecimalVerifier</node>
+    <node x="0.0" y="2783.0">uk.ac.aston.dc2300.gui.util.GUIChange</node>
+    <node x="1515.0" y="809.0">uk.ac.aston.dc2300.controller.CliController</node>
+    <node x="1028.0" y="1852.0">uk.ac.aston.dc2300.model.entity.EmployeeTest</node>
+    <node x="2275.0" y="2597.0">uk.ac.aston.dc2300.model.status.ElevatorDirection</node>
+    <node x="1364.0" y="0.0">uk.ac.aston.dc2300.model.entity.Elevator</node>
+    <node x="682.0" y="1357.0">uk.ac.aston.dc2300.gui.frames.ControlPanel</node>
+    <node x="1531.0" y="2279.0">uk.ac.aston.dc2300.model.entity.FloorTest</node>
+    <node x="2317.0" y="2279.0">uk.ac.aston.dc2300.utility.RandomUtils</node>
+    <node x="1226.0" y="2597.0">uk.ac.aston.dc2300.utility.FileUtils</node>
+    <node x="1333.0" y="1357.0">uk.ac.aston.dc2300.model.entity.ClientTest</node>
+    <node x="1896.25" y="708.0">uk.ac.aston.dc2300.controller.ApplicationController</node>
+    <node x="1532.0" y="1852.0">uk.ac.aston.dc2300.model.entity.Building</node>
+    <node x="2014.0" y="809.206791595157">uk.ac.aston.dc2300.controller.GuiController</node>
+    <node x="371.0" y="0.0">uk.ac.aston.dc2300.model.entity.BuildingOccupant</node>
+    <node x="946.0" y="2783.0">uk.ac.aston.dc2300.gui.util.LongVerifier</node>
+    <node x="2134.0" y="1852.0">uk.ac.aston.dc2300.model.entity.BuildingTest</node>
+    <node x="615.0" y="455.2987412449553">uk.ac.aston.dc2300.model.entity.Developer</node>
+    <node x="1816.0" y="2597.0">uk.ac.aston.dc2300.model.status.ElevatorMovementStatus</node>
+    <node x="1933.0" y="2279.0">uk.ac.aston.dc2300.model.status.SimulationStatistics</node>
+    <node x="1421.0" y="2597.0">uk.ac.aston.dc2300.ElevatedExpectationsApplication</node>
+    <node x="0.0" y="1852.0">uk.ac.aston.dc2300.model.entity.DeveloperTest</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="uk.ac.aston.dc2300.model.entity.Client" target="uk.ac.aston.dc2300.model.entity.BuildingOccupant">
+      <point x="0.0" y="-103.5" />
+      <point x="416.0" y="436.0" />
+      <point x="551.75" y="436.0" />
+      <point x="-60.25" y="203.0" />
+    </edge>
+    <edge source="uk.ac.aston.dc2300.model.entity.Developer" target="uk.ac.aston.dc2300.model.entity.BuildingOccupant">
+      <point x="0.0" y="-81.5" />
+      <point x="808.0" y="436.0" />
+      <point x="672.25" y="436.0" />
+      <point x="60.25" y="203.0" />
+    </edge>
+    <edge source="uk.ac.aston.dc2300.model.entity.MaintenanceCrew" target="uk.ac.aston.dc2300.model.entity.BuildingOccupant">
+      <point x="0.0" y="-70.5" />
+      <point x="1170.0" y="426.0" />
+      <point x="792.75" y="426.0" />
+      <point x="180.75" y="203.0" />
+    </edge>
+    <edge source="uk.ac.aston.dc2300.controller.CliController" target="uk.ac.aston.dc2300.controller.ApplicationController">
+      <point x="0.0" y="-180.5" />
+      <point x="1754.5" y="784.0" />
+      <point x="1940.75" y="784.0" />
+      <point x="-44.5" y="25.5" />
+    </edge>
+    <edge source="uk.ac.aston.dc2300.model.entity.Employee" target="uk.ac.aston.dc2300.model.entity.BuildingOccupant">
+      <point x="0.0" y="-59.0" />
+      <point x="108.5" y="426.0" />
+      <point x="431.25" y="426.0" />
+      <point x="-180.75" y="203.0" />
+    </edge>
+    <edge source="uk.ac.aston.dc2300.controller.GuiController" target="uk.ac.aston.dc2300.controller.ApplicationController">
+      <point x="0.0" y="-158.5" />
+      <point x="2216.0" y="784.0" />
+      <point x="2029.75" y="784.0" />
+      <point x="44.5" y="25.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.3428041288999035" x="983.0066713766611" y="2012.4247845001576" />
+  <SelectedNodes>
+    <node>uk.ac.aston.dc2300.model.entity.EmployeeTest</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Constructors</Category>
+    <Category>Properties</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>Project Files</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
