@@ -122,6 +122,7 @@ public class GuiController implements ApplicationController {
         uiFrame.setContentPane(containerPanel);
         uiFrame.pack();
         uiFrame.setVisible(true);
+        this.stats = true;
 
         // Create and start an asynchronous SwingWorker
         SwingWorker<SimulationStatus, Object> simulationWorker = getSimulationWorker(simulationConfiguration, controlPanel, simulationCanvas);
@@ -187,7 +188,6 @@ public class GuiController implements ApplicationController {
 
                     System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
                 }
-                stats = true;
                 return currentStatus;
             }
         };
