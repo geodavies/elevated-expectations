@@ -197,7 +197,7 @@ public class Elevator {
      * @param floors list of all the floors in the building
      * @return a sublist of floors above current floor
      */
-    private List<Floor> getFloorsAbove(List<Floor> floors) {
+    public List<Floor> getFloorsAbove(List<Floor> floors) {
         return floors.subList(currentFloor.getFloorNumber() + 1, floors.size());
     }
 
@@ -207,7 +207,7 @@ public class Elevator {
      * @param floors list of all the floors in the building
      * @return a sublist of floors below current floor
      */
-    private List<Floor> getFloorsBelow(List<Floor> floors) {
+    public List<Floor> getFloorsBelow(List<Floor> floors) {
         return floors.subList(0, currentFloor.getFloorNumber());
     }
 

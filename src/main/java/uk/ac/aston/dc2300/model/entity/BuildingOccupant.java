@@ -107,16 +107,22 @@ public abstract class BuildingOccupant {
 
         if (elevatorDirection == ElevatorDirection.UP) {
             // If we're moving in the same direction
-            if (destination.getFloorNumber() > elevator.getCurrentFloor().getFloorNumber()) return true;
-            // Or it's about to change direction
-            else if (!elevator.shouldElevatorTravelToFloors(floors.subList(elevator.getCurrentFloor().getFloorNumber() + 1, floors.size() - 1)))
+            if (destination.getFloorNumber() > elevator.getCurrentFloor().getFloorNumber()) {
                 return true;
+            }
+            // Or it's about to change direction
+            else if (!elevator.shouldElevatorTravelToFloors(elevator.getFloorsAbove(floors))) {
+                return true;
+            }
         } else if (elevatorDirection == ElevatorDirection.DOWN) {
             // If we're moving in the same direction
-            if (destination.getFloorNumber() < elevator.getCurrentFloor().getFloorNumber()) return true;
-                // Or it's about to change direction
-            else if (!elevator.shouldElevatorTravelToFloors(floors.subList(0, elevator.getCurrentFloor().getFloorNumber() - 1)))
+            if (destination.getFloorNumber() < elevator.getCurrentFloor().getFloorNumber()) {
                 return true;
+            }
+            // Or it's about to change direction
+            else if (!elevator.shouldElevatorTravelToFloors(elevator.getFloorsBelow(floors))) {
+                return true;
+            }
         }
         // if we're not moving up or down - jump in, noone's waiting
         return true;
