@@ -37,8 +37,13 @@ public class GuiController implements ApplicationController {
 
     public GuiController() {
         System.out.println("Initializing application in 'GUI' mode");
+        initialiseFields();
+    }
+
+    private void initialiseFields() {
         simSpeedMultiplier = 1;
         simulationRunning = false;
+        simulationPaused = false;
         goToEnd = false;
         stats = true;
     }
@@ -84,6 +89,8 @@ public class GuiController implements ApplicationController {
 
     private void setupSimulation(SimulationConfiguration simulationConfiguration) {
 
+        initialiseFields();
+
         uiFrame.setVisible(false);
         uiFrame.revalidate();
 
@@ -119,6 +126,7 @@ public class GuiController implements ApplicationController {
         containerPanel.add(simulationCanvas);
         containerPanel.add(controlPanel.getPanel());
 
+        uiFrame.setSize(SimulationCanvas.WIDTH, SimulationCanvas.HEIGHT + 75);
         uiFrame.setContentPane(containerPanel);
         uiFrame.pack();
         uiFrame.setVisible(true);
@@ -187,7 +195,6 @@ public class GuiController implements ApplicationController {
 
                     System.out.println(String.format("Simulation Completed at time: %s ", currentStatus.getTime()));
                 }
-                stats = true;
                 return currentStatus;
             }
         };
