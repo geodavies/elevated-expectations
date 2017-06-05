@@ -217,7 +217,7 @@ public class Elevator {
      * @param floors the floors to check
      * @return boolean status true=passengersWaiting, false=noneWaiting
      */
-    private boolean shouldElevatorTravelToFloors(List<Floor> floors) {
+    public boolean shouldElevatorTravelToFloors(List<Floor> floors) {
         return occupantsWaitingOnFloors(floors) || occupantsWaitingForFloors(floors);
     }
 
